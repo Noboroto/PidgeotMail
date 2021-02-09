@@ -12,6 +12,8 @@
             x:Name="login"
             Style="{StaticResource MaterialDesignRaisedLightButton}"
             Height="50"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
             materialDesign:ShadowAssist.ShadowDepth="Depth4"
             Width="250" Click="login_Click">
             <Grid>

@@ -15,7 +15,7 @@ namespace PidgeotMail
         {
             get
             {
-                return message.Subject;
+                return (string.IsNullOrEmpty(message.Subject)) ? "None subject" : message.Subject;
             }
         }
         public GMessage(string id = "", MimeMessage m = null)

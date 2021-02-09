@@ -38,14 +38,14 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Margin="5"
-                            materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth3"
                             Grid.Column="0"
                             Content="Về trang chủ"
                             Click="Home_Click" />
                         <Button
                             Background="#c62828"
                             BorderBrush="#c62828"
-                            materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth3"
                             Margin="5"
                             Grid.Column="1"
                             Content="Đóng"

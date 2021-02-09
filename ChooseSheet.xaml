@@ -43,6 +43,7 @@
                                 Width="24" />
                         </Button>
                         <Button 
+                            materialDesign:ShadowAssist.ShadowDepth="Depth3"
                             x:Name="refbut"
                             Margin="5"
                             VerticalAlignment="Center"

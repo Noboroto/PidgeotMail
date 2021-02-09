@@ -11,5 +11,10 @@ namespace PidgeotMail
         {
             File.AppendAllText(path, DateTime.Now.ToString() + ": " + message + "\n");
         }
+
+        public static string Get ()
+        {
+            return File.ReadAllText(path);
+        }
     }
 }
