@@ -93,19 +93,30 @@ namespace PidgeotMail
                     MessageBox.Show("Sheet trống!");
                     return;
                 }
+                Logs.Write("Template gửi thư: ");
+                Logs.Add("Sheet: ");
                 for(int i = 0; i < sheet[0].Count; ++i)
                 {
                     header.Add(sheet[0][i].ToString(), i);
+                    Logs.Add(sheet[0][i].ToString());
                 }
-                string htmlbody, plainbody;
+                string htmlbody, plainbody, subject;
                 string replacement, s;
                 var request = App.MailService.Users.Drafts.Get("me", App.ChoiceMailID);
                 request.Format = Google.Apis.Gmail.v1.UsersResource.DraftsResource.GetRequest.FormatEnum.Raw;
                 MimeMessage ChoiceMail = GetDataFromBase64(request.Execute().Message.Raw.Replace('-', '+').Replace('_', '/'));
+                Logs.Add("Origin: ");
+                Logs.Add("ID: " + App.ChoiceMailID);
+                Logs.Add("Subject: " + ChoiceMail.Subject);
+                Logs.Add("Cc: " + App.Cc);
+                Logs.Add("Bcc: " + App.Bcc);
+                Logs.Add("Text: " + ChoiceMail.TextBody);
+                Logs.Add("Html: " + ChoiceMail.HtmlBody);
                 for(int i = 1; i < sheet.Count; ++i)
                 {
                     htmlbody = ChoiceMail.HtmlBody;
                     plainbody = ChoiceMail.TextBody;
+                    subject = ChoiceMail.Subject;
                     try
                     {
                         foreach(var value in header)
@@ -115,6 +126,7 @@ namespace PidgeotMail
                             s = HtmlEncode(App.L) + value.Key + HtmlEncode(App.R);
                             plainbody = plainbody.Replace(App.L + value.Key + App.R, replacement);
                             htmlbody = htmlbody.Replace(s, replacement);
+                            subject = subject.Replace(App.L + value.Key + App.R, replacement);
                         }
                         MimeMessage t;
                         GetDataFromBase64(out t, Base64UrlEncode(ChoiceMail).Replace('-', '+').Replace('_', '/'));
@@ -129,6 +141,7 @@ namespace PidgeotMail
                                 x.Text = plainbody;
                             }
                         }
+                        t.Subject = subject;
                         t.To.Add(new MailboxAddress("", sheet[i][header["Email"]].ToString()));
                         if(string.IsNullOrEmpty(App.Bcc)) t.Bcc.Add(new MailboxAddress("", App.Bcc));
                         if(string.IsNullOrEmpty(App.Cc)) t.Cc.Add(new MailboxAddress("", App.Cc));

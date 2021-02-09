@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using Google.Apis.Gmail.v1;
@@ -25,6 +26,7 @@ namespace PidgeotMail
                 HttpClientInitializer = App.credential,
                 ApplicationName = App.ApplicationName,
             });
+            Refresh.IsEnabled = false;
             Logs.Write("Đã login bằng " + App.MailService.Users.GetProfile("me").Execute().EmailAddress);
             source = new ObservableCollection<GMessage>();
             table.ItemsSource = source;
@@ -67,6 +69,11 @@ namespace PidgeotMail
             });
         }
 
+        public static string HtmlEncode(string text)
+        {
+            return HttpUtility.HtmlEncode(text);
+        }
+
         private void table_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -75,7 +82,7 @@ namespace PidgeotMail
                 var visitor = new HtmlPreviewVisitor();
                 var gMessage = source[table.SelectedIndex];
                 gMessage.message.Accept(visitor);
-                wb.NavigateToString(header + "<h3>ID: " + gMessage.MessageId + "</h3><h2>Subject: " + gMessage.Subject + "</h2><br/>" + visitor.HtmlBody);
+                wb.NavigateToString(header + "<h3>ID: " + gMessage.MessageId + "</h3><h2>Subject: " + HtmlEncode(gMessage.Subject) + "</h2><br/>" + visitor.HtmlBody);
             }
             catch(Exception ex)
             {
@@ -121,9 +128,9 @@ namespace PidgeotMail
         }
 
         private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            source.Clear();
+        {            
             Refresh.IsEnabled = false;
+            source.Clear();
             wb.NavigateToString(header);
             table.SelectedIndex = -1;
             Logs.Write("Đã refresh");
