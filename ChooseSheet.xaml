@@ -19,6 +19,7 @@
                 Message="Đã copy link!"
                 IsActive="False"
                 x:Name="announce"
+                Panel.ZIndex="1"
                 />
             <ScrollViewer
                 HorizontalScrollBarVisibility="Disabled"
@@ -184,6 +185,7 @@
                             InputScope="Number" />
                     </Grid>
                     <Button
+                        Panel.ZIndex="0"
                         materialDesign:ShadowAssist.ShadowDepth="Depth3"
                         Style="{StaticResource MaterialDesignRaisedAccentButton}"
                         Grid.Column="0"
