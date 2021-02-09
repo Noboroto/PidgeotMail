@@ -15,7 +15,7 @@ namespace PidgeotMail
     {
         public static UserCredential credential;
         static public readonly string ApplicationName = "PidgeotMail";
-        static public readonly string TextCredential = "{\"installed\":{\"client_id\":\"155023122563-9qnq9022jb9189377rjt98k91s393pen.apps.googleusercontent.com\",\"project_id\":\"olympia-html-automail-tool\",\"auth_uri\":\"https://accounts.google.com/o/oauth2/auth\",\"token_uri\":\"https://oauth2.googleapis.com/token\",\"auth_provider_x509_cert_url\":\"https://www.googleapis.com/oauth2/v1/certs\",\"client_secret\":\"ztuBZE_qYRBEJbYSAgbPimu4\",\"redirect_uris\":[\"urn:ietf:wg:oauth:2.0:oob\",\"http://localhost\"]}}";
+        static public readonly string TextCredential = "{\"installed\":{\"client_id\":\"155023122563-9qnq9022jb9189377rjt98k91s393pen.apps.googleusercontent.com\",\"project_id\":\"PidgeotMail\",\"auth_uri\":\"https://accounts.google.com/o/oauth2/auth\",\"token_uri\":\"https://oauth2.googleapis.com/token\",\"auth_provider_x509_cert_url\":\"https://www.googleapis.com/oauth2/v1/certs\",\"client_secret\":\"ztuBZE_qYRBEJbYSAgbPimu4\",\"redirect_uris\":[\"urn:ietf:wg:oauth:2.0:oob\",\"http://localhost\"]}}";
         static public SheetsService sheetsService;
         public static GmailService MailService;
         public static string ChoiceMailID;

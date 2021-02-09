@@ -18,12 +18,21 @@ namespace PidgeotMail
     {
         static string[] Scopes = { GmailService.Scope.GmailReadonly, SheetsService.Scope.Spreadsheets, GmailService.Scope.GmailSend };
 
+        public static Stream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
         public Login()
         {
             InitializeComponent();
             try
             {
-                File.WriteAllText("credentials.json", App.TextCredential);
                 if(!Directory.Exists("token")) Directory.CreateDirectory("token");
                 if(Directory.GetFiles("token").Length > 0) Task.Run(ActiveAcount);
             }
@@ -36,7 +45,7 @@ namespace PidgeotMail
         {
             try
             {
-                using(var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+                using(var stream = GenerateStreamFromString(App.TextCredential))
                 {
                     string path = "token";
                     App.credential = GoogleWebAuthorizationBroker.AuthorizeAsync(

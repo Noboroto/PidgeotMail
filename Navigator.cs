@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -8,7 +6,13 @@ namespace PidgeotMail
 {
     public static class Navigator
     {
-        private static NavigationService NavigationService { get; } = (Application.Current.MainWindow as MainWindow).f.NavigationService;
+        private static NavigationService NavigationService 
+        {
+            get
+            {
+                return (Application.Current.MainWindow as MainWindow).f.NavigationService;
+            }
+        }
 
         public static void Navigate(string path, object param = null)
         {
