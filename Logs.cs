@@ -21,12 +21,12 @@ namespace PidgeotMail
 
         public static void Write (string message)
         {
-            File.AppendAllText(path, Encode (DateTime.Now.ToString() + ": " + message + "\n"));
+            File.AppendAllText(path, Encode (DateTime.Now.ToString() + ": " + message) + "\n");
         }
 
         public static void Add(string message)
         {
-            File.AppendAllText(path, Encode(message + "\n"));
+            File.AppendAllText(path, Encode(message) + "\n");
         }
 
         public static string Get ()
