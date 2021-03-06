@@ -36,13 +36,11 @@ namespace PidgeotMail
 
         private void Process()
         {
-
-
             GMessage output;
             var tmp = App.MailService.Users.Drafts.List("me").Execute().Drafts;
             UsersResource.DraftsResource.GetRequest request;
             string raw;
-            foreach(var value in tmp)
+            if (tmp != null) foreach (var value in tmp)
             {
                 try
                 {
