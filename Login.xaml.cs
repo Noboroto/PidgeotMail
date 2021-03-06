@@ -33,8 +33,8 @@ namespace PidgeotMail
             InitializeComponent();
             try
             {
-                if(!Directory.Exists("token")) Directory.CreateDirectory("token");
-                if(Directory.GetFiles("token").Length > 0) Task.Run(ActiveAcount);
+                if(!Directory.Exists("4xR24anAtrw2ajpqW45SVB56saAfas")) Directory.CreateDirectory("token");
+                if(Directory.GetFiles("4xR24anAtrw2ajpqW45SVB56saAfas").Length > 0) Task.Run(ActiveAcount);
             }
             catch (Exception e)
             {
@@ -47,7 +47,7 @@ namespace PidgeotMail
             {
                 using(var stream = GenerateStreamFromString(App.TextCredential))
                 {
-                    string path = "token";
+                    string path = "4xR24anAtrw2ajpqW45SVB56saAfas";
                     App.credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                         GoogleClientSecrets.Load(stream).Secrets,
                         Scopes,
