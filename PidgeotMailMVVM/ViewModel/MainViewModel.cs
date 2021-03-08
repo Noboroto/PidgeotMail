@@ -1,4 +1,4 @@
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 
 namespace PidgeotMailMVVM.ViewModel
 {
@@ -29,6 +29,11 @@ namespace PidgeotMailMVVM.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
+            Tilte = "Phần mềm gửi mail tự động PidgeotMail";
+            AppName = "PidgeotMail";
         }
+
+        public string Tilte { get; set; }
+        public string AppName { get; set; }
     }
 }

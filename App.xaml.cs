@@ -1,7 +1,6 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Sheets.v4;
-using MimeKit;
 using System;
 using System.Windows;
 using System.Windows.Threading;
