@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PidgeotMail", "PidgeotMail.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Decode", "Decode\Decode.csproj", "{9C7CAB26-D7F3-4109-B492-4C74A6BBB389}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PidgeotMailMVVM", "..\PidgeotMailMVVM\PidgeotMailMVVM.csproj", "{2C083C5F-F87C-4199-BE45-1EDC27FC78AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PidgeotMailMVVM", "PidgeotMailMVVM\PidgeotMailMVVM.csproj", "{2C083C5F-F87C-4199-BE45-1EDC27FC78AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
