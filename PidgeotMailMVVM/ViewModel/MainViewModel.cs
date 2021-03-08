@@ -33,7 +33,7 @@ namespace PidgeotMailMVVM.ViewModel
             AppName = "PidgeotMail";
         }
 
-        public string Tilte { get; set; }
-        public string AppName { get; set; }
+        public static string Tilte { get; set; }
+        public static string AppName { get; set; }
     }
 }
