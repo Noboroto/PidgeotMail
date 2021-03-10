@@ -8,8 +8,11 @@ using System.Windows.Input;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 
 using PidgeotMailMVVM.Lib;
+using PidgeotMailMVVM.MessageForUI;
+using PidgeotMailMVVM.View;
 
 namespace PidgeotMailMVVM.ViewModel
 {
@@ -74,19 +77,27 @@ namespace PidgeotMailMVVM.ViewModel
 			);
 
 			PDFCmd = new RelayCommand(() =>
-			{
-				OpenFileDialog openFileDialog = new OpenFileDialog();
-				openFileDialog.Filter = "PDF File|*.pdf";
-				openFileDialog.Multiselect = false;
-				if (openFileDialog.ShowDialog() == DialogResult.OK)
 				{
-					foreach (var values in openFileDialog.FileNames)
+					OpenFileDialog openFileDialog = new OpenFileDialog();
+					openFileDialog.Filter = "PDF File|*.pdf";
+					openFileDialog.Multiselect = false;
+					if (openFileDialog.ShowDialog() == DialogResult.OK)
 					{
-						Attachments.Add(new AttachmentInfo(values, true, true, PDFMess));
+						foreach (var values in openFileDialog.FileNames)
+						{
+							Attachments.Add(new AttachmentInfo(values, true, true, PDFMess));
+						}
 					}
 				}
-			}
 			);
+
+			NextCmd = new RelayCommand(() =>
+				{
+					UserSettings.Attachments = Attachments;
+					Messenger.Default.Send(new NavigateToMessage( new ResultView()));
+				}
+			);
+
 			Selection.Add(SendAll);
 		}
 	}

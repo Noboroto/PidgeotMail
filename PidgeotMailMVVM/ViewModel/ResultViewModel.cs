@@ -1,5 +1,4 @@
-﻿using MimeKit;
-using System;
+﻿using System;
 using System.Web;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -65,37 +64,13 @@ namespace PidgeotMailMVVM.ViewModel
 			);
 		}
 
-
-
-		static void GetDataFromBase64(out MimeMessage output, string input)
-		{
-			output = new MimeMessage();
-			using (var stream = new MemoryStream(Convert.FromBase64String(input)))
-			{
-				output = MimeMessage.Load(stream);
-			}
-		}
-
-		static string Base64UrlEncode(MimeMessage message)
-		{
-			using (var stream = new MemoryStream())
-			{
-				message.WriteTo(stream);
-				return Convert.ToBase64String(stream.GetBuffer(), 0, (int)stream.Length)
-					.Replace('+', '-').Replace('/', '_');
-			}
-		}
-
-
 		private void Process()
 		{
 			IList<IList<Object>> sheet = null;
 			try
 			{
 				sheet = UserSettings.Values;
-				Dictionary<string, int> header = UserSettings.HeaderLocation;
-				string path = DateTime.Now.ToString().Replace("/", "-").Replace(":", ".");
-				Directory.CreateDirectory(path);
+				var header = UserSettings.HeaderLocation;
 				if (sheet == null || sheet.Count <= 0)
 				{
 					Logs.Write("Sheet trống");
@@ -111,18 +86,22 @@ namespace PidgeotMailMVVM.ViewModel
 				}
 				string htmlbody, plainbody, subject;
 				string replacement, s;
-				MimeMessage ChoiceMail = GMService.GetDraftByID(UserSettings.ChoiceMailID);
+				GMessage ChoiceMail = new GMessage(UserSettings.ChoiceMailID, GMService.GetDraftByID(UserSettings.ChoiceMailID));
+				foreach (var value in UserSettings.Attachments)
+				{
+
+				}
 				Logs.Add("Origin: ");
 				Logs.Add("ID: " + UserSettings.ChoiceMailID);
 				Logs.Add("Subject: " + ChoiceMail.Subject);
 				Logs.Add("Cc: " + UserSettings.Cc);
 				Logs.Add("Bcc: " + UserSettings.Bcc);
-				Logs.Add("Text: " + ChoiceMail.TextBody);
-				Logs.Add("Html: " + ChoiceMail.HtmlBody);
+				Logs.Add("Text: " + ChoiceMail.message.TextBody);
+				Logs.Add("Html: " + ChoiceMail.message.HtmlBody);
 				for (int i = 1; i < sheet.Count; ++i)
 				{
-					htmlbody = ChoiceMail.HtmlBody;
-					plainbody = ChoiceMail.TextBody;
+					htmlbody = ChoiceMail.message.HtmlBody;
+					plainbody = ChoiceMail.message.TextBody;
 					subject = ChoiceMail.Subject;
 					try
 					{
@@ -135,34 +114,14 @@ namespace PidgeotMailMVVM.ViewModel
 							htmlbody = htmlbody.Replace(s, replacement);
 							subject = subject.Replace(UserSettings.L + value.Key + UserSettings.R, replacement);
 						}
-						MimeMessage t;
-						GetDataFromBase64(out t, Base64UrlEncode(ChoiceMail).Replace('-', '+').Replace('_', '/'));
-						foreach (var x in t.BodyParts.OfType<TextPart>())
-						{
-							if (x.IsHtml)
-							{
-								x.Text = htmlbody;
-							}
-							if (x.IsPlain)
-							{
-								x.Text = plainbody;
-							}
-						}
-						t.Subject = subject;
-						t.To.Add(new MailboxAddress("", sheet[i][header["Email"]].ToString()));
-						if (string.IsNullOrEmpty(UserSettings.Bcc)) t.Bcc.Add(new MailboxAddress("", UserSettings.Bcc));
-						if (string.IsNullOrEmpty(UserSettings.Cc)) t.Cc.Add(new MailboxAddress("", UserSettings.Cc));
 						App.Current.Dispatcher.BeginInvoke((Action)delegate ()
 						{
-							source.Add(new SenderInfo(i, t.To.ToString()));
+							source.Add(new SenderInfo(i, sheet[i][header["Email"]].ToString()));
 						});
-						File.WriteAllText(path + "/" + i + "-full.txt", t.ToString());
-						File.WriteAllText(path + "/" + i + "-html.txt", htmlbody);
-						File.WriteAllText(path + "/" + i + "-plain.txt", plainbody);
-						GMService.Send(t);
+						GMService.Send(ChoiceMail.GenerateClone(sheet[i][header["Email"]].ToString(), UserSettings.Bcc, UserSettings.Cc, subject,plainbody, htmlbody));
 						App.Current.Dispatcher.BeginInvoke((Action)delegate ()
 						{
-							Logs.Write(i + ": " + t.To.ToString());
+							Logs.Write(i + ": " + sheet[i][header["Email"]].ToString());
 						});
 					}
 					catch (Exception e)

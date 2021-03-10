@@ -12,6 +12,6 @@ namespace PidgeotMailMVVM.Lib
 		public static string Cc;
 		public static IList<IList<Object>> Values;
 		public static Dictionary<string, int> HeaderLocation;
-		public IList<AttachmentInfo> Attachments;
+		public static IList<AttachmentInfo> Attachments;
 	}
 }
