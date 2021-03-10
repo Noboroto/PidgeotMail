@@ -4,7 +4,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:local="clr-namespace:PidgeotMailMVVM.View"
 	mc:Ignorable="d"
 	d:DesignHeight="450"
 	d:DesignWidth="800"
@@ -13,6 +12,8 @@
 	<materialDesign:Card
 		VerticalAlignment="Center"
 		HorizontalAlignment="Center"
+		Margin="10"
+		MaxHeight="800"
 		>
 		<Grid
 			Margin="5"
@@ -22,6 +23,7 @@
 				<ColumnDefinition Width="auto" />
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
+				<RowDefinition />
 				<RowDefinition />
 				<RowDefinition />
 			</Grid.RowDefinitions>
@@ -54,6 +56,7 @@
 					Foreground="Red"
 					BorderBrush="Red"
 					Height="auto"
+					Command="{Binding DeleteCmd}"
 					Width="auto">
 					<StackPanel>
 						<materialDesign:PackIcon
@@ -77,6 +80,7 @@
 				<Button
 					Height="auto"
 					Width="auto"
+					Command="{Binding FolderCmd}"
 					>
 					<StackPanel>
 						<materialDesign:PackIcon
@@ -92,6 +96,7 @@
 				</Button>
 				<Button
 					Height="auto"
+					Command="{Binding FileCmd}"
 					Width="auto">
 					<StackPanel>
 						<materialDesign:PackIcon
@@ -107,6 +112,7 @@
 				</Button>
 				<Button
 					Height="auto"
+					Command="{Binding PDFCmd}"
 					Width="auto">
 					<StackPanel>
 						<materialDesign:PackIcon
@@ -136,19 +142,13 @@
 				CanUserReorderColumns="False"
 				CanUserSortColumns="False"
 				AutoGenerateColumns="False"
-				HeadersVisibility="All">
+				HeadersVisibility="Column">
 				<DataGrid.Columns>
 					<DataGridCheckBoxColumn
 						CanUserResize="False"
 						Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
 						ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
 						EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
-						<DataGridCheckBoxColumn.Header>
-							<Border
-								Background="Transparent">
-								<CheckBox />
-							</Border>
-						</DataGridCheckBoxColumn.Header>
 						<DataGridCheckBoxColumn.HeaderStyle>
 							<Style
 								TargetType="{x:Type DataGridColumnHeader}"
@@ -169,14 +169,38 @@
 						Header="Đường dẫn"
 						MaxWidth="350"
 						IsReadOnly="True" />
-					<materialDesign:DataGridComboBoxColumn
-						Header="Gửi theo ..."
-						IsReadOnly="False"
-						ItemsSourceBinding="{Binding Selection}"
-						SelectedValueBinding="{Binding SenderGroup}"
-						MaxWidth="250" />
+					<DataGridTemplateColumn>
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox
+									IsEnabled="{Binding Enable}"
+									SelectedItem="{Binding SenderGroup}"
+									ItemsSource="{Binding Attachment.Selection, Source={StaticResource Locator}}" />
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
 				</DataGrid.Columns>
 			</DataGrid>
+			<Button
+				Grid.Column="1"
+				Grid.Row="2"
+				HorizontalAlignment="Right"
+				Margin="10"
+				Height="50"
+				Command="{Binding NextCmd}"
+				Width="50">
+				<StackPanel>
+					<materialDesign:PackIcon
+						HorizontalAlignment="Center"
+						Width="20"
+						Height="20"
+						Kind="Send" />
+					<TextBlock
+						FontSize="12"
+						HorizontalAlignment="Center"
+						Text="Gửi" />
+				</StackPanel>
+			</Button>
 		</Grid>
     </materialDesign:Card>
 </Page>

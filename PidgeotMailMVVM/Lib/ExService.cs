@@ -26,6 +26,7 @@ namespace PidgeotMailMVVM.Lib
 		{
 			if (!File.Exists(path))
 				return "File không tồn tại!";
+			_path = path;
 			return "OK";
 		}
 		public static string InitValue(int Col, int Row)

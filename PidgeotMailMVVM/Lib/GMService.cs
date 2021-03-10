@@ -26,7 +26,7 @@ namespace PidgeotMailMVVM.Lib
 
 		public static void Init()
 		{
-			if (gs != null) ;
+			if (gs != null) return;
 			gs = new GmailService(new BaseClientService.Initializer()
 			{
 				HttpClientInitializer = GoogleService.Credential,
