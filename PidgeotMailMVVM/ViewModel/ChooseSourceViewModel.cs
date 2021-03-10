@@ -6,7 +6,7 @@ using System.Windows.Input;
 using PidgeotMailMVVM.MessageForUI;
 using PidgeotMailMVVM.View;
 using System.Windows;
-using System;
+using Microsoft.Win32;
 
 namespace PidgeotMailMVVM.ViewModel
 {
@@ -15,8 +15,9 @@ namespace PidgeotMailMVVM.ViewModel
 		private string link;
 		private bool _SelectEx;
 		private bool _SelectGs;
-		private int _Amount;
-		private string path;
+		private int _Row;
+		private int _Column;
+		private string _ExPath;
 
 		public string Left
 		{
@@ -95,15 +96,37 @@ namespace PidgeotMailMVVM.ViewModel
 				Set(nameof(_SelectGs), ref _SelectGs, value);
 			}
 		}
-		public int Amount
+		public int Row
 		{
 			get
 			{
-				return _Amount;
+				return _Row;
 			}
 			set
 			{
-				Set(nameof(_Amount), ref _Amount, value);
+				Set(nameof(_Row), ref _Row, value);
+			}
+		}
+		public int Column
+		{
+			get
+			{
+				return _Column;
+			}
+			set
+			{
+				Set(nameof(_Column), ref _Column, value);
+			}
+		}
+		public string ExPath
+		{
+			get
+			{
+				return _ExPath;
+			}
+			set
+			{
+				Set(nameof(_ExPath), ref _ExPath, value);
 			}
 		}
 
@@ -111,12 +134,27 @@ namespace PidgeotMailMVVM.ViewModel
 		public ICommand BackCmd { get; set; }
 		public ICommand GSCmd { get; set; }
 		public ICommand ExCmd { get; set; }
+		public ICommand BrowseCmd { get; set; }
 
 		public ChooseSourceViewModel()
 		{
 			SelectEx = true;
 			Left = "{{";
 			Right = "}}";
+			ExPath = "Chưa chọn";
+
+			BrowseCmd = new RelayCommand(() =>
+			   {
+				   var OpenFileBox = new OpenFileDialog();
+				   OpenFileBox.Filter = "Excel Files|*.xls;*.xlsx";
+				   OpenFileBox.Multiselect = false;
+				   if (OpenFileBox.ShowDialog() == true)
+				   {
+					   ExPath = OpenFileBox.FileName;
+					   Messenger.Default.Send(new ChangePathMessage(ExPath));
+				   }
+			   }
+			);
 
 			BackCmd = new RelayCommand(() =>
 				{
@@ -135,7 +173,7 @@ namespace PidgeotMailMVVM.ViewModel
 							Logs.Write(result);
 							return;
 						}
-						result = GSheetService.InitValue(Amount);
+						result = GSheetService.InitValue(Row);
 						if (result != "OK")
 						{
 							MessageBox.Show(result);
@@ -143,11 +181,29 @@ namespace PidgeotMailMVVM.ViewModel
 							return;
 						}
 						Logs.Write("Đã chọn sheet " + GSheetService.ChoiceSheetID);
+						UserSettings.HeaderLocation = GSheetService.Header;
+						UserSettings.Values = GSheetService.Values;
 					}
 					else if (SelectEx)
 					{
-
-					}
+						string result = ExService.CheckAvailable(ExPath);
+						if (result != "OK")
+						{
+							MessageBox.Show(result);
+							Logs.Write(result);
+							return;
+						}
+						result = ExService.InitValue(Column, Row);
+						if (result != "OK")
+						{
+							MessageBox.Show(result);
+							Logs.Write(result);
+							return;
+						}
+						UserSettings.HeaderLocation = ExService.Header;
+						UserSettings.Values = ExService.Value;
+						Logs.Write("Đã chọn ExcelWorkbook " + ExService.Path);
+					} 
 				}
 			);
 

@@ -16,7 +16,7 @@ namespace PidgeotMailMVVM
 		public MainWindow()
 		{
 			InitializeComponent();
-			MyFrame.Navigate(new ChooseSourceView());
+			MyFrame.Navigate(new AttachmentView());
 		}
 
 		protected void OnNavigatedTo(object sender, RoutedEventArgs e)

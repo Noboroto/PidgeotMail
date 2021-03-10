@@ -46,39 +46,16 @@ namespace PidgeotMailMVVM.ViewModel
 			SimpleIoc.Default.Register<LoginViewModel>();
 			SimpleIoc.Default.Register<ChooseDraftViewModel>();
 			SimpleIoc.Default.Register<ChooseSourceViewModel>();
+			SimpleIoc.Default.Register<AttachmentViewModel>();
+			SimpleIoc.Default.Register<ResultViewModel>();
 		}
 
-		public MainViewModel Main
-		{
-			get
-			{
-				return ServiceLocator.Current.GetInstance<MainViewModel>();
-			}
-		}
-
-		public LoginViewModel Login
-		{
-			get
-			{
-				return ServiceLocator.Current.GetInstance<LoginViewModel>();
-			}
-		}
-		public ChooseDraftViewModel ChooseDraft
-		{
-			get
-			{
-				return ServiceLocator.Current.GetInstance<ChooseDraftViewModel>();
-			}
-		}
-
-		public ChooseSourceViewModel ChooseSource
-		{
-			get
-			{
-				return ServiceLocator.Current.GetInstance<ChooseSourceViewModel>();
-			}
-		}
-
+		public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+		public LoginViewModel Login => ServiceLocator.Current.GetInstance<LoginViewModel>();
+		public ChooseDraftViewModel ChooseDraft => ServiceLocator.Current.GetInstance<ChooseDraftViewModel>();
+		public ChooseSourceViewModel ChooseSource => ServiceLocator.Current.GetInstance<ChooseSourceViewModel>();
+		public AttachmentViewModel Attachment => ServiceLocator.Current.GetInstance<AttachmentViewModel>();
+		public ResultViewModel Result => ServiceLocator.Current.GetInstance<ResultViewModel>();
 		public static void Cleanup()
 		{
 			// TODO Clear the ViewModels

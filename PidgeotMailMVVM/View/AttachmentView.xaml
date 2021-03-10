@@ -1,0 +1,182 @@
+﻿<Page
+	x:Class="PidgeotMailMVVM.View.AttachmentView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:PidgeotMailMVVM.View"
+	mc:Ignorable="d"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+	DataContext="{Binding Attachment, Mode=OneWay, Source={StaticResource Locator}}">
+	<materialDesign:Card
+		VerticalAlignment="Center"
+		HorizontalAlignment="Center"
+		>
+		<Grid
+			Margin="5"
+			>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition Width="auto" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+			<TextBlock 
+				Grid.Column="0"
+				Grid.Row="0"
+				Text="Thêm tệp đính kèm"
+				FontSize="20"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Center"
+				FontWeight="Black"
+				Margin="5"
+				/>
+			<StackPanel
+				HorizontalAlignment="Right"
+				Grid.Column="1"
+				Grid.Row="0"
+				Orientation="Horizontal"
+				FlowDirection="RightToLeft"
+				>
+				<StackPanel.Resources>
+					<Style TargetType="Button" BasedOn="{StaticResource MaterialDesignOutlinedButton}">
+						<Setter 
+							Property="Margin"
+							Value="5"
+							/>
+					</Style>
+				</StackPanel.Resources>
+				<Button
+					Foreground="Red"
+					BorderBrush="Red"
+					Height="auto"
+					Width="auto">
+					<StackPanel>
+						<materialDesign:PackIcon
+							HorizontalAlignment="Center"
+							Width="20"
+							Height="20"
+							Foreground="Red"
+							Kind="Delete" />
+						<TextBlock
+							FontSize="12"
+							Foreground="Red"
+							HorizontalAlignment="Center"
+							Text="Xoá mục" />
+						<TextBlock
+							FontSize="12"
+							HorizontalAlignment="Center"
+							Foreground="Red"
+							Text="đã chọn" />
+					</StackPanel>
+				</Button>
+				<Button
+					Height="auto"
+					Width="auto"
+					>
+					<StackPanel>
+						<materialDesign:PackIcon
+							HorizontalAlignment="Center"
+							Width="20"
+							Height="20"
+							Kind="Folder" />
+						<TextBlock
+							FontSize="12"
+							HorizontalAlignment="Center"
+							Text="Gửi riêng" />
+					</StackPanel>
+				</Button>
+				<Button
+					Height="auto"
+					Width="auto">
+					<StackPanel>
+						<materialDesign:PackIcon
+							HorizontalAlignment="Center"
+							Width="20"
+							Height="20"
+							Kind="File" />
+					<TextBlock
+						FontSize="12"
+						HorizontalAlignment="Center"
+						Text="Gửi tất cả" />
+					</StackPanel>
+				</Button>
+				<Button
+					Height="auto"
+					Width="auto">
+					<StackPanel>
+						<materialDesign:PackIcon
+							HorizontalAlignment="Center"
+							Kind="FilePdf"
+							Width="20"
+							Height="20"
+							/>
+						<TextBlock
+							FontSize="12"
+							HorizontalAlignment="Center"
+							Text="Phiếu điểm" />
+						<TextBlock
+							FontSize="12"
+							HorizontalAlignment="Center"
+							Text="một lớp" />
+					</StackPanel>
+				</Button>
+			</StackPanel>
+			<DataGrid
+				ItemsSource="{Binding Attachments}"
+				Grid.Row="1"
+				Grid.ColumnSpan="2"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				CanUserAddRows="False"
+				CanUserReorderColumns="False"
+				CanUserSortColumns="False"
+				AutoGenerateColumns="False"
+				HeadersVisibility="All">
+				<DataGrid.Columns>
+					<DataGridCheckBoxColumn
+						CanUserResize="False"
+						Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+						ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+						EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
+						<DataGridCheckBoxColumn.Header>
+							<Border
+								Background="Transparent">
+								<CheckBox />
+							</Border>
+						</DataGridCheckBoxColumn.Header>
+						<DataGridCheckBoxColumn.HeaderStyle>
+							<Style
+								TargetType="{x:Type DataGridColumnHeader}"
+								BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+								<Setter
+									Property="HorizontalContentAlignment"
+									Value="Center" />
+							</Style>
+						</DataGridCheckBoxColumn.HeaderStyle>
+					</DataGridCheckBoxColumn>
+					<DataGridTextColumn
+						Binding="{Binding Name}"
+						Header="Tên tệp / thư mục"
+						MaxWidth="350"
+						IsReadOnly="True" />
+					<DataGridTextColumn
+						Binding="{Binding Path}"
+						Header="Đường dẫn"
+						MaxWidth="350"
+						IsReadOnly="True" />
+					<materialDesign:DataGridComboBoxColumn
+						Header="Gửi theo ..."
+						IsReadOnly="False"
+						ItemsSourceBinding="{Binding Selection}"
+						SelectedValueBinding="{Binding SenderGroup}"
+						MaxWidth="250" />
+				</DataGrid.Columns>
+			</DataGrid>
+		</Grid>
+    </materialDesign:Card>
+</Page>

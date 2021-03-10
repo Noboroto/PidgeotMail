@@ -14,11 +14,16 @@ namespace PidgeotMailMVVM.Lib
 		private static SheetsService sheetsService;
 		private static IList<IList<Object>> _Values;
 		private static string _ChoiceSheetID;
+		private static Dictionary<string, int> _Header;
 
+		public static Dictionary<string, int> Header => _Header;
 		public static IList<IList<Object>> Values => Values;
 		public static string ChoiceSheetID => _ChoiceSheetID;
+
 		private static void Init()
 		{
+			if (_Values == null) _Values = new List<IList<Object>>();
+			if (_Header != null) _Header = new Dictionary<string, int>();
 			if (sheetsService != null) return;
 			sheetsService = new SheetsService(new BaseClientService.Initializer()
 			{
@@ -26,11 +31,17 @@ namespace PidgeotMailMVVM.Lib
 				ApplicationName = PidgeotMailMVVM.ViewModel.MainViewModel.AppName,
 			});
 		}
-		public static string InitValue(int Amount)
+		public static string InitValue(int Row)
 		{
 			try
 			{
-				_Values = sheetsService.Spreadsheets.Values.Get(ChoiceSheetID, "1:" + Amount).Execute().Values;
+				_Values = sheetsService.Spreadsheets.Values.Get(ChoiceSheetID, "1:" + Row).Execute().Values;
+				int i = 0;
+				foreach (var value in _Values[0])
+				{
+					_Header.Add(value.ToString(), i);
+					i++;
+				}
 			}
 			catch (Exception e)
 			{
@@ -77,6 +88,5 @@ namespace PidgeotMailMVVM.Lib
 			}
 			return "OK";
 		}
-
 	}
 }
