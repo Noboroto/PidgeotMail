@@ -107,7 +107,6 @@ namespace PidgeotMailMVVM.ViewModel
 			}
 		}
 
-
 		public ICommand NextCmd { get; set; }
 		public ICommand BackCmd { get; set; }
 		public ICommand GSCmd { get; set; }

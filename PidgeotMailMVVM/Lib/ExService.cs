@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace PidgeotMailMVVM.Lib
 {
-    public class ExService
-    {
-        private void Init ()
-        {
+	public class ExService
+	{
+		private void Init()
+		{
 
-        }
-    }
+		}
+	}
 }

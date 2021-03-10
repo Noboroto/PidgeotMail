@@ -15,14 +15,14 @@ using System.Windows.Shapes;
 
 namespace PidgeotMailMVVM.View
 {
-    /// <summary>
-    /// Interaction logic for ChooseSourceView.xaml
-    /// </summary>
-    public partial class ChooseSourceView : Page
-    {
-        public ChooseSourceView()
-        {
-            InitializeComponent();
-        }
-    }
+	/// <summary>
+	/// Interaction logic for ChooseSourceView.xaml
+	/// </summary>
+	public partial class ChooseSourceView : Page
+	{
+		public ChooseSourceView()
+		{
+			InitializeComponent();
+		}
+	}
 }

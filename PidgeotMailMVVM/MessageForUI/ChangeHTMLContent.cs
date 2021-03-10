@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace PidgeotMailMVVM.MessageForUI
 {
-    public class ChangeHTMLContent
-    {
-        public string content { get; set; }
-        public ChangeHTMLContent(string text)
-        {
-            content = text;
-        }
-    }
+	public class ChangeHTMLContent
+	{
+		public string content { get; set; }
+		public ChangeHTMLContent(string text)
+		{
+			content = text;
+		}
+	}
 }

@@ -10,38 +10,38 @@ using GalaSoft.MvvmLight.Messaging;
 
 namespace PidgeotMailMVVM.ViewModel
 {
-    public class LoginViewModel
-    {
-        public ICommand LoginCmd { get; set; }
+	public class LoginViewModel
+	{
+		public ICommand LoginCmd { get; set; }
 
-        public LoginViewModel()
-        {
-            LoginCmd = new RelayCommand(() => Task.Run(ActiveAcount));
-            try
-            {
-                if (!Directory.Exists("4xR24anAtrw2ajpqW45SVB56saAfas")) Directory.CreateDirectory("token");
-                if (Directory.GetFiles("4xR24anAtrw2ajpqW45SVB56saAfas").Length > 0) Task.Run(ActiveAcount);
-            }
-            catch (Exception e)
-            {
-                Logs.Write(e.ToString());
-            }
-        }
-        public void ActiveAcount()
-        {
-            try
-            {
-                GoogleService.Init();
-                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
-                });
-            }
-            catch (Exception e)
-            {
-                Logs.Write(e.ToString());
-                return;
-            }
-        }
-    }
+		public LoginViewModel()
+		{
+			LoginCmd = new RelayCommand(() => Task.Run(ActiveAcount));
+			try
+			{
+				if (!Directory.Exists("4xR24anAtrw2ajpqW45SVB56saAfas")) Directory.CreateDirectory("token");
+				if (Directory.GetFiles("4xR24anAtrw2ajpqW45SVB56saAfas").Length > 0) Task.Run(ActiveAcount);
+			}
+			catch (Exception e)
+			{
+				Logs.Write(e.ToString());
+			}
+		}
+		public void ActiveAcount()
+		{
+			try
+			{
+				GoogleService.Init();
+				App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+				{
+					Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
+				});
+			}
+			catch (Exception e)
+			{
+				Logs.Write(e.ToString());
+				return;
+			}
+		}
+	}
 }

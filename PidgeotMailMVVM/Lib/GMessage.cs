@@ -1,24 +1,25 @@
 ﻿using MimeKit;
+
 using System;
 using System.IO;
 using System.Windows;
 
 namespace PidgeotMailMVVM.Lib
 {
-    public class GMessage
-    {
-        public MimeMessage message { get; set; }
-        public string MessageId { get; set; }
+	public class GMessage
+	{
+		public MimeMessage message { get; set; }
+		public string MessageId { get; set; }
 
 		public string HTMLContent => message.HtmlBody;
-        public string Subject => (string.IsNullOrEmpty(message.Subject)) ? "None subject" : message.Subject;
-        public string Date => message.Date.ToString();
-        public string ShortContent => message.TextBody.Substring(0, 20) + "...";
-        public GMessage(string id = "", MimeMessage m = null)
-        {
-            message = m;
-            MessageId = id;
-        }
+		public string Subject => (string.IsNullOrEmpty(message.Subject)) ? "None subject" : message.Subject;
+		public string Date => message.Date.ToString();
+		public string ShortContent => message.TextBody.Substring(0, 20) + "...";
+		public GMessage(string id = "", MimeMessage m = null)
+		{
+			message = m;
+			MessageId = id;
+		}
 
 		public static GMessage GetDataFromBase64(string input, string realID)
 		{

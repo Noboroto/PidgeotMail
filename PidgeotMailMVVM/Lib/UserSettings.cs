@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace PidgeotMailMVVM.Lib
 {
-    public class UserSettings
-    {
-        public static string ChoiceMailID;
-        public static string ChoiceExcelPath;
-        public static string L;
-        public static string R;
-        public static string Bcc;
-        public static string Cc;
-    }
+	public class UserSettings
+	{
+		public static string ChoiceMailID;
+		public static string ChoiceExcelPath;
+		public static string L;
+		public static string R;
+		public static string Bcc;
+		public static string Cc;
+	}
 }
