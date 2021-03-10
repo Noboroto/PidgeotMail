@@ -1,0 +1,261 @@
+﻿<Page
+    x:Class="PidgeotMailMVVM.View.ChooseSourceView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    Title="PidgeotMail"
+    DataContext="{Binding ChooseSource, Mode=OneWay, Source={StaticResource Locator}}">
+    <materialDesign:Card
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Width="auto"
+        Height="auto">
+        <Grid>
+            <materialDesign:Snackbar
+                Message="Đã copy link!"
+                IsActive="False"
+                x:Name="announce"
+                Panel.ZIndex="1" />
+            <ScrollViewer
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel
+                    Orientation="Vertical">
+                    <StackPanel
+                        Orientation="Horizontal">
+                        <Button
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Left"
+                            Margin="10"
+                            Background="White"
+                            BorderBrush="White"
+                            Command="{Binding BackCmd}"
+                            Style="{StaticResource MaterialDesignIconForegroundButton}">
+                            <materialDesign:PackIcon
+                                Kind="ArrowLeft"
+                                Height="24"
+                                Width="24" />
+                        </Button>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="auto" />
+                            <ColumnDefinition
+                                Width="*" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="auto" />
+                            <ColumnDefinition
+                                Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Margin="10 5 10 5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Grid.Column="0"
+                            Content="Số email sẽ gửi" />
+                        <TextBox
+                            Margin="10 5 10 5"
+                            Grid.Column="1"
+                            Text="{Binding Amount}"
+                            InputScope="Number" />
+                    </Grid>
+                    <Grid
+                        Margin="10 5 10 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="auto" />
+                            <ColumnDefinition
+                                Width="*" />
+                            <ColumnDefinition
+                                Width="auto" />
+                            <ColumnDefinition
+                                Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Margin="10 5 10 5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Grid.Column="0"
+                            Content="Chuỗi mở" />
+                        <TextBox
+                            ToolTip="Tối đa 30 ký tự"
+                            Margin="10 5 10 5"
+                            Name="Left"
+                            Grid.Column="1"
+                            MaxLength="30"
+                            Text="{Binding Left}" />
+                        <Label
+                            Margin="10 5 10 5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Grid.Column="2"
+                            Content="Chuỗi đóng" />
+                        <TextBox
+                            ToolTip="Tối đa 30 ký tự"
+                            Margin="10 5 10 5"
+                            Name="Right"
+                            Grid.Column="3"
+                            MaxLength="30"
+                            Text="{Binding Right}" />
+                    </Grid>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="10 5 10 5">
+                        <TextBlock.Text>
+                            <MultiBinding
+                                StringFormat="Các cụm từ {0}Name{1} trong email sẽ được thay bằng Name">
+                                <Binding
+                                    ElementName="Left"
+                                    Path="Text" />
+                                <Binding
+                                    ElementName="Right"
+                                    Path="Text" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="auto" />
+                            <ColumnDefinition
+                                Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Margin="10 5 10 5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Grid.Column="0"
+                            Content="Cc" />
+                        <TextBox
+                            Width="{Binding ElementName=Bcc,Path=ActualWidth}"
+                            Margin="10 5 10 5"
+                            Grid.Column="1"
+                            TextWrapping="Wrap"
+                            MaxWidth="500"
+                            Text="{Binding Cc}"
+                            />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="auto" />
+                            <ColumnDefinition
+                                Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Margin="10 5 10 5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Grid.Column="0"
+                            Content="Bcc" />
+                        <TextBox
+                            TextWrapping="Wrap"
+                            Margin="10 5 10 5"
+                            MaxWidth="500"
+                            Text="{Binding Bcc}"
+                            Grid.Column="1"/>
+                    </Grid>
+                    <RadioButton
+                        VerticalAlignment="Top"
+                        Name="ExcelSelect"
+                        GroupName="SourceSelect"
+                        IsChecked="{Binding SelectEx}"
+                        Margin="10 5 10 5">
+                        <RadioButton.Content>
+                            <Expander
+                                Width="400"
+                                Header="Excel"
+                                IsEnabled="{Binding Mode=TwoWay, UpdateSourceTrigger=LostFocus, Path=IsChecked, ElementName=ExcelSelect}"
+                                IsExpanded="{Binding Mode=TwoWay, UpdateSourceTrigger=LostFocus, Path=IsChecked, ElementName=ExcelSelect}">
+                                <StackPanel>
+                                    <Button
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                        Margin="10 5 10 5"
+                                        Width="150"
+                                        FontSize="12"
+                                        Command="{Binding ExCmd}"
+                                        VerticalAlignment="Center"
+                                        Content="Tải sheet tham khảo"/>
+                                    <StackPanel
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Margin="10 5 10 5"
+                                            Background="White"
+                                            Width="85"
+                                            FontSize="12"
+                                            VerticalAlignment="Center"
+                                            Content="Chọn tệp" />
+                                        <Label
+                                            FontSize="14"
+                                            VerticalAlignment="Center"
+                                            Content="Tên tệp" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
+                        </RadioButton.Content>
+                    </RadioButton>
+                    <RadioButton
+                        VerticalAlignment="Top"
+                        Name="GSSelect"
+                        GroupName="SourceSelect"
+                        IsChecked="{Binding SelectGs}"
+                        Margin="10 5 10 5">
+                        <RadioButton.Content>
+                            <Expander
+                                IsEnabled="{Binding Mode=TwoWay, UpdateSourceTrigger=LostFocus, Path=IsChecked, ElementName=GSSelect}"
+                                Header="Google Sheet"
+                                Width="400"
+                                IsExpanded="{Binding Mode=TwoWay, UpdateSourceTrigger=LostFocus, Path=IsChecked, ElementName=GSSelect}">
+                                <StackPanel>
+                                    <Button 
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                        Margin="10 5 10 5"
+                                        Width="160"
+                                        FontSize="12"                  
+                                        VerticalAlignment="Center"
+                                        Command="{Binding GSCmd}"
+                                        Content="Mở sheet tham khảo"/>
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        >
+                                        <Label 
+                                            Content="Link"
+                                            />
+                                        <TextBox
+                                            Margin="5"
+                                            Grid.Column="1"
+                                            Width="350"
+                                            InputScope="Url" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
+                        </RadioButton.Content>
+                    </RadioButton>
+                    <Button
+                        Panel.ZIndex="0"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                        Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                        Grid.Column="0"
+                        Grid.Row="4"
+                        Grid.ColumnSpan="2"
+                        Margin="10"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Command="{Binding NextCmd}"
+                        Content="Tiếp theo" />
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </materialDesign:Card>
+</Page>

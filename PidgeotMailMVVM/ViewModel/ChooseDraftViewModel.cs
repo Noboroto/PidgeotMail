@@ -18,7 +18,7 @@ namespace PidgeotMailMVVM.ViewModel
     public class ChooseDraftViewModel : ViewModelBase
     {
         private readonly string header = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>";
-        private bool RefreshEnable;
+        private bool _CanRefresh;
         private GMessage item;
         private int index;
 
@@ -27,17 +27,18 @@ namespace PidgeotMailMVVM.ViewModel
         
 
         public ICommand LogoutCmd { get; set; }
-        public ICommand RefreshCmd { get; set; }
+        public RelayCommand RefreshCmd { get; set; }
         public ICommand NextCmd { get; set; }
+        
         public bool CanRefresh
         {
             get
             {
-                return RefreshEnable;
+                return _CanRefresh;
             }
             set
             {
-                Set(nameof(RefreshEnable), ref RefreshEnable, value);
+                Set(nameof(_CanRefresh), ref _CanRefresh, value);
             }
         }
         public GMessage SelectedItem
@@ -70,7 +71,7 @@ namespace PidgeotMailMVVM.ViewModel
             Logs.Write("Đã login bằng " + GMService.UserEmail);
             ListSource = new ObservableCollection<GMessage>();
             Task.Run(new Action(Process));
-            RefreshEnable = true;
+            CanRefresh = true;
             NextCmd = new RelayCommand(() =>
                 {
                     if (SelectedIndex < 0) return;
@@ -94,14 +95,14 @@ namespace PidgeotMailMVVM.ViewModel
 
             RefreshCmd = new RelayCommand(() =>
                 {
-                    if (!RefreshEnable) return;
-                    RefreshEnable = false;
+                    CanRefresh = false;
+                    RefreshCmd.RaiseCanExecuteChanged();
                     ListSource.Clear();
                     Messenger.Default.Send(new ChangeHTMLContent(header));
                     SelectedIndex = -1;
                     Logs.Write("Đã refresh");
                     Task.Run(new Action(Process));
-                }
+                }, () => CanRefresh
             );
         }
 
@@ -118,36 +119,9 @@ namespace PidgeotMailMVVM.ViewModel
             App.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 Logs.Write("Đã load mail");
-                RefreshEnable = true;
+                CanRefresh = true;
+                RefreshCmd.RaiseCanExecuteChanged();
             });
-        }
-
-        private void Choose_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (index < 0) return;
-            UserSettings.ChoiceMailID = ListSource[SelectedIndex].MessageId;
-            Logs.Write("Đã chọn draft " + UserSettings.ChoiceMailID);
-            //Navigator.Navigate(new Uri("ChooseSheet.xaml", UriKind.RelativeOrAbsolute));
-        }
-
-        private void Logout_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            var tmp = Directory.GetFiles("token");
-            foreach (var value in tmp)
-            {
-                File.Delete(value);
-            }
-            Logs.Write("Logout");
-            //Navigator.Navigate("Login.xaml");
-        }
-
-        private void Refresh_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            RefreshEnable = false;
-            ListSource.Clear();
-            SelectedIndex = -1;
-            Logs.Write("Đã refresh");
-            Task.Run(new Action(Process));
         }
     }
 }

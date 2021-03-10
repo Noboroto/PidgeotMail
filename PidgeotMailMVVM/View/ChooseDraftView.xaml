@@ -113,25 +113,23 @@
                             Property="VerticalAlignment"
                             Value="Center" />
                     </Style>
-                </WrapPanel.Resources>                      
-                <Label
-                    Margin="5 10 10 0"
-                    Content="{Binding MyEmailContent}"
-                    Width="auto"
-                    VerticalAlignment="Center" />          
-                <Button
-                    Style="{StaticResource LightButton}"
-                    Command="{Binding LogoutCmd}"
-                    Content="Logout"
-                    Width="auto">
-                </Button>
+                </WrapPanel.Resources>
                 <Button
                     Style="{StaticResource AccentButton}"
                     x:Name="Refresh"
                     Width="auto"
                     Command="{Binding RefreshCmd}"
-                    IsEnabled="{Binding CanRefresh, Mode=OneWay}"
-                    Content="Refresh">
+                    Content="Refresh" />
+                <Label
+                    Margin="5 10 10 0"
+                    Content="{Binding MyEmailContent}"
+                    Width="auto"
+                    VerticalAlignment="Center" />
+                <Button
+                    Style="{StaticResource LightButton}"
+                    Command="{Binding LogoutCmd}"
+                    Content="Logout"
+                    Width="auto">
                 </Button>
                 <Button
                     Style="{StaticResource AccentButton}"

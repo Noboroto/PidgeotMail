@@ -44,6 +44,7 @@ namespace PidgeotMailMVVM.ViewModel
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
             SimpleIoc.Default.Register<ChooseDraftViewModel>();
+            SimpleIoc.Default.Register<ChooseSourceViewModel>();
         }
 
         public MainViewModel Main
@@ -66,6 +67,14 @@ namespace PidgeotMailMVVM.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<ChooseDraftViewModel>();
+            }
+        }
+
+        public ChooseSourceViewModel ChooseSource
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<ChooseSourceViewModel>();
             }
         }
 
