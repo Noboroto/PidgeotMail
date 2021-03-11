@@ -89,7 +89,10 @@ namespace PidgeotMailMVVM.ViewModel
 				GMessage ChoiceMail = new GMessage(UserSettings.ChoiceMailID, GMService.GetDraftByID(UserSettings.ChoiceMailID));
 				foreach (var value in UserSettings.Attachments)
 				{
-
+					if (value.IsFile && !value.IsResultPDF)
+					{
+						ChoiceMail.AddAttachment(value);
+					}
 				}
 				Logs.Add("Origin: ");
 				Logs.Add("ID: " + UserSettings.ChoiceMailID);

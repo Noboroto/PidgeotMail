@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Collections.Generic;
 
 using GalaSoft.MvvmLight;
 
@@ -37,6 +38,15 @@ namespace PidgeotMailMVVM.Lib
 			{
 				Set(nameof(_IsSelected), ref _IsSelected, value);
 			}
+		}
+		public FileStream Stream (string matcher = "")
+		{
+			if (IsFile) return Finfo.OpenRead();
+			else if (!string.IsNullOrEmpty(matcher))
+			{
+				return Dinfo.GetFiles(matcher)[0].OpenRead();
+			}
+			return null;
 		}
 
 		public AttachmentInfo(string path, bool isfile = true, bool ispdf = false,string group = "")

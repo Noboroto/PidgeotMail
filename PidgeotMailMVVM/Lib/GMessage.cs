@@ -1,4 +1,5 @@
 ﻿using MimeKit;
+using MimeKit.Utils;
 
 using System;
 using System.IO;
@@ -16,21 +17,28 @@ namespace PidgeotMailMVVM.Lib
 		{ 
 			get
 			{
+				if (string.IsNullOrEmpty(message.HtmlBody)) return "";
 				var visitor = new HtmlPreviewVisitor();
 				message.Accept(visitor);
 				return visitor.HtmlBody;
 			}
 		}
+		
 		public string Subject => (string.IsNullOrEmpty(message.Subject)) ? "None subject" : message.Subject;
 		public string Date => message.Date.ToString();
-		public string ShortContent => message.TextBody.Substring(0, 20) + "...";
+		public string ShortContent => message.TextBody.Substring(0, Min(20, message.TextBody.Length)) + "...";
 		public GMessage(string id = "", MimeMessage m = null)
 		{
 			message = m;
 			MessageId = id;
 		}
 
-		static string Base64UrlEncode(MimeMessage message)
+		private static int Min (int a, int b)
+		{
+			return (a < b) ? a : b;
+		}
+
+		private static string Base64UrlEncode(MimeMessage message)
 		{
 			using (var stream = new MemoryStream())
 			{
@@ -39,7 +47,7 @@ namespace PidgeotMailMVVM.Lib
 					.Replace('+', '-').Replace('/', '_');
 			}
 		}
-		static void GetDataFromBase64(out MimeMessage output, string input)
+		private static void GetDataFromBase64(out MimeMessage output, string input)
 		{
 			output = new MimeMessage();
 			using (var stream = new MemoryStream(Convert.FromBase64String(input)))
@@ -68,6 +76,14 @@ namespace PidgeotMailMVVM.Lib
 				}
 			}
 			return t;
+		}
+
+		public void AddAttachment (AttachmentInfo info)
+		{
+			var builder = new BodyBuilder();
+			builder.Attachments.Add(message.Body);
+			builder.Attachments.Add(info.Name, info.Stream(info.SenderGroup));
+			message.Body = builder.ToMessageBody();
 		}
 		public static GMessage GetDataFromBase64(string input, string realID)
 		{

@@ -79,7 +79,7 @@ namespace PidgeotMailMVVM.ViewModel
 					if (SelectedIndex < 0) return;
 					UserSettings.ChoiceMailID = ListSource[SelectedIndex].MessageId;
 					Logs.Write("Đã chọn draft " + UserSettings.ChoiceMailID);
-					Messenger.Default.Send(new NavigateToMessage(null));
+					Messenger.Default.Send(new NavigateToMessage(new ChooseSourceView()));
 				}
 			);
 
@@ -117,6 +117,7 @@ namespace PidgeotMailMVVM.ViewModel
 					{
 						ListSource.Add(value);
 					});
+					Task.Delay(500);
 				}
 			App.Current.Dispatcher.BeginInvoke((Action)delegate ()
 			{
