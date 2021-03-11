@@ -5,6 +5,7 @@ using Google.Apis.Util.Store;
 
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace PidgeotMailMVVM.Lib
 {
@@ -26,18 +27,22 @@ namespace PidgeotMailMVVM.Lib
 			return stream;
 		}
 
-		static public void Init()
+		public static async Task Init()
 		{
-			using (var stream = GenerateStreamFromString(TextCredential))
+			await Task.Run(() => 
 			{
-				string path = "4xR24anAtrw2ajpqW45SVB56saAfas";
-				credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-					GoogleClientSecrets.Load(stream).Secrets,
-					Scopes,
-					"user",
-					CancellationToken.None, new FileDataStore(path, true)).Result;
-				File.Delete("credentials.json");
+				using (var stream = GenerateStreamFromString(TextCredential))
+				{
+					string path = "4xR24anAtrw2ajpqW45SVB56saAfas";
+					credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+						GoogleClientSecrets.Load(stream).Secrets,
+						Scopes,
+						"user",
+						CancellationToken.None, new FileDataStore(path, true)).Result;
+					File.Delete("credentials.json");
+				}
 			}
+			);
 		}
 	}
 }

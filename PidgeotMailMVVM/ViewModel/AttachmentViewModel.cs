@@ -16,7 +16,6 @@ namespace PidgeotMailMVVM.ViewModel
 {
 	public class AttachmentViewModel : ViewModelBase
 	{
-		private readonly string SendAll = "Gửi cho tất cả";
 		private readonly string PDFMess = "Email";
 
 		private static void Attachments_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -26,7 +25,6 @@ namespace PidgeotMailMVVM.ViewModel
 
 		public IList<string> Selection { get; set; }
 		public ICommand PDFCmd { get; set; }
-		public ICommand FileCmd { get; set; }
 		public ICommand FolderCmd { get; set; }
 		public ICommand NextCmd { get; set; }
 		public ICommand DeleteCmd { get; set; }
@@ -52,24 +50,9 @@ namespace PidgeotMailMVVM.ViewModel
 				{
 					FolderBrowserDialog folderDlg = new FolderBrowserDialog();
 					folderDlg.ShowNewFolderButton = true;
-					// Show the FolderBrowserDialog.  
 					if (folderDlg.ShowDialog() == DialogResult.OK)
 					{
-						Attachments.Add(new AttachmentInfo(folderDlg.SelectedPath, false, false));
-					}
-				}
-			);
-
-			FileCmd = new RelayCommand(() =>
-				{
-					OpenFileDialog openFileDialog = new OpenFileDialog();
-					openFileDialog.Multiselect = true;
-					if (openFileDialog.ShowDialog() == DialogResult.OK)
-					{
-						foreach (var values in openFileDialog.FileNames)
-						{
-							Attachments.Add(new AttachmentInfo(values, true, false, SendAll));
-						}
+						Attachments.Add(new AttachmentInfo(folderDlg.SelectedPath, false));
 					}
 				}
 			);
@@ -83,7 +66,7 @@ namespace PidgeotMailMVVM.ViewModel
 					{
 						foreach (var values in openFileDialog.FileNames)
 						{
-							Attachments.Add(new AttachmentInfo(values, true, true, PDFMess));
+							Attachments.Add(new AttachmentInfo(values, true, PDFMess));
 						}
 					}
 				}
@@ -91,12 +74,19 @@ namespace PidgeotMailMVVM.ViewModel
 
 			NextCmd = new RelayCommand(() =>
 				{
+					for (int i = Attachments.Count - 1; i >= 0; --i)
+					{
+						if (Attachments[i].IsResultPDF)
+						{
+							PDFProcess.SplitPDF(Attachments[i], UserSettings.Values, UserSettings.HeaderLocation[Attachments[i].SenderGroup]);
+							Attachments.Add(new AttachmentInfo(PDFProcess.GetPDFPath(Attachments[i]), false, PDFMess, ".pdf"));
+							Attachments.RemoveAt(i);
+						}
+					}					
 					UserSettings.Attachments = Attachments;
 					Messenger.Default.Send(new NavigateToMessage( new ResultView()));
 				}
 			);
-
-			Selection.Add(SendAll);
 		}
 	}
 }

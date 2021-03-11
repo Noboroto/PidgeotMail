@@ -80,8 +80,7 @@
 				<Button
 					Height="auto"
 					Width="auto"
-					Command="{Binding FolderCmd}"
-					>
+					Command="{Binding FolderCmd}">
 					<StackPanel>
 						<materialDesign:PackIcon
 							HorizontalAlignment="Center"
@@ -91,23 +90,7 @@
 						<TextBlock
 							FontSize="12"
 							HorizontalAlignment="Center"
-							Text="Gửi riêng" />
-					</StackPanel>
-				</Button>
-				<Button
-					Height="auto"
-					Command="{Binding FileCmd}"
-					Width="auto">
-					<StackPanel>
-						<materialDesign:PackIcon
-							HorizontalAlignment="Center"
-							Width="20"
-							Height="20"
-							Kind="File" />
-					<TextBlock
-						FontSize="12"
-						HorizontalAlignment="Center"
-						Text="Gửi tất cả" />
+							Text="Gửi thư mục" />
 					</StackPanel>
 				</Button>
 				<Button
@@ -176,7 +159,7 @@
 							<DataTemplate>
 								<ComboBox
 									IsEnabled="{Binding Enable}"
-									SelectedItem="{Binding SenderGroup}"
+									SelectedItem="{Binding SenderGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									ItemsSource="{Binding Attachment.Selection, Source={StaticResource Locator}}" />
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>

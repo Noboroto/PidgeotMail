@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace PidgeotMailMVVM.Lib
 {
@@ -24,39 +25,47 @@ namespace PidgeotMailMVVM.Lib
 		}
 		public static string CheckAvailable(string path)
 		{
+			if (path == "Chưa chọn")
+				return "Chưa chọn danh sách Excel!";
 			if (!File.Exists(path))
 				return "File không tồn tại!";
 			_path = path;
 			return "OK";
 		}
-		public static string InitValue(int Col, int Row)
+		public static Task<string> InitValue(int Col, int Row)
 		{
 			Init();
 			Row++;
-			using (ExcelPackage package = new ExcelPackage(new FileInfo(_path)))
+			return Task.Run(() =>
 			{
-				try
+				using (ExcelPackage package = new ExcelPackage(new FileInfo(_path)))
 				{
-					int x = 0;
-					var worksheet = package.Workbook.Worksheets[0];
-					for (int i = 0; i < Row; ++i)
+					try
 					{
-						_Values.Add(new List<Object>());
-						for (int j = 0; j < Col; ++j)
+						int x = 0;
+						var worksheet = package.Workbook.Worksheets[0];
+						for (int i = 0; i < Row; ++i)
 						{
-							_Values[i].Add(worksheet.Cells[i + 1, j + 1].Value.ToString());
-							if (i != 0) continue;
-							_Header.Add(_Values[i][j].ToString(), x);
-							x++;
+							_Values.Add(new List<Object>());
+							for (int j = 0; j < Col; ++j)
+							{
+								_Values[i].Add(worksheet.Cells[i + 1, j + 1].Value.ToString());
+								if (i != 0) continue;
+								_Header.Add(_Values[i][j].ToString(), x);
+								if (_Values[i][j].ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
+								x++;
+							}
 						}
 					}
+					catch (Exception e)
+					{
+						return e.Message;
+					}
 				}
-				catch (Exception e)
-				{
-					return e.Message;
-				}
+				if (_Values == null || _Values.Count == 0) return "Danh sách trống!";
+				if (UserSettings.KeyColumn == -1) return "Không tìm thấy cột Email";
 				return "OK";
-			}
+			});
 		}
 	}
 }

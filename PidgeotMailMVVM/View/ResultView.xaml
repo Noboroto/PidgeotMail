@@ -7,6 +7,8 @@
 	mc:Ignorable="d"
 	d:DesignHeight="450"
 	d:DesignWidth="800"
+	Loaded="Page_Loaded"
+	Unloaded="Page_Unloaded"
 	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 	Title="ResultPage"
 	DataContext="{Binding Result, Mode=OneWay, Source={StaticResource Locator}}">
@@ -50,10 +52,12 @@
 							Command="{Binding CloseCmd}"
 							Content="Đóng"/>
 					</Grid>
-					<Label
+					<TextBlock
 						Margin="5"
-						Name="Warning"
-						Content="{Binding Warning}"
+						x:Name="Warning"
+						Text="Đang thực hiện..."
+						TextWrapping="Wrap"
+						MaxWidth="300"
 						HorizontalAlignment="Center"
 						VerticalAlignment="Center" />
 					<DataGrid

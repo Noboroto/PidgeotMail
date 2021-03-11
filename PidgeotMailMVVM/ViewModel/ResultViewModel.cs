@@ -21,31 +21,6 @@ namespace PidgeotMailMVVM.ViewModel
 	/// </summary>
 	public class ResultViewModel : ViewModelBase
 	{
-		private bool _Home;
-		private string _Warning;
-
-		public bool Home
-		{
-			get
-			{
-				return _Home;
-			}
-			set
-			{
-				Set(nameof(_Home), ref _Home, value);
-			}
-		}
-		public string Warning
-		{
-			get
-			{
-				return _Warning;
-			}
-			set
-			{
-				Set(nameof(_Warning), ref _Warning, value);
-			}
-		}
 		public ObservableCollection<SenderInfo> source { get; set; }
 
 		public ICommand HomeCmd { get; set; }
@@ -61,7 +36,7 @@ namespace PidgeotMailMVVM.ViewModel
 			source = new ObservableCollection<SenderInfo>();
 			Logs.Write("Bắt đầu gửi mail");
 			Task.Run(Process);
-			Warning = "Đang thực hiện";
+			Messenger.Default.Send<ResultMessage>(new ResultMessage("Đang thực hiện..."));
 			CloseCmd = new RelayCommand(() =>
 				{
 					App.Current.Shutdown();	
@@ -71,8 +46,19 @@ namespace PidgeotMailMVVM.ViewModel
 			HomeCmd = new RelayCommand(() =>
 				{
 					Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
-				}, () => Home
+				}
 			);
+		}
+
+		private static void AddLogs (GMessage ChoiceMail)
+		{
+			Logs.Add("Origin: ");
+			Logs.Add("ID: " + ChoiceMail.MessageId);
+			Logs.Add("Subject: " + ChoiceMail.Subject);
+			Logs.Add("Cc: " + UserSettings.Cc);
+			Logs.Add("Bcc: " + UserSettings.Bcc);
+			Logs.Add("Text: " + ChoiceMail.message.TextBody);
+			Logs.Add("Html: " + ChoiceMail.message.HtmlBody);
 		}
 
 		private void Process()
@@ -82,12 +68,6 @@ namespace PidgeotMailMVVM.ViewModel
 			{
 				sheet = UserSettings.Values;
 				var header = UserSettings.HeaderLocation;
-				if (sheet == null || sheet.Count <= 0)
-				{
-					Logs.Write("Sheet trống");
-					MessageBox.Show("Sheet trống!");
-					return;
-				}
 				Logs.Write("Template gửi thư: ");
 				Logs.Add("Sheet: ");
 				foreach (var value in header)
@@ -96,21 +76,8 @@ namespace PidgeotMailMVVM.ViewModel
 				}
 				string htmlbody, plainbody, subject;
 				string replacement, s;
-				GMessage ChoiceMail = new GMessage(UserSettings.ChoiceMailID, GMService.GetDraftByID(UserSettings.ChoiceMailID));
-				foreach (var value in UserSettings.Attachments)
-				{
-					if (value.IsFile && !value.IsResultPDF)
-					{
-						ChoiceMail.AddAttachment(value);
-					}
-				}
-				Logs.Add("Origin: ");
-				Logs.Add("ID: " + UserSettings.ChoiceMailID);
-				Logs.Add("Subject: " + ChoiceMail.Subject);
-				Logs.Add("Cc: " + UserSettings.Cc);
-				Logs.Add("Bcc: " + UserSettings.Bcc);
-				Logs.Add("Text: " + ChoiceMail.message.TextBody);
-				Logs.Add("Html: " + ChoiceMail.message.HtmlBody);
+				GMessage ChoiceMail = new GMessage(UserSettings.ChoiceMailID, GMService.GetDraftByID(UserSettings.ChoiceMailID).Result);
+				AddLogs(ChoiceMail);
 				for (int i = 1; i < sheet.Count; ++i)
 				{
 					htmlbody = ChoiceMail.message.HtmlBody;
@@ -131,36 +98,27 @@ namespace PidgeotMailMVVM.ViewModel
 						{
 							source.Add(new SenderInfo(i, sheet[i][header["Email"]].ToString()));
 						});
-						GMService.Send(ChoiceMail.GenerateClone(sheet[i][header["Email"]].ToString(), UserSettings.Bcc, UserSettings.Cc, subject,plainbody, htmlbody));
-						App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-						{
-							Logs.Write(i + ": " + sheet[i][header["Email"]].ToString());
-						});
+						GMService.Send(ChoiceMail.GenerateClone(i, subject, plainbody, htmlbody));
+						Logs.Write(i + ": " + sheet[i][header["Email"]].ToString());
 					}
 					catch (Exception e)
 					{
-						App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-						{
-							Warning = "Có lỗi xảy ra tại mail thứ " + i.ToString() + "\n" +
-							"Nội dung: " + e.Message;
-							Logs.Write(e.ToString());
-							Home = true;
-						});
+						Messenger.Default.Send<ResultMessage>(new ResultMessage("Có lỗi xảy ra tại mail thứ " + i.ToString() + "\n" +
+						"Nội dung: " + e.Message, true));
+						Logs.Write(e.ToString());
 						return;
 					}
-					finally
-					{
-					}
+
 				}
-				App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-				{
-					Warning = "Hoàn thành gửi " + (sheet.Count - 1) + " email hợp lệ";
-					_Home = true;
-				});
+				Messenger.Default.Send<ResultMessage>(new ResultMessage("Hoàn thành gửi " + (sheet.Count - 1) + " email hợp lệ",true));
 			}
 			catch (Exception ex)
 			{
 				Logs.Write(ex.ToString());
+			}					
+			finally
+			{
+				Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "/temp", true);
 			}
 		}
 	}

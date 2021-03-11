@@ -31,30 +31,36 @@ namespace PidgeotMailMVVM.Lib
 				ApplicationName = PidgeotMailMVVM.ViewModel.MainViewModel.AppName,
 			});
 		}
-		public static string InitValue(int Row)
+		public static Task<string> InitValue(int Row)
 		{
-			try
+			return Task.Run(() =>
 			{
-				_Values = sheetsService.Spreadsheets.Values.Get(ChoiceSheetID, "1:" + Row).Execute().Values;
-				int i = 0;
-				foreach (var value in _Values[0])
+				try
 				{
-					_Header.Add(value.ToString(), i);
-					i++;
+					_Values = sheetsService.Spreadsheets.Values.Get(ChoiceSheetID, "1:" + Row).Execute().Values;
+					int i = 0;
+					foreach (var value in _Values[0])
+					{
+						_Header.Add(value.ToString(), i);
+						if (value.ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
+						i++;
+					}
 				}
-			}
-			catch (Exception e)
-			{
-				return e.Message;
-			}
-			return "OK";
+				catch (Exception e)
+				{
+					return e.Message;
+				}
+				if (_Values == null || _Values.Count == 0) return "Danh sách trống!";
+				if (UserSettings.KeyColumn == -1) return "Không tìm thấy Email";
+				return "OK";
+			});
 		}
 		public static string CheckAvailable(string Link)
 		{
 			Init();
 			if (string.IsNullOrEmpty(Link))
 			{
-				return "Không được để trống!";
+				return "Chưa chọn danh sách Google Sheet!";
 			}
 			if (!Link.Contains(@"https://docs.google.com/spreadsheets/"))
 			{

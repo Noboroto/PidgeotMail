@@ -72,15 +72,15 @@ namespace PidgeotMailMVVM.ViewModel
 		{
 			Logs.Write("Đã login bằng " + GMService.UserEmail);
 			ListSource = new ObservableCollection<GMessage>();
-			Task.Run(new Action(Process));
+			Process();
 			NextCmd = new RelayCommand(() =>
 				{
 					if (SelectedIndex < 0) return;
 					UserSettings.ChoiceMailID = ListSource[SelectedIndex].MessageId;
 					Logs.Write("Đã chọn draft " + UserSettings.ChoiceMailID);
 					Messenger.Default.Send(new NavigateToMessage(new ChooseSourceView()));
-				}
-			);
+				}, () => (SelectedIndex >= 0) && CanRefresh
+			); 
 
 			LogoutCmd = new RelayCommand(() =>
 				{
@@ -102,22 +102,19 @@ namespace PidgeotMailMVVM.ViewModel
 					Messenger.Default.Send(new ChangeHTMLContent(header));
 					SelectedIndex = -1;
 					Logs.Write("Đã refresh");
-					Task.Run(new Action(Process));
+					Process();
 				}, () => CanRefresh
 			);
 		}
 
-		private void Process()
+		private async void Process()
 		{
-			var tmp = GMService.DraftsList;
+			var tmp = await GMService.DraftsList;
 			if (tmp != null) foreach (var value in tmp)
 				{
 					try
 					{
-						App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-						{
-							ListSource.Add(new GMessage(value.Id, GMService.GetDraftByID(value.Id)));
-						});
+						ListSource.Add(new GMessage(value.Id, await GMService.GetDraftByID(value.Id)));
 					}
 					catch (Exception e)
 					{
@@ -127,11 +124,8 @@ namespace PidgeotMailMVVM.ViewModel
 					}
 
 				}
-			App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-			{
-				Logs.Write("Đã load mail");
-				CanRefresh = true;
-			});
+			Logs.Write("Đã load mail");
+			CanRefresh = true;
 		}
 	}
 }

@@ -13,5 +13,6 @@ namespace PidgeotMailMVVM.Lib
 		public static IList<IList<Object>> Values;
 		public static Dictionary<string, int> HeaderLocation;
 		public static IList<AttachmentInfo> Attachments;
+		public static int KeyColumn = -1;
 	}
 }

@@ -144,6 +144,7 @@
     <Compile Include="MessageForUI\ChangeHTMLContent.cs" />
     <Compile Include="MessageForUI\ChangePathMessage.cs" />
     <Compile Include="MessageForUI\NavigateToMessage.cs" />
+    <Compile Include="MessageForUI\ResultMessage.cs" />
     <Compile Include="ViewModel\AttachmentViewModel.cs" />
     <Compile Include="ViewModel\ChooseDraftViewModel.cs" />
     <Compile Include="ViewModel\ChooseSourceViewModel.cs" />

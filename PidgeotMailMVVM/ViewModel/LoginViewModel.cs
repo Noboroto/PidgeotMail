@@ -16,26 +16,24 @@ namespace PidgeotMailMVVM.ViewModel
 
 		public LoginViewModel()
 		{
-			LoginCmd = new RelayCommand(() => Task.Run(ActiveAcount));
+			LoginCmd = new RelayCommand(() => ActiveAcount());
 			try
 			{
 				if (!Directory.Exists("4xR24anAtrw2ajpqW45SVB56saAfas")) Directory.CreateDirectory("token");
-				if (Directory.GetFiles("4xR24anAtrw2ajpqW45SVB56saAfas").Length > 0) Task.Run(ActiveAcount);
+				if (Directory.GetFiles("4xR24anAtrw2ajpqW45SVB56saAfas").Length > 0) ActiveAcount();
 			}
 			catch (Exception e)
 			{
 				Logs.Write(e.ToString());
 			}
 		}
-		public void ActiveAcount()
+		public async void ActiveAcount()
 		{
 			try
 			{
-				GoogleService.Init();
-				App.Current.Dispatcher.BeginInvoke((Action)delegate ()
-				{
-					Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
-				});
+				Task InitTask = GoogleService.Init();
+				await InitTask;
+				Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
 			}
 			catch (Exception e)
 			{

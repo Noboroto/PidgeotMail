@@ -34,7 +34,9 @@
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
 		<materialDesign:Card>
-			<Grid>
+			<Grid
+				Width="200"
+				>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="auto" />
 					<RowDefinition />
@@ -51,7 +53,7 @@
 				<ListBox
 					Grid.Row="1"
 					ScrollViewer.VerticalScrollBarVisibility="Auto"
-					ScrollViewer.HorizontalScrollBarVisibility="Auto"
+					ScrollViewer.HorizontalScrollBarVisibility="Hidden"
 					ItemsSource="{Binding ListSource}"
 					SelectedItem="{Binding SelectedItem}"
 					SelectedIndex="{Binding SelectedIndex}">

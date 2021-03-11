@@ -1,21 +1,21 @@
-﻿using System.IO;
-using System.Collections.Generic;
+﻿using System;
+using System.IO;
 
 using GalaSoft.MvvmLight;
 
 namespace PidgeotMailMVVM.Lib
 {
-	public class AttachmentInfo : ViewModelBase
+	public class AttachmentInfo : ObservableObject
 	{
 		private DirectoryInfo Dinfo;
-		private FileInfo Finfo;
 		private bool _IsSelected;
 		private string _SenderGroup;
 
-		public string AttachmentPath => (IsFile) ? Finfo.FullName : Dinfo.FullName;
-		public string Name => (IsFile) ? Finfo.Name : Dinfo.Name;
+		public string OriginExt { get; set; }
+		public string AttachmentPath => Dinfo.FullName;
+		public string Name => Dinfo.Name;
 		public bool IsResultPDF { get; set; }
-		public bool IsFile { get; set; }
+		public bool Enable => !IsResultPDF;
 		public string SenderGroup
 		{
 			get
@@ -27,7 +27,6 @@ namespace PidgeotMailMVVM.Lib
 				Set(nameof(_SenderGroup), ref _SenderGroup, value);
 			}
 		}
-		public bool Enable => !IsFile;
 		public bool IsSelected
 		{
 			get
@@ -41,21 +40,27 @@ namespace PidgeotMailMVVM.Lib
 		}
 		public FileStream Stream (string matcher = "")
 		{
-			if (IsFile) return Finfo.OpenRead();
-			else if (!string.IsNullOrEmpty(matcher))
+			try
 			{
-				return Dinfo.GetFiles(matcher)[0].OpenRead();
+				if (!string.IsNullOrEmpty(matcher))
+				{
+					return Dinfo.GetFiles("*" + matcher + "*")[0].OpenRead();
+				}
+				return null;
 			}
-			return null;
+			catch (Exception e)
+			{
+				Logs.Write(e.Message);
+				return null;
+			}
 		}
 
-		public AttachmentInfo(string path, bool isfile = true, bool ispdf = false,string group = "")
+		public AttachmentInfo(string path, bool ispdf = false, string group = "", string ext = "")
 		{
-			if (isfile) Finfo = new FileInfo(path);
-			else Dinfo = new DirectoryInfo(path);
-			IsFile = isfile;
+			Dinfo = new DirectoryInfo(path);
 			IsResultPDF = ispdf;
 			SenderGroup = group;
+			OriginExt = ext;
 		}
 	}
 }

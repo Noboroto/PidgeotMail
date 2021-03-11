@@ -162,7 +162,7 @@ namespace PidgeotMailMVVM.ViewModel
 				}
 			);
 
-			NextCmd = new RelayCommand(() =>
+			NextCmd = new RelayCommand(async () =>
 				{
 					if (SelectGs)
 					{
@@ -173,7 +173,7 @@ namespace PidgeotMailMVVM.ViewModel
 							Logs.Write(result);
 							return;
 						}
-						result = GSheetService.InitValue(Row);
+						result = await GSheetService.InitValue(Row);
 						if (result != "OK")
 						{
 							MessageBox.Show(result);
@@ -193,7 +193,7 @@ namespace PidgeotMailMVVM.ViewModel
 							Logs.Write(result);
 							return;
 						}
-						result = ExService.InitValue(Column, Row);
+						result = await ExService.InitValue(Column, Row);
 						if (result != "OK")
 						{
 							MessageBox.Show(result);
@@ -205,6 +205,12 @@ namespace PidgeotMailMVVM.ViewModel
 						Logs.Write("Đã chọn ExcelWorkbook " + ExService.Path);
 					}
 					Messenger.Default.Send(new NavigateToMessage(new AttachmentView()));
+				}
+				, () =>
+				{
+					if (SelectEx) return ExPath != "Chưa chọn";
+					if (SelectGs) return !string.IsNullOrEmpty(link);
+					return false;
 				}
 			);
 

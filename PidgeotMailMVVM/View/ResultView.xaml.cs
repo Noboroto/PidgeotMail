@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using GalaSoft.MvvmLight.Messaging;
+
+using PidgeotMailMVVM.MessageForUI;
 
 namespace PidgeotMailMVVM.View
 {
@@ -23,6 +16,25 @@ namespace PidgeotMailMVVM.View
 		public ResultView()
 		{
 			InitializeComponent();
+		}
+
+		private void Page_Loaded(object sender, RoutedEventArgs e)
+		{
+			Messenger.Default.Register<ResultMessage>(this, t => Update(t));
+		}
+
+		private void Page_Unloaded(object sender, RoutedEventArgs e)
+		{
+			Messenger.Default.Unregister<ResultMessage>(this, t => Update(t));
+		}
+
+		private void Update (ResultMessage r)
+		{
+			App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+			{
+				Warning.Text = r.Message;
+				Home.IsEnabled = r.IsEnable;
+			});
 		}
 	}
 }
