@@ -118,7 +118,7 @@ namespace PidgeotMailMVVM.ViewModel
 			}					
 			finally
 			{
-				Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "/temp", true);
+				if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "/temp")) Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "/temp", true);
 			}
 		}
 	}

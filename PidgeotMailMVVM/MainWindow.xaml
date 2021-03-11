@@ -6,14 +6,50 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
+	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+	mc:Ignorable="d"
     DataContext="{Binding Main, Source={StaticResource Locator}}"
     Title="{Binding Tilte}"
     Height="450"
     Width="800">
-    <Grid>
-        <Frame
-            x:Name="MyFrame"
-            NavigationUIVisibility="Hidden" />
-    </Grid>
+	<DockPanel>
+		<Menu
+			DockPanel.Dock="Top"
+			Height="auto"
+			IsMainMenu="True">
+			<MenuItem
+				Width="auto"
+				Header="Menu"
+				FontSize="12"
+				Padding="5"
+				Height="auto">
+				<MenuItem
+					FontSize="12"
+					Height="auto"
+					Padding="5"
+					Header="Lưu Log"
+					Command="{Binding LogCmd}">
+					<MenuItem.Icon>
+						<materialDesign:PackIcon
+							Kind="ContentSave" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem
+					FontSize="12"
+					Height="auto"
+					Padding="5"
+					Header="Thông tin tác giả"
+					Command="{Binding InfoCmd}">
+					<MenuItem.Icon>
+						<materialDesign:PackIcon
+							Kind="Information" />
+					</MenuItem.Icon>
+				</MenuItem>
+			</MenuItem>
+		</Menu>
+		<Frame
+			DockPanel.Dock="Top"
+			x:Name="MyFrame"
+			NavigationUIVisibility="Hidden" />
+	</DockPanel>
 </Window>

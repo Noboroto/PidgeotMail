@@ -1,4 +1,11 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.IO;
+using System.Windows.Forms;
+using System.Windows.Input;
+
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+
+using PidgeotMailMVVM.Lib;
 
 namespace PidgeotMailMVVM.ViewModel
 {
@@ -31,7 +38,23 @@ namespace PidgeotMailMVVM.ViewModel
 			////}
 			Tilte = "Phần mềm gửi mail tự động PidgeotMail";
 			AppName = "PidgeotMail";
+			LogCmd = new RelayCommand(() =>
+				{
+					SaveFileDialog saveFileDialog = new SaveFileDialog();
+					saveFileDialog.Filter = "Text file (*.txt)|*.txt";
+					if (saveFileDialog.ShowDialog() == DialogResult.OK)
+						File.WriteAllText(saveFileDialog.FileName, Logs.Get());
+				}
+			);
+			InfoCmd = new RelayCommand(() =>
+				{
+					MessageBox.Show("Võ Thanh Tú\nEmail: thanhtuvo135@gmail.com");
+				}
+			);
 		}
+
+		public ICommand LogCmd { get; set; }
+		public ICommand InfoCmd { get; set; }
 
 		public static string Tilte { get; set; }
 		public static string AppName { get; set; }
