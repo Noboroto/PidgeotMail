@@ -27,7 +27,7 @@ namespace PidgeotMailMVVM.Lib
 				Set(nameof(_SenderGroup), ref _SenderGroup, value);
 			}
 		}
-		public bool Enable => (IsFile && !IsResultPDF);
+		public bool Enable => !IsFile;
 		public bool IsSelected
 		{
 			get

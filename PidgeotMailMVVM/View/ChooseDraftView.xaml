@@ -34,8 +34,13 @@
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
 		<materialDesign:Card>
-			<StackPanel>
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="auto" />
+					<RowDefinition />
+				</Grid.RowDefinitions>
 				<TextBlock
+					Grid.Row="0"
 					Text="Chủ đề"
 					Margin="10 10 10 5"
 					FontSize="20"
@@ -44,6 +49,9 @@
 					FontStyle="Normal"
 					FontWeight="Bold" />
 				<ListBox
+					Grid.Row="1"
+					ScrollViewer.VerticalScrollBarVisibility="Auto"
+					ScrollViewer.HorizontalScrollBarVisibility="Auto"
 					ItemsSource="{Binding ListSource}"
 					SelectedItem="{Binding SelectedItem}"
 					SelectedIndex="{Binding SelectedIndex}">
@@ -63,7 +71,7 @@
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>
-			</StackPanel>
+			</Grid>
 		</materialDesign:Card>
 		<Grid
 			Grid.Column="1">

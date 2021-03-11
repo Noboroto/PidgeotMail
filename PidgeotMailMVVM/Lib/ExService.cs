@@ -20,7 +20,7 @@ namespace PidgeotMailMVVM.Lib
 		{
 			ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 			if (_Values == null) _Values = new List<IList<Object>>();
-			if (_Header != null) _Header = new Dictionary<string, int>();
+			if (_Header == null) _Header = new Dictionary<string, int>();
 		}
 		public static string CheckAvailable(string path)
 		{
@@ -32,6 +32,7 @@ namespace PidgeotMailMVVM.Lib
 		public static string InitValue(int Col, int Row)
 		{
 			Init();
+			Row++;
 			using (ExcelPackage package = new ExcelPackage(new FileInfo(_path)))
 			{
 				try
@@ -43,7 +44,7 @@ namespace PidgeotMailMVVM.Lib
 						_Values.Add(new List<Object>());
 						for (int j = 0; j < Col; ++j)
 						{
-							_Values[i].Add(worksheet.Cells[Row, Col].Value);
+							_Values[i].Add(worksheet.Cells[i + 1, j + 1].Value.ToString());
 							if (i != 0) continue;
 							_Header.Add(_Values[i][j].ToString(), x);
 							x++;

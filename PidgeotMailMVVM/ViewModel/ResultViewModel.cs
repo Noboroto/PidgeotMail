@@ -79,10 +79,9 @@ namespace PidgeotMailMVVM.ViewModel
 				}
 				Logs.Write("Template gửi thư: ");
 				Logs.Add("Sheet: ");
-				for (int i = 0; i < sheet[0].Count; ++i)
+				foreach (var value in header)
 				{
-					header.Add(sheet[0][i].ToString(), i);
-					Logs.Add(sheet[0][i].ToString());
+					Logs.Add(value.Key);
 				}
 				string htmlbody, plainbody, subject;
 				string replacement, s;

@@ -203,7 +203,8 @@ namespace PidgeotMailMVVM.ViewModel
 						UserSettings.HeaderLocation = ExService.Header;
 						UserSettings.Values = ExService.Value;
 						Logs.Write("Đã chọn ExcelWorkbook " + ExService.Path);
-					} 
+					}
+					Messenger.Default.Send(new NavigateToMessage(new AttachmentView()));
 				}
 			);
 

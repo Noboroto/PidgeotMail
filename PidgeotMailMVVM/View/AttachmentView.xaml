@@ -169,7 +169,9 @@
 						Header="Đường dẫn"
 						MaxWidth="350"
 						IsReadOnly="True" />
-					<DataGridTemplateColumn>
+					<DataGridTemplateColumn
+						Header="Gửi theo..."
+						>
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<ComboBox

@@ -81,7 +81,7 @@ namespace PidgeotMailMVVM.Lib
 		public void AddAttachment (AttachmentInfo info)
 		{
 			var builder = new BodyBuilder();
-			builder.Attachments.Add(message.Body);
+			builder.Attachments.Add(message.Attachments);
 			builder.Attachments.Add(info.Name, info.Stream(info.SenderGroup));
 			message.Body = builder.ToMessageBody();
 		}
