@@ -24,6 +24,17 @@ namespace PidgeotMailMVVM.ViewModel
 		private bool _Home;
 		private string _Warning;
 
+		public bool Home
+		{
+			get
+			{
+				return _Home;
+			}
+			set
+			{
+				Set(nameof(_Home), ref _Home, value);
+			}
+		}
 		public string Warning
 		{
 			get
@@ -50,7 +61,7 @@ namespace PidgeotMailMVVM.ViewModel
 			source = new ObservableCollection<SenderInfo>();
 			Logs.Write("Bắt đầu gửi mail");
 			Task.Run(Process);
-
+			Warning = "Đang thực hiện";
 			CloseCmd = new RelayCommand(() =>
 				{
 					App.Current.Shutdown();	
@@ -60,7 +71,7 @@ namespace PidgeotMailMVVM.ViewModel
 			HomeCmd = new RelayCommand(() =>
 				{
 					Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
-				}, () => _Home
+				}, () => Home
 			);
 		}
 
@@ -133,13 +144,12 @@ namespace PidgeotMailMVVM.ViewModel
 							Warning = "Có lỗi xảy ra tại mail thứ " + i.ToString() + "\n" +
 							"Nội dung: " + e.Message;
 							Logs.Write(e.ToString());
-							_Home = true;
+							Home = true;
 						});
 						return;
 					}
 					finally
 					{
-						Task.Delay(500).Wait();
 					}
 				}
 				App.Current.Dispatcher.BeginInvoke((Action)delegate ()

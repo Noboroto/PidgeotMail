@@ -13,8 +13,8 @@ namespace PidgeotMailMVVM.Lib
 	public class GMService
 	{
 		private static GmailService gs;
-		private static int Size = 30;
 
+		public static IList<Draft> DraftsList => gs.Users.Drafts.List("me").Execute().Drafts;
 		public static string UserEmail
 		{
 			get
@@ -65,36 +65,6 @@ namespace PidgeotMailMVVM.Lib
 			var request = gs.Users.Drafts.Get("me", id);
 			request.Format = UsersResource.DraftsResource.GetRequest.FormatEnum.Raw;
 			return GetDataFromBase64(request.Execute().Message.Raw.Replace('-', '+').Replace('_', '/'));
-		}
-
-		public static List<GMessage> GetDraft()
-		{
-			Init();
-			var tmp = gs.Users.Drafts.List("me").Execute().Drafts;
-			UsersResource.DraftsResource.GetRequest request;
-			string raw;
-			int count = 0;
-			List<GMessage> Result = new List<GMessage>();
-			if (tmp != null)
-				foreach (var value in tmp)
-				{
-					if (count > Size) break;
-					try
-					{
-						request = gs.Users.Drafts.Get("me", value.Id);
-						request.Format = UsersResource.DraftsResource.GetRequest.FormatEnum.Raw;
-						raw = request.Execute().Message.Raw;
-						Result.Add(GMessage.GetDataFromBase64(raw.Replace('-', '+').Replace('_', '/'), value.Id));
-					}
-					catch (Exception e)
-					{
-						MessageBox.Show(e.Message + " " + value.Id);
-						Logs.Write(e.ToString() + " " + value.Id);
-						continue;
-					}
-					count++;
-				}
-			return Result;
 		}
 	}
 }

@@ -53,11 +53,11 @@
 					<Label
 						Margin="5"
 						Name="Warning"
-						Content="Đang thực hiện ..."
+						Content="{Binding Warning}"
 						HorizontalAlignment="Center"
 						VerticalAlignment="Center" />
 					<DataGrid
-						x:Name="table"
+						ItemsSource="{Binding source}"
 						CanUserSortColumns="False"
 						CanUserAddRows="False"
 						AutoGenerateColumns="False"

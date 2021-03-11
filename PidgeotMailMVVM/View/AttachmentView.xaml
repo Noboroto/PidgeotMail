@@ -165,7 +165,7 @@
 						MaxWidth="350"
 						IsReadOnly="True" />
 					<DataGridTextColumn
-						Binding="{Binding Path}"
+						Binding="{Binding AttachmentPath}"
 						Header="Đường dẫn"
 						MaxWidth="350"
 						IsReadOnly="True" />

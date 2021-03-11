@@ -62,8 +62,8 @@ namespace PidgeotMailMVVM.Lib
 			GetDataFromBase64(out t, Base64UrlEncode(message).Replace('-', '+').Replace('_', '/'));
 			t.Subject = subject; 
 			t.To.Add(new MailboxAddress("", email));
-			if (string.IsNullOrEmpty(bcc)) t.Bcc.Add(new MailboxAddress("", bcc));
-			if (string.IsNullOrEmpty(cc)) t.Cc.Add(new MailboxAddress("", cc));
+			if (!string.IsNullOrEmpty(bcc)) t.Bcc.Add(new MailboxAddress("", bcc));
+			if (!string.IsNullOrEmpty(cc)) t.Cc.Add(new MailboxAddress("", cc));
 			foreach (var x in t.BodyParts.OfType<TextPart>())
 			{
 				if (x.IsHtml)
@@ -81,7 +81,12 @@ namespace PidgeotMailMVVM.Lib
 		public void AddAttachment (AttachmentInfo info)
 		{
 			var builder = new BodyBuilder();
-			builder.Attachments.Add(message.Attachments);
+			builder.HtmlBody = message.HtmlBody;
+			builder.TextBody = message.TextBody;
+			foreach (var x in message.Attachments)
+			{
+				builder.Attachments.Add(x);
+			}
 			builder.Attachments.Add(info.Name, info.Stream(info.SenderGroup));
 			message.Body = builder.ToMessageBody();
 		}

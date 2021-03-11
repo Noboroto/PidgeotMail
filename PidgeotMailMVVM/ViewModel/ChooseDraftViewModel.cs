@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 using GalaSoft.MvvmLight;
@@ -26,7 +27,6 @@ namespace PidgeotMailMVVM.ViewModel
 
 		public string MyEmailContent => "Tài khoản hiện tại: " + GMService.UserEmail;
 		public ObservableCollection<GMessage> ListSource { get; set; }
-
 
 		public ICommand LogoutCmd { get; set; }
 		public RelayCommand RefreshCmd { get; set; }
@@ -73,7 +73,6 @@ namespace PidgeotMailMVVM.ViewModel
 			Logs.Write("Đã login bằng " + GMService.UserEmail);
 			ListSource = new ObservableCollection<GMessage>();
 			Task.Run(new Action(Process));
-			CanRefresh = true;
 			NextCmd = new RelayCommand(() =>
 				{
 					if (SelectedIndex < 0) return;
@@ -110,20 +109,28 @@ namespace PidgeotMailMVVM.ViewModel
 
 		private void Process()
 		{
-			var tmp = GMService.GetDraft();
+			var tmp = GMService.DraftsList;
 			if (tmp != null) foreach (var value in tmp)
 				{
-					App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+					try
 					{
-						ListSource.Add(value);
-					});
-					Task.Delay(500);
+						App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+						{
+							ListSource.Add(new GMessage(value.Id, GMService.GetDraftByID(value.Id)));
+						});
+					}
+					catch (Exception e)
+					{
+						MessageBox.Show(e.Message + " " + value.Id);
+						Logs.Write(e.ToString() + " " + value.Id);
+						continue;
+					}
+
 				}
 			App.Current.Dispatcher.BeginInvoke((Action)delegate ()
 			{
 				Logs.Write("Đã load mail");
 				CanRefresh = true;
-				RefreshCmd.RaiseCanExecuteChanged();
 			});
 		}
 	}
