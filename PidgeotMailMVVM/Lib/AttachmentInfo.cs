@@ -3,7 +3,7 @@ using System.IO;
 
 using GalaSoft.MvvmLight;
 
-namespace PidgeotMailMVVM.Lib
+namespace PidgeotMail.Lib
 {
 	public class AttachmentInfo : ObservableObject
 	{
@@ -16,28 +16,8 @@ namespace PidgeotMailMVVM.Lib
 		public string Name => Dinfo.Name;
 		public bool IsResultPDF { get; set; }
 		public bool Enable => !IsResultPDF;
-		public string SenderGroup
-		{
-			get
-			{
-				return _SenderGroup;
-			}
-			set
-			{
-				Set(nameof(_SenderGroup), ref _SenderGroup, value);
-			}
-		}
-		public bool IsSelected
-		{
-			get
-			{
-				return _IsSelected;
-			}
-			set
-			{
-				Set(nameof(_IsSelected), ref _IsSelected, value);
-			}
-		}
+		public string SenderGroup { get => _SenderGroup; set => Set(ref _SenderGroup, value); } 
+		public bool IsSelected { get => _IsSelected; set => Set(ref _IsSelected, value); }
 		public FileStream Stream(string matcher = "")
 		{
 			try
@@ -50,7 +30,7 @@ namespace PidgeotMailMVVM.Lib
 			}
 			catch (Exception e)
 			{
-				Logs.Write(e.Message);
+				Logs.Write(e.ToString());
 				return null;
 			}
 		}

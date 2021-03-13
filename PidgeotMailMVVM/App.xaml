@@ -1,8 +1,8 @@
 <Application
-	x:Class="PidgeotMailMVVM.App"
+	x:Class="PidgeotMail.App"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:local="clr-namespace:PidgeotMailMVVM"
+	xmlns:local="clr-namespace:PidgeotMail"
 	StartupUri="MainWindow.xaml"
 	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -14,7 +14,7 @@
 			<vm:ViewModelLocator
 				x:Key="Locator"
 				d:IsDataSource="True"
-				xmlns:vm="clr-namespace:PidgeotMailMVVM.ViewModel" />
+				xmlns:vm="clr-namespace:PidgeotMail.ViewModel" />
 			<ResourceDictionary.MergedDictionaries>
 				<materialDesign:BundledTheme
 					BaseTheme="Light"

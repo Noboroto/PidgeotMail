@@ -1,12 +1,12 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 
-using PidgeotMailMVVM.MessageForUI;
+using PidgeotMail.MessageForUI;
 
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 
-namespace PidgeotMailMVVM.View
+namespace PidgeotMail.View
 {
 	/// <summary>
 	/// Interaction logic for ChooseDraftView.xaml

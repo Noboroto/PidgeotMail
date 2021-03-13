@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -8,11 +7,11 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 
-using PidgeotMailMVVM.Lib;
-using PidgeotMailMVVM.MessageForUI;
-using PidgeotMailMVVM.View;
+using PidgeotMail.Lib;
+using PidgeotMail.MessageForUI;
+using PidgeotMail.View;
 
-namespace PidgeotMailMVVM.ViewModel
+namespace PidgeotMail.ViewModel
 {
 	public class AttachmentViewModel : ViewModelBase
 	{
@@ -23,20 +22,31 @@ namespace PidgeotMailMVVM.ViewModel
 			throw new System.NotImplementedException();
 		}
 
-		public IList<string> Selection { get; set; }
 		public ICommand PDFCmd { get; set; }
 		public ICommand FolderCmd { get; set; }
 		public ICommand NextCmd { get; set; }
 		public ICommand DeleteCmd { get; set; }
-
+		public ObservableCollection<string> Selection { get; set; }
 		public ObservableCollection<AttachmentInfo> Attachments { get; set; }
+
+		public void Start (StartMessage s)
+		{
+			if (s.CurrentView != StartMessage.View.Attachments) return;
+			Attachments.Clear();
+			Selection.Clear();
+			if (UserSettings.HeaderLocation != null)
+			{
+				foreach (var x in UserSettings.HeaderLocation)
+				{
+					Selection.Add(x.Key);
+				}
+			}
+		}
 
 		public AttachmentViewModel()
 		{
 			Attachments = new ObservableCollection<AttachmentInfo>();
 			Selection = new ObservableCollection<string>();
-			if (UserSettings.HeaderLocation != null) Selection = UserSettings.HeaderLocation.Keys.ToList();
-
 			DeleteCmd = new RelayCommand(() =>
 				{
 					for (int i = Attachments.Count - 1; i >= 0; --i)
@@ -72,21 +82,24 @@ namespace PidgeotMailMVVM.ViewModel
 				}
 			);
 
-			NextCmd = new RelayCommand(() =>
+			NextCmd = new RelayCommand(async () =>
 				{
+					if (Directory.Exists(MainViewModel.TempFolder)) Directory.Delete(MainViewModel.TempFolder, true);
 					for (int i = Attachments.Count - 1; i >= 0; --i)
 					{
 						if (Attachments[i].IsResultPDF)
 						{
-							PDFProcess.SplitPDF(Attachments[i], UserSettings.Values, UserSettings.HeaderLocation[Attachments[i].SenderGroup]);
+							await PDFProcess.SplitPDF(Attachments[i], UserSettings.Values, UserSettings.HeaderLocation[Attachments[i].SenderGroup]);
 							Attachments.Add(new AttachmentInfo(PDFProcess.GetPDFPath(Attachments[i]), false, PDFMess, ".pdf"));
 							Attachments.RemoveAt(i);
 						}
 					}
 					UserSettings.Attachments = Attachments;
 					Messenger.Default.Send(new NavigateToMessage(new ResultView()));
+					Messenger.Default.Send(new StartMessage(StartMessage.View.Result));
 				}
 			);
+			Messenger.Default.Register<StartMessage>(this, (t) => Start(t));
 		}
 	}
 }

@@ -1,15 +1,14 @@
 ﻿using Google.Apis.Gmail.v1;
 using Google.Apis.Services;
-using PidgeotMailMVVM.ViewModel;
+using PidgeotMail.ViewModel;
 using System;
-using System.Windows;
 using System.Collections.Generic;
 using MimeKit;
 using System.IO;
 using Google.Apis.Gmail.v1.Data;
 using System.Threading.Tasks;
 
-namespace PidgeotMailMVVM.Lib
+namespace PidgeotMail.Lib
 {
 	public class GMService
 	{
@@ -54,11 +53,22 @@ namespace PidgeotMailMVVM.Lib
 			}
 		}
 
-		public static void Send(MimeMessage m)
+		public static Task<string> Send(MimeMessage m)
 		{
-			Message newMsg = new Message();
-			newMsg.Raw = Base64UrlEncode(m);
-			gs.Users.Messages.Send(newMsg, "me").Execute();
+			return Task.Run(() =>
+			{
+				try
+				{
+					Message newMsg = new Message();
+					newMsg.Raw = Base64UrlEncode(m);
+					gs.Users.Messages.Send(newMsg, "me").Execute();
+				}
+				catch (Exception e)
+				{
+					return e.ToString();
+				}
+				return "OK";
+			});
 		}
 
 		public static Task<MimeMessage> GetDraftByID(string id)

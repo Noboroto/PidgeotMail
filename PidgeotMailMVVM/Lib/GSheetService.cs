@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PidgeotMailMVVM.Lib
+namespace PidgeotMail.Lib
 {
 	public class GSheetService
 	{
@@ -17,38 +17,41 @@ namespace PidgeotMailMVVM.Lib
 		private static Dictionary<string, int> _Header;
 
 		public static Dictionary<string, int> Header => _Header;
-		public static IList<IList<Object>> Values => Values;
+		public static IList<IList<Object>> Values => _Values;
 		public static string ChoiceSheetID => _ChoiceSheetID;
 
 		private static void Init()
 		{
-			if (_Values == null) _Values = new List<IList<Object>>();
-			if (_Header != null) _Header = new Dictionary<string, int>();
+			_Values = new List<IList<Object>>();
+			_Header = new Dictionary<string, int>();
 			if (sheetsService != null) return;
 			sheetsService = new SheetsService(new BaseClientService.Initializer()
 			{
 				HttpClientInitializer = GoogleService.Credential,
-				ApplicationName = PidgeotMailMVVM.ViewModel.MainViewModel.AppName,
+				ApplicationName = PidgeotMail.ViewModel.MainViewModel.AppName,
 			});
 		}
 		public static Task<string> InitValue(int Row)
 		{
 			return Task.Run(() =>
 			{
+				UserSettings.KeyColumn = -1;
+				Row++;
 				try
 				{
 					_Values = sheetsService.Spreadsheets.Values.Get(ChoiceSheetID, "1:" + Row).Execute().Values;
 					int i = 0;
 					foreach (var value in _Values[0])
 					{
-						_Header.Add(value.ToString(), i);
+						if (_Header.ContainsKey(value.ToString())) _Header[value.ToString()] = i;
+						else _Header.Add(value.ToString(), i);
 						if (value.ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
 						i++;
 					}
 				}
 				catch (Exception e)
 				{
-					return e.Message;
+					return e.ToString();
 				}
 				if (_Values == null || _Values.Count == 0) return "Danh sách trống!";
 				if (UserSettings.KeyColumn == -1) return "Không tìm thấy Email";
@@ -87,7 +90,7 @@ namespace PidgeotMailMVVM.Lib
 						}
 						else
 						{
-							return ex.Message;
+							return ex.ToString();
 						}
 					}
 				}

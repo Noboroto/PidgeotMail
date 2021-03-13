@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
-using PidgeotMailMVVM.Lib;
+using PidgeotMail.Lib;
 using System.IO;
 
-namespace PidgeotMailMVVM
+namespace PidgeotMail
 {
 	/// <summary>
 	/// Interaction logic for App.xaml
@@ -26,8 +26,7 @@ namespace PidgeotMailMVVM
 
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{
-			if (Directory.Exists(ViewModel.MainViewModel.TokenFolder)) Directory.Delete(ViewModel.MainViewModel.TokenFolder, true);
-			if (Directory.Exists(ViewModel.MainViewModel.TokenFolder)) Directory.Delete(ViewModel.MainViewModel.TempFolder, true);
+			if (Directory.Exists(ViewModel.MainViewModel.TempFolder)) Directory.Delete(ViewModel.MainViewModel.TempFolder, true);
 		}
 	}
 }

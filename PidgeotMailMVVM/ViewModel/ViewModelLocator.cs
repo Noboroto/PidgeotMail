@@ -16,7 +16,7 @@ using CommonServiceLocator;
 
 using GalaSoft.MvvmLight.Ioc;
 
-namespace PidgeotMailMVVM.ViewModel
+namespace PidgeotMail.ViewModel
 {
 	/// <summary>
 	/// This class contains static references to all the view models in the

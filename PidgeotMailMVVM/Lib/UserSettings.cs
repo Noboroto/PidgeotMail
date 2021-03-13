@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PidgeotMailMVVM.Lib
+namespace PidgeotMail.Lib
 {
 	public class UserSettings
 	{
 		public static string ChoiceMailID;
-		public static string L;
-		public static string R;
+		public static string L = "{{";
+		public static string R = "}}";
 		public static string Bcc;
 		public static string Cc;
 		public static IList<IList<Object>> Values;

@@ -1,12 +1,6 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using System.Windows.Controls;
 
-using PidgeotMailMVVM.MessageForUI;
-
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
-
-namespace PidgeotMailMVVM.View
+namespace PidgeotMail.View
 {
 	/// <summary>
 	/// Interaction logic for LoginView.xaml

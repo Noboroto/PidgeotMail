@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace PidgeotMailMVVM.MessageForUI
+namespace PidgeotMail.MessageForUI
 {
 	public class NavigateToMessage
 	{

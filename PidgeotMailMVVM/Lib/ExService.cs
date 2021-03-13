@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace PidgeotMailMVVM.Lib
+namespace PidgeotMail.Lib
 {
 	public class ExService
 	{
@@ -20,11 +20,13 @@ namespace PidgeotMailMVVM.Lib
 		private static void Init()
 		{
 			ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-			if (_Values == null) _Values = new List<IList<Object>>();
-			if (_Header == null) _Header = new Dictionary<string, int>();
+			_Values = new List<IList<Object>>();
+			_Header = new Dictionary<string, int>();
 		}
+
 		public static string CheckAvailable(string path)
 		{
+			Init();
 			if (path == "Chưa chọn")
 				return "Chưa chọn danh sách Excel!";
 			if (!File.Exists(path))
@@ -32,12 +34,13 @@ namespace PidgeotMailMVVM.Lib
 			_path = path;
 			return "OK";
 		}
+
 		public static Task<string> InitValue(int Col, int Row)
 		{
-			Init();
 			Row++;
 			return Task.Run(() =>
 			{
+				UserSettings.KeyColumn = -1;
 				using (ExcelPackage package = new ExcelPackage(new FileInfo(_path)))
 				{
 					try
@@ -59,7 +62,7 @@ namespace PidgeotMailMVVM.Lib
 					}
 					catch (Exception e)
 					{
-						return e.Message;
+						return e.ToString();
 					}
 				}
 				if (_Values == null || _Values.Count == 0) return "Danh sách trống!";

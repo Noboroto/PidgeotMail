@@ -6,9 +6,9 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 
-using PidgeotMailMVVM.Lib;
+using PidgeotMail.Lib;
 
-namespace PidgeotMailMVVM.ViewModel
+namespace PidgeotMail.ViewModel
 {
 	/// <summary>
 	/// This class contains properties that the main View can data bind to.
@@ -57,8 +57,8 @@ namespace PidgeotMailMVVM.ViewModel
 		public ICommand LogCmd { get; set; }
 		public ICommand InfoCmd { get; set; }
 
-		public static string TokenFolder => AppDomain.CurrentDomain.BaseDirectory + "/4xR24anAtrw2ajpqW45SVB56saAfas";
-		public static string TempFolder => AppDomain.CurrentDomain.BaseDirectory + "/temp";
+		public static string TokenFolder => AppDomain.CurrentDomain.BaseDirectory + "\\4xR24anAtrw2ajpqW45SVB56saAfas";
+		public static string TempFolder => AppDomain.CurrentDomain.BaseDirectory + "\\temp";
 		public static string Tilte { get; set; }
 		public static string AppName { get; set; }
 	}

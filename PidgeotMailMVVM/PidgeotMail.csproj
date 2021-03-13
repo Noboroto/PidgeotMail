@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2C083C5F-F87C-4199-BE45-1EDC27FC78AE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>PidgeotMailMVVM</RootNamespace>
-    <AssemblyName>PidgeotMailMVVM</AssemblyName>
+    <RootNamespace>PidgeotMail</RootNamespace>
+    <AssemblyName>PidgeotMail</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -145,9 +145,8 @@
     <Compile Include="Lib\SenderInfo.cs" />
     <Compile Include="Lib\UserSettings.cs" />
     <Compile Include="MessageForUI\ChangeHTMLContent.cs" />
-    <Compile Include="MessageForUI\ChangePathMessage.cs" />
     <Compile Include="MessageForUI\NavigateToMessage.cs" />
-    <Compile Include="MessageForUI\ResultMessage.cs" />
+    <Compile Include="MessageForUI\StartMessage.cs" />
     <Compile Include="ViewModel\AttachmentViewModel.cs" />
     <Compile Include="ViewModel\ChooseDraftViewModel.cs" />
     <Compile Include="ViewModel\ChooseSourceViewModel.cs" />

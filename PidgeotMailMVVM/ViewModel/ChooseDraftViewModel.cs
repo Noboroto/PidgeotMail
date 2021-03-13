@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,11 +8,11 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 
-using PidgeotMailMVVM.Lib;
-using PidgeotMailMVVM.MessageForUI;
-using PidgeotMailMVVM.View;
+using PidgeotMail.Lib;
+using PidgeotMail.MessageForUI;
+using PidgeotMail.View;
 
-namespace PidgeotMailMVVM.ViewModel
+namespace PidgeotMail.ViewModel
 {
 	/// <summary>
 	/// Interaction logic for ChooseDraft.xaml
@@ -29,58 +28,45 @@ namespace PidgeotMailMVVM.ViewModel
 		public ObservableCollection<GMessage> ListSource { get; set; }
 
 		public ICommand LogoutCmd { get; set; }
+		public ICommand NextCmd { get; set; }		
 		public RelayCommand RefreshCmd { get; set; }
-		public ICommand NextCmd { get; set; }
 
-		public bool CanRefresh
-		{
-			get
-			{
-				return _CanRefresh;
-			}
-			set
-			{
-				Set(nameof(_CanRefresh), ref _CanRefresh, value);
-			}
-		}
+		public bool CanRefresh { get =>_CanRefresh; set => Set(ref _CanRefresh, value); }
 		public GMessage SelectedItem
 		{
-			get
-			{
-				return item;
-			}
+			get => item;
 			set
 			{
-				Set(nameof(item), ref item, value);
+				Set(ref item, value);
 				Messenger.Default.Send(new ChangeHTMLContent(header + ((item == null) ? "" : item.HTMLContent)));
 			}
 		}
 
-		public int SelectedIndex
+		public int SelectedIndex { get => index; set => Set(ref index, value); }
+
+		private void Start(StartMessage s)
 		{
-			get
-			{
-				return index;
-			}
-			set
-			{
-				Set(nameof(index), ref index, value);
-			}
+			if (s.CurrentView != StartMessage.View.ChooseDraft) return;
+			CanRefresh = false;
+			SelectedIndex = -1;
+			SelectedItem = null;
+			Logs.Write("Đã login bằng " + GMService.UserEmail);
+			ListSource.Clear();
+			Process();
 		}
 
 		public ChooseDraftViewModel()
 		{
-			Logs.Write("Đã login bằng " + GMService.UserEmail);
 			ListSource = new ObservableCollection<GMessage>();
-			Process();
 			NextCmd = new RelayCommand(() =>
 				{
 					if (SelectedIndex < 0) return;
 					UserSettings.ChoiceMailID = ListSource[SelectedIndex].MessageId;
 					Logs.Write("Đã chọn draft " + UserSettings.ChoiceMailID);
 					Messenger.Default.Send(new NavigateToMessage(new ChooseSourceView()));
-				}, () => (SelectedIndex >= 0) && CanRefresh
-			);
+					Messenger.Default.Send(new StartMessage(StartMessage.View.ChooseSource));
+				}, () => (SelectedIndex >= 0) && (ListSource.Count > 0)
+			) ;
 
 			LogoutCmd = new RelayCommand(() =>
 				{
@@ -101,6 +87,7 @@ namespace PidgeotMailMVVM.ViewModel
 					Process();
 				}, () => CanRefresh
 			);
+			Messenger.Default.Register<StartMessage>(this, (t) => Start(t));
 		}
 
 		private async void Process()
@@ -114,7 +101,7 @@ namespace PidgeotMailMVVM.ViewModel
 					}
 					catch (Exception e)
 					{
-						MessageBox.Show(e.Message + " " + value.Id);
+						MessageBox.Show(e.ToString() + " " + value.Id);
 						Logs.Write(e.ToString() + " " + value.Id);
 						continue;
 					}

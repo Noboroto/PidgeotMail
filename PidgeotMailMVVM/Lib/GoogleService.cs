@@ -3,13 +3,13 @@ using Google.Apis.Gmail.v1;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Util.Store;
 
-using PidgeotMailMVVM.ViewModel;
+using PidgeotMail.ViewModel;
 
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PidgeotMailMVVM.Lib
+namespace PidgeotMail.Lib
 {
 	public class GoogleService
 	{

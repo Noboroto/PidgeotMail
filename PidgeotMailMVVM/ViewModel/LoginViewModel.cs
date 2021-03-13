@@ -1,14 +1,14 @@
-﻿using PidgeotMailMVVM.Lib;
+﻿using PidgeotMail.Lib;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using PidgeotMailMVVM.MessageForUI;
-using PidgeotMailMVVM.View;
+using PidgeotMail.MessageForUI;
+using PidgeotMail.View;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 
-namespace PidgeotMailMVVM.ViewModel
+namespace PidgeotMail.ViewModel
 {
 	public class LoginViewModel
 	{
@@ -34,6 +34,7 @@ namespace PidgeotMailMVVM.ViewModel
 				Task InitTask = GoogleService.Init();
 				await InitTask;
 				Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
+				Messenger.Default.Send(new StartMessage(StartMessage.View.ChooseDraft));
 			}
 			catch (Exception e)
 			{

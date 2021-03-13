@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace PidgeotMailMVVM.View
+namespace PidgeotMail.View
 {
 	/// <summary>
 	/// Interaction logic for AttachmentView.xaml

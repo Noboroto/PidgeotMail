@@ -1,14 +1,10 @@
 ﻿using MimeKit;
-using MimeKit.Utils;
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace PidgeotMailMVVM.Lib
+namespace PidgeotMail.Lib
 {
 	public class GMessage
 	{
@@ -47,21 +43,13 @@ namespace PidgeotMailMVVM.Lib
 					.Replace('+', '-').Replace('/', '_');
 			}
 		}
-		private static void GetDataFromBase64(out MimeMessage output, string input)
-		{
-			output = new MimeMessage();
-			using (var stream = new MemoryStream(Convert.FromBase64String(input)))
-			{
-				output = MimeMessage.Load(stream);
-			}
-		}
 
 		public MimeMessage GenerateClone(int id, string subject, string plainbody, string htmlbody)
 		{
 			MimeMessage t = new MimeMessage();
 			try
 			{
-				GetDataFromBase64(out t, Base64UrlEncode(message).Replace('-', '+').Replace('_', '/'));
+				t = new MimeMessage();
 				t.Subject = subject;
 				t.To.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.KeyColumn].ToString()));
 				if (!string.IsNullOrEmpty(UserSettings.Bcc)) t.Bcc.Add(new MailboxAddress("", UserSettings.Bcc));
@@ -83,8 +71,7 @@ namespace PidgeotMailMVVM.Lib
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show(e.Message);
-				Logs.Add(e.Message);
+				Logs.Add(e.ToString());
 			}
 			return t;
 		}
@@ -102,7 +89,7 @@ namespace PidgeotMailMVVM.Lib
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show(e.Message + " " + realID + "\nBạn có thể bỏ qua thông báo này");
+				MessageBox.Show(e.ToString() + " " + realID + "\nBạn có thể bỏ qua thông báo này");
 				Logs.Write(e.ToString() + realID);
 				return output;
 			}

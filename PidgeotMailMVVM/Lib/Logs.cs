@@ -2,22 +2,11 @@
 using System;
 using System.Text;
 
-namespace PidgeotMailMVVM.Lib
+namespace PidgeotMail.Lib
 {
 	class Logs
 	{
 		public static string path = "History.log";
-
-		private static string Encode(string rawdata)
-		{
-			rawdata = Convert.ToBase64String(Encoding.UTF8.GetBytes(rawdata));
-			string text = "";
-			foreach (char c in rawdata)
-			{
-				text += ((char)(ushort)(c + 1372)).ToString();
-			}
-			return text;
-		}
 
 		public static void Write(string message)
 		{

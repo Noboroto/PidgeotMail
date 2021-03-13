@@ -5,7 +5,7 @@ using MimeKit;
 using MimeKit.Text;
 using MimeKit.Tnef;
 
-namespace PidgeotMailMVVM.Lib
+namespace PidgeotMail.Lib
 {
 	/// <summary>
 	/// Visits a MimeMessage and generates HTML suitable to be rendered by a browser control.

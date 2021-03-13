@@ -1,12 +1,12 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 
-using PidgeotMailMVVM.MessageForUI;
-using PidgeotMailMVVM.View;
+using PidgeotMail.MessageForUI;
+using PidgeotMail.View;
 
 using System.Windows;
 
 
-namespace PidgeotMailMVVM
+namespace PidgeotMail
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
