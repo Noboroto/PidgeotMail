@@ -19,8 +19,8 @@ namespace PidgeotMailMVVM.ViewModel
 			LoginCmd = new RelayCommand(() => ActiveAcount());
 			try
 			{
-				if (!Directory.Exists("4xR24anAtrw2ajpqW45SVB56saAfas")) Directory.CreateDirectory("token");
-				if (Directory.GetFiles("4xR24anAtrw2ajpqW45SVB56saAfas").Length > 0) ActiveAcount();
+				if (!Directory.Exists(MainViewModel.TokenFolder)) Directory.CreateDirectory(MainViewModel.TokenFolder);
+				if (Directory.GetFiles(MainViewModel.TokenFolder).Length > 0) ActiveAcount();
 			}
 			catch (Exception e)
 			{

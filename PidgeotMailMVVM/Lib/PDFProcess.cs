@@ -10,21 +10,21 @@ namespace PidgeotMailMVVM.Lib
 {
 	public class PDFProcess
 	{
-		public static string GetPDFPath (AttachmentInfo info)
+		public static string GetPDFPath(AttachmentInfo info)
 		{
-			return Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "/temp/ " + Path.GetFileNameWithoutExtension(info.AttachmentPath));
+			return Path.GetFullPath(ViewModel.MainViewModel.TempFolder + "/" + Path.GetFileNameWithoutExtension(info.AttachmentPath));
 		}
 
-		private static int Min (int a, int b)
+		private static int Min(int a, int b)
 		{
 			return (a < b) ? a : b;
 		}
 
-		public static void SplitPDF (AttachmentInfo info, IList<IList<Object>> values, int col)
+		public static void SplitPDF(AttachmentInfo info, IList<IList<Object>> values, int col)
 		{
 			// Open the file
 			PdfDocument inputDocument = PdfReader.Open(info.AttachmentPath, PdfDocumentOpenMode.Import);
-			if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "/temp")) Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "/temp", true);
+			if (Directory.Exists(ViewModel.MainViewModel.TempFolder)) Directory.Delete(ViewModel.MainViewModel.TempFolder, true);
 			Directory.CreateDirectory(GetPDFPath(info));
 			for (int idx = 0; idx < Min(inputDocument.PageCount, values.Count - 1); idx++)
 			{

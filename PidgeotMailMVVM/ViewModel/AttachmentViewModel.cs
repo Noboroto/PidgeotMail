@@ -82,9 +82,9 @@ namespace PidgeotMailMVVM.ViewModel
 							Attachments.Add(new AttachmentInfo(PDFProcess.GetPDFPath(Attachments[i]), false, PDFMess, ".pdf"));
 							Attachments.RemoveAt(i);
 						}
-					}					
+					}
 					UserSettings.Attachments = Attachments;
-					Messenger.Default.Send(new NavigateToMessage( new ResultView()));
+					Messenger.Default.Send(new NavigateToMessage(new ResultView()));
 				}
 			);
 		}

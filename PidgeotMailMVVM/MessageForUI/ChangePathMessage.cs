@@ -3,7 +3,7 @@
 	public class ChangePathMessage
 	{
 		public string Path { get; set; }
-		public ChangePathMessage (string path)
+		public ChangePathMessage(string path)
 		{
 			Path = path;
 		}

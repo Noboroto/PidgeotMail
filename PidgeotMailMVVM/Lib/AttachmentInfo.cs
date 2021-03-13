@@ -38,7 +38,7 @@ namespace PidgeotMailMVVM.Lib
 				Set(nameof(_IsSelected), ref _IsSelected, value);
 			}
 		}
-		public FileStream Stream (string matcher = "")
+		public FileStream Stream(string matcher = "")
 		{
 			try
 			{

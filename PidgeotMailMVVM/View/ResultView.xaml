@@ -50,7 +50,7 @@
 							Margin="5"
 							Grid.Column="1"
 							Command="{Binding CloseCmd}"
-							Content="Đóng"/>
+							Content="Đóng" />
 					</Grid>
 					<TextBlock
 						Margin="5"

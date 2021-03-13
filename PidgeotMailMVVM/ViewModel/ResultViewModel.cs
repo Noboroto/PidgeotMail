@@ -39,7 +39,7 @@ namespace PidgeotMailMVVM.ViewModel
 			Messenger.Default.Send<ResultMessage>(new ResultMessage("Đang thực hiện..."));
 			CloseCmd = new RelayCommand(() =>
 				{
-					App.Current.Shutdown();	
+					App.Current.Shutdown();
 				}
 			);
 
@@ -50,7 +50,7 @@ namespace PidgeotMailMVVM.ViewModel
 			);
 		}
 
-		private static void AddLogs (GMessage ChoiceMail)
+		private static void AddLogs(GMessage ChoiceMail)
 		{
 			Logs.Add("Origin: ");
 			Logs.Add("ID: " + ChoiceMail.MessageId);
@@ -110,15 +110,15 @@ namespace PidgeotMailMVVM.ViewModel
 					}
 
 				}
-				Messenger.Default.Send<ResultMessage>(new ResultMessage("Hoàn thành gửi " + (sheet.Count - 1) + " email hợp lệ",true));
+				Messenger.Default.Send<ResultMessage>(new ResultMessage("Hoàn thành gửi " + (sheet.Count - 1) + " email hợp lệ", true));
 			}
 			catch (Exception ex)
 			{
 				Logs.Write(ex.ToString());
-			}					
+			}
 			finally
 			{
-				if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "/temp")) Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "/temp", true);
+				if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "/temp")) Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "/temp", true);
 			}
 		}
 	}

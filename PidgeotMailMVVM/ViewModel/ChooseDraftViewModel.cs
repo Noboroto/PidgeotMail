@@ -80,15 +80,11 @@ namespace PidgeotMailMVVM.ViewModel
 					Logs.Write("Đã chọn draft " + UserSettings.ChoiceMailID);
 					Messenger.Default.Send(new NavigateToMessage(new ChooseSourceView()));
 				}, () => (SelectedIndex >= 0) && CanRefresh
-			); 
+			);
 
 			LogoutCmd = new RelayCommand(() =>
 				{
-					var tmp = Directory.GetFiles("4xR24anAtrw2ajpqW45SVB56saAfas");
-					foreach (var value in tmp)
-					{
-						File.Delete(value);
-					}
+					Directory.Delete(MainViewModel.TokenFolder, true);
 					Logs.Write("Logout");
 					Messenger.Default.Send(new NavigateToMessage(new LoginView()));
 				}

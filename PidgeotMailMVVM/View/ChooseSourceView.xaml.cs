@@ -17,7 +17,7 @@ namespace PidgeotMailMVVM.View
 			InitializeComponent();
 		}
 
-		private void UpdatePath (ChangePathMessage t)
+		private void UpdatePath(ChangePathMessage t)
 		{
 			Ex.Text = t.Path;
 			Ex.ToolTip = t.Path;

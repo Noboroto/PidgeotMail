@@ -3,6 +3,8 @@ using Google.Apis.Gmail.v1;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Util.Store;
 
+using PidgeotMailMVVM.ViewModel;
+
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,16 +31,15 @@ namespace PidgeotMailMVVM.Lib
 
 		public static async Task Init()
 		{
-			await Task.Run(() => 
+			await Task.Run(() =>
 			{
 				using (var stream = GenerateStreamFromString(TextCredential))
 				{
-					string path = "4xR24anAtrw2ajpqW45SVB56saAfas";
 					credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
 						GoogleClientSecrets.Load(stream).Secrets,
 						Scopes,
 						"user",
-						CancellationToken.None, new FileDataStore(path, true)).Result;
+						CancellationToken.None, new FileDataStore(MainViewModel.TokenFolder, true)).Result;
 					File.Delete("credentials.json");
 				}
 			}

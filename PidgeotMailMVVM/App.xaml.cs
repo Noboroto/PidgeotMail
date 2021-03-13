@@ -1,10 +1,8 @@
-﻿using Google.Apis.Auth.OAuth2;
-using Google.Apis.Gmail.v1;
-using Google.Apis.Sheets.v4;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Threading;
 using PidgeotMailMVVM.Lib;
+using System.IO;
 
 namespace PidgeotMailMVVM
 {
@@ -24,6 +22,12 @@ namespace PidgeotMailMVVM
 			var ex = e.ExceptionObject as Exception;
 			if (e != null)
 				Logs.Write(ex.ToString());
+		}
+
+		private void Application_Exit(object sender, ExitEventArgs e)
+		{
+			if (Directory.Exists(ViewModel.MainViewModel.TokenFolder)) Directory.Delete(ViewModel.MainViewModel.TokenFolder, true);
+			if (Directory.Exists(ViewModel.MainViewModel.TokenFolder)) Directory.Delete(ViewModel.MainViewModel.TempFolder, true);
 		}
 	}
 }

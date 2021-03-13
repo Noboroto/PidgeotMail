@@ -65,10 +65,10 @@ namespace PidgeotMailMVVM.Lib
 		{
 			return Task.Run(() =>
 				{
-				var request = gs.Users.Drafts.Get("me", id);
-				request.Format = UsersResource.DraftsResource.GetRequest.FormatEnum.Raw;
-				return GetDataFromBase64(request.Execute().Message.Raw.Replace('-', '+').Replace('_', '/'));
-			});
+					var request = gs.Users.Drafts.Get("me", id);
+					request.Format = UsersResource.DraftsResource.GetRequest.FormatEnum.Raw;
+					return GetDataFromBase64(request.Execute().Message.Raw.Replace('-', '+').Replace('_', '/'));
+				});
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace PidgeotMailMVVM.View
 			Messenger.Default.Unregister<ResultMessage>(this, t => Update(t));
 		}
 
-		private void Update (ResultMessage r)
+		private void Update(ResultMessage r)
 		{
 			App.Current.Dispatcher.BeginInvoke((Action)delegate ()
 			{

@@ -178,10 +178,10 @@
 							IsEnabled="{Binding Mode=TwoWay, UpdateSourceTrigger=LostFocus, Path=IsChecked, ElementName=ExcelSelect}"
 							IsExpanded="{Binding Mode=TwoWay, UpdateSourceTrigger=LostFocus, Path=IsChecked, ElementName=ExcelSelect}">
 							<Grid
-								HorizontalAlignment="Stretch"
-								>
+								HorizontalAlignment="Stretch">
 								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="auto" />
+									<ColumnDefinition
+										Width="auto" />
 									<ColumnDefinition />
 								</Grid.ColumnDefinitions>
 								<Grid.RowDefinitions>
@@ -233,7 +233,8 @@
 							IsExpanded="{Binding Mode=TwoWay, UpdateSourceTrigger=LostFocus, Path=IsChecked, ElementName=GSSelect}">
 							<Grid>
 								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="auto" />
+									<ColumnDefinition
+										Width="auto" />
 									<ColumnDefinition />
 								</Grid.ColumnDefinitions>
 								<Grid.RowDefinitions>
