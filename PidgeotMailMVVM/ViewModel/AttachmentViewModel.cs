@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -15,8 +16,6 @@ namespace PidgeotMail.ViewModel
 {
 	public class AttachmentViewModel : ViewModelBase
 	{
-		private readonly string PDFMess = "Email";
-
 		private static void Attachments_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
 		{
 			throw new System.NotImplementedException();
@@ -24,6 +23,7 @@ namespace PidgeotMail.ViewModel
 
 		public ICommand PDFCmd { get; set; }
 		public ICommand FolderCmd { get; set; }
+		public ICommand FileCmd { get; set; }
 		public ICommand NextCmd { get; set; }
 		public ICommand DeleteCmd { get; set; }
 		public ObservableCollection<string> Selection { get; set; }
@@ -34,6 +34,7 @@ namespace PidgeotMail.ViewModel
 			if (s.CurrentView != StartMessage.View.Attachments) return;
 			Attachments.Clear();
 			Selection.Clear();
+			Selection.Add("Tất cả");
 			if (UserSettings.HeaderLocation != null)
 			{
 				foreach (var x in UserSettings.HeaderLocation)
@@ -62,7 +63,7 @@ namespace PidgeotMail.ViewModel
 					folderDlg.ShowNewFolderButton = true;
 					if (folderDlg.ShowDialog() == DialogResult.OK)
 					{
-						Attachments.Add(new AttachmentInfo(folderDlg.SelectedPath, false));
+						Attachments.Add(new AttachmentInfo(folderDlg.SelectedPath, false, UserSettings.KeyColumn + 1, true));
 					}
 				}
 			);
@@ -76,25 +77,39 @@ namespace PidgeotMail.ViewModel
 					{
 						foreach (var values in openFileDialog.FileNames)
 						{
-							Attachments.Add(new AttachmentInfo(values, true, PDFMess));
+							Attachments.Add(new AttachmentInfo(values, true, UserSettings.KeyColumn + 1));
 						}
 					}
 				}
 			);
+			
+			FileCmd = new RelayCommand(() =>
+			{
+				OpenFileDialog openFileDialog = new OpenFileDialog();
+				openFileDialog.Multiselect = false;
+				if (openFileDialog.ShowDialog() == DialogResult.OK)
+				{
+					foreach (var values in openFileDialog.FileNames)
+					{
+						Attachments.Add(new AttachmentInfo(values, false, 0));
+					}
+				}
+			}
+   );
 
 			NextCmd = new RelayCommand(async () =>
 				{
 					if (Directory.Exists(MainViewModel.TempFolder)) Directory.Delete(MainViewModel.TempFolder, true);
+					UserSettings.Attachments = new List<AttachmentInfo>();
 					for (int i = Attachments.Count - 1; i >= 0; --i)
 					{
 						if (Attachments[i].IsResultPDF)
 						{
-							await PDFProcess.SplitPDF(Attachments[i], UserSettings.Values, UserSettings.HeaderLocation[Attachments[i].SenderGroup]);
-							Attachments.Add(new AttachmentInfo(PDFProcess.GetPDFPath(Attachments[i]), false, PDFMess, ".pdf"));
-							Attachments.RemoveAt(i);
+							await PDFProcess.SplitPDF(Attachments[i], UserSettings.Values, UserSettings.KeyColumn);
+							UserSettings.Attachments.Add(new AttachmentInfo(PDFProcess.GetPDFPath(Attachments[i]), true, UserSettings.KeyColumn + 1, false, ".pdf"));
 						}
+						else UserSettings.Attachments.Add(Attachments[i]);
 					}
-					UserSettings.Attachments = Attachments;
 					Messenger.Default.Send(new NavigateToMessage(new ResultView()));
 					Messenger.Default.Send(new StartMessage(StartMessage.View.Result));
 				}

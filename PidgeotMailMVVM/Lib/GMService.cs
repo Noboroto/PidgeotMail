@@ -59,6 +59,7 @@ namespace PidgeotMail.Lib
 			{
 				try
 				{
+					if (m.MessageId == "-1") return m.Subject;
 					Message newMsg = new Message();
 					newMsg.Raw = Base64UrlEncode(m);
 					gs.Users.Messages.Send(newMsg, "me").Execute();

@@ -13,7 +13,7 @@
 		<materialDesign:Card
 			Width="auto"
 			Height="auto"
-			MaxWidth="500"
+			MaxWidth="1000"
 			Margin="10"
 			materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
 			materialDesign:ShadowAssist.ShadowDepth="Depth2"

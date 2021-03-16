@@ -34,16 +34,6 @@ namespace PidgeotMail.Lib
 			return (a < b) ? a : b;
 		}
 
-		private static string Base64UrlEncode(MimeMessage message)
-		{
-			using (var stream = new MemoryStream())
-			{
-				message.WriteTo(stream);
-				return Convert.ToBase64String(stream.GetBuffer(), 0, (int)stream.Length)
-					.Replace('+', '-').Replace('/', '_');
-			}
-		}
-
 		public MimeMessage GenerateClone(int id, string subject, string plainbody, string htmlbody)
 		{
 			MimeMessage t = new MimeMessage();
@@ -63,15 +53,28 @@ namespace PidgeotMail.Lib
 					}
 				if (UserSettings.Attachments != null) foreach (var x in UserSettings.Attachments)
 					{
-						string s = UserSettings.Values[id][UserSettings.HeaderLocation[x.SenderGroup]].ToString();
-						var f = x.Stream(s);
-						if (f != null) builder.Attachments.Add(x.Name + "-" + s + x.OriginExt, f); ;
+						string s, name = x.Name;
+						if (!x.Enable && !x.IsResultPDF)
+						{
+							s = x.AttachmentPath;
+						}
+						else
+						{
+							s = UserSettings.Values[id][x.GroupIndex - 1].ToString();
+							name = x.Name + "-" + s + "-" + id + x.OriginExt;
+						}
+						var info = x.GetFile(id - 1, s);
+						FileStream f = info.OpenRead();
+						if (x.Enable) name = info.Name;
+						if (f != null) builder.Attachments.Add(name, f); ;
 					}
 				t.Body = builder.ToMessageBody();
 			}
 			catch (Exception e)
 			{
-				Logs.Add(e.ToString());
+				t = new MimeMessage();
+				t.Subject = e.ToString();
+				t.MessageId = "-1";
 			}
 			return t;
 		}

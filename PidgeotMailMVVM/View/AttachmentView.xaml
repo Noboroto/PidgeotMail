@@ -95,6 +95,26 @@
 				</Button>
 				<Button
 					Height="auto"
+					Width="auto"
+					Command="{Binding FileCmd}">
+					<StackPanel>
+						<materialDesign:PackIcon
+							HorizontalAlignment="Center"
+							Width="20"
+							Height="20"
+							Kind="File" />
+						<TextBlock
+							FontSize="12"
+							HorizontalAlignment="Center"
+							Text="Gửi file" />
+						<TextBlock
+							FontSize="12"
+							HorizontalAlignment="Center"
+							Text="cho tất cả" />
+					</StackPanel>
+				</Button>
+				<Button
+					Height="auto"
 					Command="{Binding PDFCmd}"
 					Width="auto">
 					<StackPanel>
@@ -159,7 +179,7 @@
 							<DataTemplate>
 								<ComboBox
 									IsEnabled="{Binding Enable}"
-									SelectedItem="{Binding SenderGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									SelectedIndex="{Binding GroupIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 									ItemsSource="{Binding Attachment.Selection, Source={StaticResource Locator}}" />
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>

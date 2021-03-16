@@ -9,23 +9,33 @@ namespace PidgeotMail.Lib
 	{
 		private DirectoryInfo Dinfo;
 		private bool _IsSelected;
-		private string _SenderGroup;
+		private int _GroupIndex;
+		private bool _Enable;
 
 		public string OriginExt { get; set; }
 		public string AttachmentPath => Dinfo.FullName;
 		public string Name => Dinfo.Name;
 		public bool IsResultPDF { get; set; }
-		public bool Enable => !IsResultPDF;
-		public string SenderGroup { get => _SenderGroup; set => Set(ref _SenderGroup, value); } 
+		public bool Enable => _Enable;
+		public int GroupIndex
+		{
+			get => _GroupIndex; set
+			{
+				if (Enable && value == 0) value = 1; 
+				Set(ref _GroupIndex, value);
+			}
+		}
 		public bool IsSelected { get => _IsSelected; set => Set(ref _IsSelected, value); }
-		public FileStream Stream(string matcher = "")
+		public FileInfo GetFile(int id, string matcher = "")
 		{
 			try
 			{
-				if (!string.IsNullOrEmpty(matcher))
-				{
-					return Dinfo.GetFiles("*" + matcher + "*")[0].OpenRead();
-				}
+				string s;
+				if (GroupIndex == 0) return new FileInfo(Dinfo.FullName);
+				if (IsResultPDF) s = "*" + matcher + "-" + id.ToString() + "*";
+				else s = "*" + matcher + "*";
+				var a = Dinfo.GetFiles(s);
+				if (a.Length > 0) return a[0];
 				return null;
 			}
 			catch (Exception e)
@@ -35,12 +45,13 @@ namespace PidgeotMail.Lib
 			}
 		}
 
-		public AttachmentInfo(string path, bool ispdf = false, string group = "", string ext = "")
+		public AttachmentInfo(string path, bool ispdf = false, int group = 0, bool enab = false, string ext = "")
 		{
 			Dinfo = new DirectoryInfo(path);
 			IsResultPDF = ispdf;
-			SenderGroup = group;
+			GroupIndex = group;
 			OriginExt = ext;
+			_Enable = enab;
 		}
 	}
 }

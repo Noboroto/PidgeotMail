@@ -33,7 +33,7 @@ namespace PidgeotMail.Lib
 					// Create new document
 					PdfDocument outputDocument = new PdfDocument();
 					outputDocument.Version = inputDocument.Version;
-					outputDocument.Info.Title = Path.GetFileNameWithoutExtension(info.AttachmentPath) + "-" + values[idx + 1][col].ToString();
+					outputDocument.Info.Title = Path.GetFileNameWithoutExtension(info.AttachmentPath) + "-" + values[idx + 1][col].ToString() + "-" + idx.ToString();
 					outputDocument.Info.Creator = inputDocument.Info.Creator;
 
 					// Add the page and save it
