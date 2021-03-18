@@ -35,6 +35,7 @@ namespace PidgeotMail.ViewModel
 			Attachments.Clear();
 			Selection.Clear();
 			Selection.Add("Tất cả");
+			Logs.Add("Chọn tệp đính kèm");
 			if (UserSettings.HeaderLocation != null)
 			{
 				foreach (var x in UserSettings.HeaderLocation)
@@ -52,7 +53,11 @@ namespace PidgeotMail.ViewModel
 				{
 					for (int i = Attachments.Count - 1; i >= 0; --i)
 					{
-						if (Attachments[i].IsSelected) Attachments.RemoveAt(i);
+						if (Attachments[i].IsSelected)
+						{							
+							Logs.Add("Xoá file: " + Attachments[i].AttachmentPath);
+							Attachments.RemoveAt(i);
+						}
 					}
 				}
 			);
@@ -63,6 +68,7 @@ namespace PidgeotMail.ViewModel
 					folderDlg.ShowNewFolderButton = true;
 					if (folderDlg.ShowDialog() == DialogResult.OK)
 					{
+						Logs.Add("Chọn thư mục: " + folderDlg.SelectedPath);
 						Attachments.Add(new AttachmentInfo(folderDlg.SelectedPath, false, UserSettings.KeyColumn + 1, true));
 					}
 				}
@@ -72,11 +78,12 @@ namespace PidgeotMail.ViewModel
 				{
 					OpenFileDialog openFileDialog = new OpenFileDialog();
 					openFileDialog.Filter = "PDF File|*.pdf";
-					openFileDialog.Multiselect = false;
+					openFileDialog.Multiselect = true;
 					if (openFileDialog.ShowDialog() == DialogResult.OK)
 					{
 						foreach (var values in openFileDialog.FileNames)
 						{
+							Logs.Add("Chọn pdf: " + values);
 							Attachments.Add(new AttachmentInfo(values, true, UserSettings.KeyColumn + 1));
 						}
 					}
@@ -86,11 +93,12 @@ namespace PidgeotMail.ViewModel
 			FileCmd = new RelayCommand(() =>
 			{
 				OpenFileDialog openFileDialog = new OpenFileDialog();
-				openFileDialog.Multiselect = false;
+				openFileDialog.Multiselect = true;
 				if (openFileDialog.ShowDialog() == DialogResult.OK)
 				{
 					foreach (var values in openFileDialog.FileNames)
 					{
+						Logs.Add("Chọn file: " + values);
 						Attachments.Add(new AttachmentInfo(values, false, 0));
 					}
 				}
@@ -106,6 +114,7 @@ namespace PidgeotMail.ViewModel
 						if (Attachments[i].IsResultPDF)
 						{
 							await PDFProcess.SplitPDF(Attachments[i], UserSettings.Values, UserSettings.KeyColumn);
+							Logs.Add("Chuyển đổi pdf: " + Attachments[i].AttachmentPath);
 							UserSettings.Attachments.Add(new AttachmentInfo(PDFProcess.GetPDFPath(Attachments[i]), true, UserSettings.KeyColumn + 1, false, ".pdf"));
 						}
 						else UserSettings.Attachments.Add(Attachments[i]);
