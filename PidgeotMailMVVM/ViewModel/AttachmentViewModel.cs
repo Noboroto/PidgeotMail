@@ -16,11 +16,6 @@ namespace PidgeotMail.ViewModel
 {
 	public class AttachmentViewModel : ViewModelBase
 	{
-		private static void Attachments_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-		{
-			throw new System.NotImplementedException();
-		}
-
 		public ICommand PDFCmd { get; set; }
 		public ICommand FolderCmd { get; set; }
 		public ICommand FileCmd { get; set; }

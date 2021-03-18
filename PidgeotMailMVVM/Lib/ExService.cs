@@ -60,6 +60,10 @@ namespace PidgeotMail.Lib
 							}
 						}
 					}
+					catch (NullReferenceException)
+					{
+						return "Danh sách không liền mạch";
+					}
 					catch (Exception e)
 					{
 						return e.ToString();

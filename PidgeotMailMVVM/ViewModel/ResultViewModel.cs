@@ -10,6 +10,8 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight.Messaging;
 using PidgeotMail.MessageForUI;
 using PidgeotMail.View;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace PidgeotMail.ViewModel
 {
@@ -22,16 +24,18 @@ namespace PidgeotMail.ViewModel
 		private bool _HomeEnabled;
 		private int _Done;
 		private int _Linmit;
+		private bool _Cancel = false;
 		private IList<IList<Object>> sheet = null;
+		private List<GMessage> messages = new List<GMessage>();
 
 		public string Warning { get => _Warning; set => Set(ref _Warning, value); }
 		public bool HomeEnabled
 		{
 			get => _HomeEnabled;
-			set 
+			set
 			{
 				Set(ref _HomeEnabled, value);
-				HomeCmd.RaiseCanExecuteChanged();
+				CloseCmd.RaiseCanExecuteChanged();
 			}
 		}
 		public int Done { get => _Done; set => Set(ref _Done, value); }
@@ -40,7 +44,7 @@ namespace PidgeotMail.ViewModel
 		public ObservableCollection<SenderInfo> source { get; set; }
 
 		public RelayCommand HomeCmd { get; set; }
-		public ICommand CloseCmd { get; set; }
+		public RelayCommand CloseCmd { get; set; }
 
 		public static string HtmlEncode(string text)
 		{
@@ -52,12 +56,14 @@ namespace PidgeotMail.ViewModel
 			Messenger.Default.Register<StartMessage>(this, (t) => Start(t));
 			source = new ObservableCollection<SenderInfo>();
 			CloseCmd = new RelayCommand(() =>
-				App.Current.Shutdown()
-			); ;
+			{
+				App.Current.Shutdown();
+			}, () => HomeEnabled
+			);
 			HomeCmd = new RelayCommand(() =>
 				{
 					Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
-				},() => HomeEnabled
+				}
 			);
 		}
 
@@ -72,7 +78,7 @@ namespace PidgeotMail.ViewModel
 			Logs.Add("Html: " + ChoiceMail.message.HtmlBody);
 		}
 
-		private void Start (StartMessage s)
+		private void Start(StartMessage s)
 		{
 			if (s.CurrentView != StartMessage.View.Result) return;
 			Logs.Write("Bắt đầu gửi mail");
@@ -81,14 +87,46 @@ namespace PidgeotMail.ViewModel
 			Done = 0;
 			HomeEnabled = false;
 			Process();
+			Loop();
 			Warning = "Đang thực hiện ...";
+		}
+
+		private async void Loop()
+		{
+			string result;
+			while (!_Cancel)
+			{
+				if (messages.Count > 0)
+				{
+					result = await GMService.Send(messages[0].message);
+					if (result != "OK")
+					{
+						Logs.Write(result);
+						source[int.Parse(messages[0].MessageId)].Status = result;
+					}
+					else
+					{
+						Logs.Write(messages[0].message.To.ToString());
+						source[int.Parse(messages[0].MessageId) - 1].Status = "Đã gửi";
+						Done++;
+						Warning = "Đã hoàn thành " + Done + " email";
+					}
+					messages.RemoveAt(0);
+				}
+				if (Done == source.Count)
+				{
+					HomeEnabled = true;
+					if (Directory.Exists(MainViewModel.TempFolder)) Directory.Delete(MainViewModel.TempFolder, true);
+					break;
+				}
+			}
 		}
 
 		private async void Process()
 		{
 			source.Clear();
 			string htmlbody, plainbody, subject;
-			string replacement, s, result;
+			string replacement, s;
 			try
 			{
 				var header = UserSettings.HeaderLocation;
@@ -114,25 +152,14 @@ namespace PidgeotMail.ViewModel
 						htmlbody = htmlbody.Replace(s, replacement);
 						subject = subject.Replace(UserSettings.L + value.Key + UserSettings.R, replacement);
 					}
-					result = await GMService.Send(ChoiceMail.GenerateClone(i, subject, plainbody, htmlbody));
-					Logs.Write(i + ": " + sheet[i][header["Email"]].ToString());
-					if (result != "OK")
-					{
-						Logs.Write(result);
-					}		
-					source.Add(new SenderInfo(i, sheet[i][header["Email"]].ToString(), result));
-					Done++;
-					Warning = "Đã hoàn thành " + source.Count + " email";
+					messages.Add(new GMessage (i.ToString(), ChoiceMail.GenerateClone(i, subject, plainbody, htmlbody)));
+					await Task.Delay(0);
+					source.Add(new SenderInfo(i, sheet[i][header["Email"]].ToString(), "Đợi gửi"));
 				}
 			}
 			catch (Exception ex)
 			{
 				Logs.Write(ex.ToString());
-			}
-			finally
-			{
-				HomeEnabled = true;
-				if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "/temp")) Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "/temp", true);
 			}
 		}
 	}

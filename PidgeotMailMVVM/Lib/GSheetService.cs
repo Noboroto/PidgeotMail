@@ -31,7 +31,7 @@ namespace PidgeotMail.Lib
 				ApplicationName = PidgeotMail.ViewModel.MainViewModel.AppName,
 			});
 		}
-		public static Task<string> InitValue(int Row)
+		public static Task<string> InitValue(int Col, int Row)
 		{
 			return Task.Run(() =>
 			{
@@ -48,6 +48,7 @@ namespace PidgeotMail.Lib
 						if (value.ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
 						i++;
 					}
+					if (_Header.Count < Col || _Values.Count < Row) return "Danh sách không liền mạch";
 				}
 				catch (Exception e)
 				{

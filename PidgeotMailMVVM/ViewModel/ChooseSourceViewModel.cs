@@ -99,7 +99,7 @@ namespace PidgeotMail.ViewModel
 							Logs.Write(result);
 							return;
 						}
-						result = await GSheetService.InitValue(Row);
+						result = await GSheetService.InitValue(Column, Row);
 						if (result != "OK")
 						{
 							MessageBox.Show(result);

@@ -69,6 +69,7 @@
 						ScrollViewer.HorizontalScrollBarVisibility="Auto"
 						ScrollViewer.VerticalScrollBarVisibility="Auto">
 						<DataGrid
+							HorizontalAlignment="Center"
 							ItemsSource="{Binding source}"
 							CanUserSortColumns="False"
 							CanUserAddRows="False"
@@ -79,6 +80,33 @@
 							CanUserResizeColumns="False"
 							CanUserResizeRows="False"
 							HeadersVisibility="Column">
+							<DataGrid.CellStyle>
+								<Style
+									TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+									<Setter
+										Property="Background" 
+										Value="Red"
+										/>
+									<Style.Triggers>
+										<DataTrigger
+											Binding="{Binding Status}"
+											Value="Đợi gửi"
+											>
+											<Setter
+												Property="Background"
+												Value="#fff176"
+												/>
+										</DataTrigger>
+										<DataTrigger
+											Binding="{Binding Status}"
+											Value="Đã gửi">
+											<Setter
+												Property="Background"
+												Value="#4caf50" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</DataGrid.CellStyle>
 							<DataGrid.Columns>
 								<materialDesign:DataGridTextColumn
 									IsReadOnly="True"
