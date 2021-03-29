@@ -1,10 +1,12 @@
-﻿using System;
+﻿using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
+
 
 namespace PidgeotMail.Lib
 {
@@ -22,24 +24,23 @@ namespace PidgeotMail.Lib
 
 		public static Task SplitPDF(AttachmentInfo info, IList<IList<Object>> values, int col)
 		{
-			// Open the file
 			return Task.Run(() =>
 			{
-				PdfDocument inputDocument = PdfReader.Open(info.AttachmentPath, PdfDocumentOpenMode.Import);
-				Directory.CreateDirectory(GetPDFPath(info));
-				string s = GetPDFPath(info);
-				for (int idx = 0; idx < Min(inputDocument.PageCount, values.Count - 1); idx++)
-				{
-					// Create new document
-					PdfDocument outputDocument = new PdfDocument();
-					outputDocument.Version = inputDocument.Version;
-					outputDocument.Info.Title = Path.GetFileNameWithoutExtension(info.AttachmentPath) + "-" + values[idx + 1][col].ToString() + "-" + idx.ToString();
-					outputDocument.Info.Creator = inputDocument.Info.Creator;
-
-					// Add the page and save it
-					outputDocument.AddPage(inputDocument.Pages[idx]);
-					outputDocument.Save(GetPDFPath(info) + "/" + outputDocument.Info.Title + ".pdf");
+				int tmp = info.GroupIndex = 0;
+				info.GroupIndex = 0;
+				PdfReader reader = new PdfReader(info.GetFile(0));
+				PdfDocument doc = new PdfDocument(reader);
+				if (!Directory.Exists(GetPDFPath(info))) Directory.CreateDirectory(GetPDFPath(info));
+				for (int i = 1; i <= Min(doc.GetNumberOfPages(), values.Count - 1); i++ )
+				{				
+					string name = Path.GetFileNameWithoutExtension(info.AttachmentPath) + "-" + values[i][col].ToString() + "-" + i;
+					PdfWriter writer = new PdfWriter(GetPDFPath(info) + "/" + name + ".pdf");
+					PdfDocument pdfDoc = new PdfDocument(writer);
+					PdfPage page = doc.GetPage(i).CopyTo(pdfDoc);
+					pdfDoc.AddPage(page);
+					pdfDoc.Close();
 				}
+				info.GroupIndex = tmp;
 			}
 			);
 		}

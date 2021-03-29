@@ -26,10 +26,25 @@
 				<RowDefinition />
 				<RowDefinition />
 				<RowDefinition />
+				<RowDefinition />
 			</Grid.RowDefinitions>
+			<Button
+				Grid.Row="0"
+				VerticalAlignment="Top"
+				HorizontalAlignment="Left"
+				Margin="10"
+				Background="White"
+				BorderBrush="White"
+				Command="{Binding BackCmd}"
+				Style="{StaticResource MaterialDesignIconForegroundButton}">
+				<materialDesign:PackIcon
+						Kind="ArrowLeft"
+						Height="24"
+						Width="24" />
+			</Button>
 			<TextBlock 
 				Grid.Column="0"
-				Grid.Row="0"
+				Grid.Row="1"
 				Text="Thêm tệp đính kèm"
 				FontSize="20"
 				HorizontalAlignment="Left"
@@ -40,7 +55,7 @@
 			<StackPanel
 				HorizontalAlignment="Right"
 				Grid.Column="1"
-				Grid.Row="0"
+				Grid.Row="1"
 				Orientation="Horizontal"
 				FlowDirection="RightToLeft"
 				>
@@ -137,7 +152,7 @@
 			</StackPanel>
 			<DataGrid
 				ItemsSource="{Binding Attachments}"
-				Grid.Row="1"
+				Grid.Row="2"
 				Grid.ColumnSpan="2"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
@@ -188,7 +203,7 @@
 			</DataGrid>
 			<Button
 				Grid.Column="1"
-				Grid.Row="2"
+				Grid.Row="3"
 				HorizontalAlignment="Right"
 				Margin="10"
 				Height="50"

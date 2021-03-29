@@ -21,6 +21,7 @@ namespace PidgeotMail.ViewModel
 		public ICommand FileCmd { get; set; }
 		public ICommand NextCmd { get; set; }
 		public ICommand DeleteCmd { get; set; }
+		public ICommand BackCmd { get; set; }
 		public ObservableCollection<string> Selection { get; set; }
 		public ObservableCollection<AttachmentInfo> Attachments { get; set; }
 
@@ -118,6 +119,13 @@ namespace PidgeotMail.ViewModel
 					Messenger.Default.Send(new StartMessage(StartMessage.View.Result));
 				}
 			);
+
+			BackCmd = new RelayCommand(() =>
+			{
+				Messenger.Default.Send(new NavigateToMessage(new ChooseSourceView()));
+			}
+			);
+
 			Messenger.Default.Register<StartMessage>(this, (t) => Start(t));
 		}
 	}
