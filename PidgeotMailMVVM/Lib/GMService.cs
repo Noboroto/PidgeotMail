@@ -7,31 +7,40 @@ using MimeKit;
 using System.IO;
 using Google.Apis.Gmail.v1.Data;
 using System.Threading.Tasks;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 
 namespace PidgeotMail.Lib
 {
 	public class GMService
 	{
 		private static GmailService gs;
-
+		private static SmtpClient client;
+		private static string _UserEmail;
 		public static Task<IList<Draft>> DraftsList => Task.Run(() => gs.Users.Drafts.List("me").Execute().Drafts);
-		public static string UserEmail
+		public static string UserEmail => _UserEmail;
+
+		public static Task Init()
 		{
-			get
+			return Task.Run(() =>
 			{
-				Init();
-				return gs.Users.GetProfile("me").Execute().EmailAddress;
-			}
+				client = new SmtpClient();
+				if (gs != null) return;
+				gs = new GmailService(new BaseClientService.Initializer()
+				{
+					HttpClientInitializer = GoogleService.Credential,
+					ApplicationName = MainViewModel.AppName,
+				});
+				_UserEmail = gs.Users.GetProfile("me").Execute().EmailAddress;
+				client.Connect("smtp.gmail.com", 587);
+				var oauth2 = new SaslMechanismOAuth2(UserEmail, GoogleService.Credential.Token.AccessToken);
+				client.Authenticate(oauth2);
+			});
 		}
 
-		public static void Init()
+		public static async void Disconnect()
 		{
-			if (gs != null) return;
-			gs = new GmailService(new BaseClientService.Initializer()
-			{
-				HttpClientInitializer = GoogleService.Credential,
-				ApplicationName = MainViewModel.AppName,
-			});
+			await client.DisconnectAsync(true);
 		}
 
 		private static MimeMessage GetDataFromBase64(string input)
@@ -59,10 +68,7 @@ namespace PidgeotMail.Lib
 			try
 			{
 				Logs.Write("Start send");
-				if (m.MessageId == "-1") return m.Subject;
-				Message newMsg = new Message();
-				newMsg.Raw = Base64UrlEncode(m);
-				gs.Users.Messages.Send(newMsg, "me").Execute();
+				client.Send(m);
 			}
 			catch (Exception e)
 			{

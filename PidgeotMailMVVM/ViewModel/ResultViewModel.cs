@@ -127,7 +127,6 @@ namespace PidgeotMail.ViewModel
 					{
 						HomeEnabled = true;
 					});
-					if (Directory.Exists(MainViewModel.TempFolder)) Directory.Delete(MainViewModel.TempFolder, true);
 					break;
 				}
 			}

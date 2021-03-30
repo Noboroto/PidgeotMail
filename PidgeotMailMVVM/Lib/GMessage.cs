@@ -69,6 +69,7 @@ namespace PidgeotMail.Lib
 						if (f != null) builder.Attachments.Add(name, f); ;
 					}
 				t.Body = builder.ToMessageBody();
+				t.From.Add(new MailboxAddress("",GMService.UserEmail));
 			}
 			catch (Exception e)
 			{

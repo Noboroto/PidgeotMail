@@ -16,6 +16,12 @@ namespace PidgeotMail.ViewModel
 {
 	public class AttachmentViewModel : ViewModelBase
 	{
+		private bool _Continue;
+		public bool Continue
+		{
+			get => _Continue;
+			set => Set(ref _Continue, value);
+		}
 		public ICommand PDFCmd { get; set; }
 		public ICommand FolderCmd { get; set; }
 		public ICommand FileCmd { get; set; }
@@ -27,6 +33,7 @@ namespace PidgeotMail.ViewModel
 
 		public void Start(StartMessage s)
 		{
+			Continue = true;
 			if (s.CurrentView != StartMessage.View.Attachments) return;
 			Attachments.Clear();
 			Selection.Clear();
@@ -103,6 +110,7 @@ namespace PidgeotMail.ViewModel
 
 			NextCmd = new RelayCommand(async () =>
 				{
+					Continue = false;
 					if (Directory.Exists(MainViewModel.TempFolder)) Directory.Delete(MainViewModel.TempFolder, true);
 					UserSettings.Attachments = new List<AttachmentInfo>();
 					for (int i = Attachments.Count - 1; i >= 0; --i)

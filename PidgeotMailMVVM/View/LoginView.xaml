@@ -35,6 +35,7 @@
                     Margin="5"
                     Kind="Google" />
                 <TextBlock
+					IsEnabled="{Binding NeedLog}"
                     Grid.Column="1"
                     Text="Log in with Goolge Account"
                     VerticalAlignment="Center"

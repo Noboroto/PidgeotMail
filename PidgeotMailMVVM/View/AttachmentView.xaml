@@ -32,6 +32,7 @@
 				VerticalAlignment="Top"
 				HorizontalAlignment="Left"
 				Margin="10"
+				IsEnabled="{Binding Continue}"
 				Background="White"
 				BorderBrush="White"
 				Command="{Binding BackCmd}"
@@ -198,6 +199,7 @@
 				</DataGrid.Columns>
 			</DataGrid>
 			<Button
+				IsEnabled="{Binding Continue}"
 				Grid.Column="1"
 				Grid.Row="3"
 				HorizontalAlignment="Right"
