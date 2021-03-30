@@ -85,10 +85,10 @@ namespace PidgeotMail.ViewModel
 			sheet = UserSettings.Values;
 			Limit = sheet.Count - 1;
 			Done = 0;
-			HomeEnabled = false;
+			HomeEnabled = false;			
+			Warning = "Đang thực hiện ...";
 			await Process();
 			await Task.Run(Loop);
-			Warning = "Đang thực hiện ...";
 		}
 
 		private async void Loop()
@@ -98,13 +98,15 @@ namespace PidgeotMail.ViewModel
 			{
 				if (messages.Count > 0)
 				{
-					result = "OK";
+					result = GMService.Send(messages[0].message);					
+					Done++;
 					if (result != "OK")
 					{
 						Logs.Write(result);
 						App.Current.Dispatcher.Invoke(() =>
 						{
-							source[int.Parse(messages[0].MessageId)].Status = result;
+							source[int.Parse(messages[0].MessageId)-1].Status = result;
+							Warning = "Đã hoàn thành " + Done + " email";
 						});
 					}
 					else
@@ -113,10 +115,9 @@ namespace PidgeotMail.ViewModel
 						App.Current.Dispatcher.Invoke(() =>
 						{
 							source[int.Parse(messages[0].MessageId) - 1].Status = "Đã gửi";
-							Done++;
 							Warning = "Đã hoàn thành " + Done + " email";
 						});
-					}
+					}							
 					messages.RemoveAt(0);
 					await Task.Delay(1000);
 				}

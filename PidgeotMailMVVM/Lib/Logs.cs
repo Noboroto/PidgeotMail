@@ -10,7 +10,7 @@ namespace PidgeotMail.Lib
 
 		public static void Write(string message)
 		{
-			File.AppendAllText(path, DateTime.Now.ToString() + ": " + message + "\n");
+			File.AppendAllText(path, DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss: ") + message + "\n");
 		}
 
 		public static void Add(string message)

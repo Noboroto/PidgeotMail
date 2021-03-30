@@ -53,23 +53,26 @@ namespace PidgeotMail.Lib
 			}
 		}
 
-		public static Task<string> Send(MimeMessage m)
+		public static string Send(MimeMessage m)
 		{
-			return Task.Run(() =>
+			string result = "OK";
+			try
 			{
-				try
-				{
-					if (m.MessageId == "-1") return m.Subject;
-					Message newMsg = new Message();
-					newMsg.Raw = Base64UrlEncode(m);
-					gs.Users.Messages.Send(newMsg, "me").Execute();
-				}
-				catch (Exception e)
-				{
-					return e.ToString();
-				}
-				return "OK";
-			});
+				Logs.Write("Start send");
+				if (m.MessageId == "-1") return m.Subject;
+				Message newMsg = new Message();
+				newMsg.Raw = Base64UrlEncode(m);
+				gs.Users.Messages.Send(newMsg, "me").Execute();
+			}
+			catch (Exception e)
+			{
+				result = e.ToString();
+			}
+			finally
+			{
+				Logs.Write("End send");
+			}
+			return result;
 		}
 
 		public static Task<MimeMessage> GetDraftByID(string id)

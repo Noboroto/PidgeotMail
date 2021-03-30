@@ -63,7 +63,7 @@ namespace PidgeotMail.Lib
 							s = UserSettings.Values[id][x.GroupIndex - 1].ToString();
 							name = x.Name + "-" + s + "-" + id + x.OriginExt;
 						}
-						var info = x.GetFile(id - 1, s);
+						var info = x.GetFile(id, s);
 						FileStream f = info.OpenRead();
 						if (x.Enable) name = info.Name;
 						if (f != null) builder.Attachments.Add(name, f); ;
