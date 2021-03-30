@@ -40,7 +40,8 @@ namespace PidgeotMail.Lib
 			try
 			{
 				t = new MimeMessage();
-				t.Subject = subject;
+				t.Subject = subject;				
+				t.From.Add(new MailboxAddress("",GMService.UserEmail));
 				t.To.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.KeyColumn].ToString()));
 				if (!string.IsNullOrEmpty(UserSettings.Bcc)) t.Bcc.Add(new MailboxAddress("", UserSettings.Bcc));
 				if (!string.IsNullOrEmpty(UserSettings.Cc)) t.Cc.Add(new MailboxAddress("", UserSettings.Cc));
@@ -51,25 +52,32 @@ namespace PidgeotMail.Lib
 					{
 						builder.Attachments.Add(x);
 					}
-				if (UserSettings.Attachments != null) foreach (var x in UserSettings.Attachments)
+				if (UserSettings.Attachments != null) 
+				foreach (var x in UserSettings.Attachments)
+				{
+					string s, name = x.Name;
+					if (!x.Enable && !x.IsResultPDF)
 					{
-						string s, name = x.Name;
-						if (!x.Enable && !x.IsResultPDF)
-						{
-							s = x.AttachmentPath;
-						}
-						else
-						{
-							s = UserSettings.Values[id][x.GroupIndex - 1].ToString();
-							name = x.Name + "-" + s + "-" + id + x.OriginExt;
-						}
+						s = x.AttachmentPath;
+					}
+					else
+					{
+						s = UserSettings.Values[id][x.GroupIndex - 1].ToString();
+						name = x.Name + "-" + s + "-" + id + x.OriginExt;
+					}
+					try
+					{
 						var info = x.GetFile(id, s);
 						FileStream f = info.OpenRead();
 						if (x.Enable) name = info.Name;
 						if (f != null) builder.Attachments.Add(name, f); ;
 					}
+					catch (NullReferenceException)
+					{
+						continue;
+					}
+				}
 				t.Body = builder.ToMessageBody();
-				t.From.Add(new MailboxAddress("",GMService.UserEmail));
 			}
 			catch (Exception e)
 			{
