@@ -21,7 +21,7 @@ namespace PidgeotMail.Lib
 		{
 			get => _GroupIndex; set
 			{
-				if (Enable && value == 0) value = 1; 
+				if (Enable && value == 0) value = 1;
 				Set(ref _GroupIndex, value);
 			}
 		}

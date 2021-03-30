@@ -41,7 +41,7 @@ namespace PidgeotMail.ViewModel
 				RaisePropertyChanged(nameof(SelectGs));
 			}
 		}
-		public int Row { get =>  _Row; set => Set(ref _Row, value); }
+		public int Row { get => _Row; set => Set(ref _Row, value); }
 		public int Column { get => _Column; set => Set(ref _Column, value); }
 		public string ExPath { get => _ExPath; set => Set(ref _ExPath, value); }
 

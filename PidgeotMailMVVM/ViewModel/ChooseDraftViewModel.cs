@@ -28,10 +28,10 @@ namespace PidgeotMail.ViewModel
 		public ObservableCollection<GMessage> ListSource { get; set; }
 
 		public ICommand LogoutCmd { get; set; }
-		public ICommand NextCmd { get; set; }		
+		public ICommand NextCmd { get; set; }
 		public RelayCommand RefreshCmd { get; set; }
 
-		public bool CanRefresh { get =>_CanRefresh; set => Set(ref _CanRefresh, value); }
+		public bool CanRefresh { get => _CanRefresh; set => Set(ref _CanRefresh, value); }
 		public GMessage SelectedItem
 		{
 			get => item;
@@ -66,7 +66,7 @@ namespace PidgeotMail.ViewModel
 					Messenger.Default.Send(new NavigateToMessage(new ChooseSourceView()));
 					Messenger.Default.Send(new StartMessage(StartMessage.View.ChooseSource));
 				}, () => (SelectedIndex >= 0) && (ListSource.Count > 0)
-			) ;
+			);
 
 			LogoutCmd = new RelayCommand(() =>
 				{

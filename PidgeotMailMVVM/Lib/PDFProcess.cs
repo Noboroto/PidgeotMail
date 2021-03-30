@@ -31,8 +31,8 @@ namespace PidgeotMail.Lib
 				PdfReader reader = new PdfReader(info.GetFile(0));
 				PdfDocument doc = new PdfDocument(reader);
 				if (!Directory.Exists(GetPDFPath(info))) Directory.CreateDirectory(GetPDFPath(info));
-				for (int i = 1; i <= Min(doc.GetNumberOfPages(), values.Count - 1); i++ )
-				{				
+				for (int i = 1; i <= Min(doc.GetNumberOfPages(), values.Count - 1); i++)
+				{
 					string name = Path.GetFileNameWithoutExtension(info.AttachmentPath) + "-" + values[i][col].ToString() + "-" + i;
 					PdfWriter writer = new PdfWriter(GetPDFPath(info) + "/" + name + ".pdf");
 					PdfDocument pdfDoc = new PdfDocument(writer);

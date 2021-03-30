@@ -25,7 +25,7 @@ namespace PidgeotMail.ViewModel
 		public ObservableCollection<string> Selection { get; set; }
 		public ObservableCollection<AttachmentInfo> Attachments { get; set; }
 
-		public void Start (StartMessage s)
+		public void Start(StartMessage s)
 		{
 			if (s.CurrentView != StartMessage.View.Attachments) return;
 			Attachments.Clear();
@@ -50,7 +50,7 @@ namespace PidgeotMail.ViewModel
 					for (int i = Attachments.Count - 1; i >= 0; --i)
 					{
 						if (Attachments[i].IsSelected)
-						{							
+						{
 							Logs.Add("Xoá file: " + Attachments[i].AttachmentPath);
 							Attachments.RemoveAt(i);
 						}
@@ -85,7 +85,7 @@ namespace PidgeotMail.ViewModel
 					}
 				}
 			);
-			
+
 			FileCmd = new RelayCommand(() =>
 			{
 				OpenFileDialog openFileDialog = new OpenFileDialog();

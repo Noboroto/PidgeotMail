@@ -78,7 +78,7 @@ namespace PidgeotMail.ViewModel
 			Logs.Add("Html: " + ChoiceMail.message.HtmlBody);
 		}
 
-		private void Start(StartMessage s)
+		private async void Start(StartMessage s)
 		{
 			if (s.CurrentView != StartMessage.View.Result) return;
 			Logs.Write("Bắt đầu gửi mail");
@@ -86,14 +86,14 @@ namespace PidgeotMail.ViewModel
 			Limit = sheet.Count - 1;
 			Done = 0;
 			HomeEnabled = false;
-			Loop();
+			await Process();
+			await Task.Run(Loop);
 			Warning = "Đang thực hiện ...";
 		}
 
 		private async void Loop()
 		{
-			string result;			
-			await Process();
+			string result;
 			while (!_Cancel)
 			{
 				if (messages.Count > 0)
@@ -102,20 +102,30 @@ namespace PidgeotMail.ViewModel
 					if (result != "OK")
 					{
 						Logs.Write(result);
-						source[int.Parse(messages[0].MessageId)].Status = result;
+						App.Current.Dispatcher.Invoke(() =>
+						{
+							source[int.Parse(messages[0].MessageId)].Status = result;
+						});
 					}
 					else
 					{
 						Logs.Write(messages[0].message.To.ToString());
-						source[int.Parse(messages[0].MessageId) - 1].Status = "Đã gửi";
-						Done++;
-						Warning = "Đã hoàn thành " + Done + " email";
+						App.Current.Dispatcher.Invoke(() =>
+						{
+							source[int.Parse(messages[0].MessageId) - 1].Status = "Đã gửi";
+							Done++;
+							Warning = "Đã hoàn thành " + Done + " email";
+						});
 					}
 					messages.RemoveAt(0);
+					await Task.Delay(1000);
 				}
-				if (Done == UserSettings.Values.Count)
+				if (Done >= UserSettings.Values.Count - 1)
 				{
-					HomeEnabled = true;
+					App.Current.Dispatcher.Invoke(() =>
+					{
+						HomeEnabled = true;
+					});
 					if (Directory.Exists(MainViewModel.TempFolder)) Directory.Delete(MainViewModel.TempFolder, true);
 					break;
 				}
@@ -145,26 +155,28 @@ namespace PidgeotMail.ViewModel
 					subject = ChoiceMail.Subject;
 					foreach (var value in header)
 					{
-						try
+						if (value.Value >= sheet[i].Count) continue;
+						replacement = (sheet[i][value.Value] != null) ? sheet[i][value.Value].ToString() : "";
+						s = HtmlEncode(UserSettings.L) + value.Key + HtmlEncode(UserSettings.R);
+						plainbody = plainbody.Replace(UserSettings.L + value.Key + UserSettings.R, replacement);
+						htmlbody = htmlbody.Replace(s, replacement);
+						subject = subject.Replace(UserSettings.L + value.Key + UserSettings.R, replacement);
+					}
+					try
+					{
+						messages.Add(new GMessage(i.ToString(), ChoiceMail.GenerateClone(i, subject, plainbody, htmlbody)));
+						App.Current.Dispatcher.Invoke(() =>
 						{
-							if (value.Value >= sheet[i].Count) continue;
-							replacement = (sheet[i][value.Value] != null) ? sheet[i][value.Value].ToString() : "";
-							s = HtmlEncode(UserSettings.L) + value.Key + HtmlEncode(UserSettings.R);
-							plainbody = plainbody.Replace(UserSettings.L + value.Key + UserSettings.R, replacement);
-							htmlbody = htmlbody.Replace(s, replacement);
-							subject = subject.Replace(UserSettings.L + value.Key + UserSettings.R, replacement);
-
-							messages.Add(new GMessage(i.ToString(), ChoiceMail.GenerateClone(i, subject, plainbody, htmlbody)));
 							source.Add(new SenderInfo(i, sheet[i][header["Email"]].ToString(), "Đợi gửi"));
-						}				
-						catch (Exception ex)
-						{
-							Logs.Write(ex.ToString());
-							Done++;
-						}
+						});
+					}
+					catch (Exception ex)
+					{
+						Logs.Write(ex.ToString());
+						Done++;
 					}
 				}
-		   });
+			});
 		}
 	}
 }

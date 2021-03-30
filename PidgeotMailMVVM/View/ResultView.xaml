@@ -9,128 +9,120 @@
 	d:DesignWidth="800"
 	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 	DataContext="{Binding Result, Mode=OneWay, Source={StaticResource Locator}}">
-	<Grid>
-		<materialDesign:Card
-			Width="auto"
-			Height="auto"
-			MaxWidth="1000"
-			Margin="10"
-			materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
-			materialDesign:ShadowAssist.ShadowDepth="Depth2"
-			HorizontalAlignment="Center"
-			VerticalAlignment="Center">
-			<ScrollViewer
-				HorizontalScrollBarVisibility="Disabled"
-				VerticalScrollBarVisibility="Auto">
-				<StackPanel>
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition
-								Width="1*" />
-							<ColumnDefinition
-								Width="1*" />
-						</Grid.ColumnDefinitions>
-						<!--<Button 
-							HorizontalAlignment="Stretch"
-							VerticalAlignment="Stretch"
-							Margin="5"
-							materialDesign:ShadowAssist.ShadowDepth="Depth3"
-							Grid.Column="0"
-							Command="{Binding HomeCmd}"
-							Content="Về trang chủ" />-->
-						<Button
-							Background="#c62828"
-							BorderBrush="#c62828"
-							materialDesign:ShadowAssist.ShadowDepth="Depth3"
-							Margin="5"
-							Grid.Column="0"
-							Grid.ColumnSpan="2"
-							IsEnabled="{Binding HomeEnabled}"
-							Command="{Binding CloseCmd}"
-							Content="Đóng" />
-					</Grid>
-					<TextBlock
-						ScrollViewer.VerticalScrollBarVisibility="Auto"
-						MaxHeight="500"
-						Margin="5"
-						Text="{Binding Warning, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-						TextWrapping="Wrap"
-						MaxWidth="300"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center" />
-					<ProgressBar 
-						Margin="10"
-						Height="10"
-						Maximum="{Binding Limit}"
-						Value="{Binding Done}"
-						/>
-					<Grid
-						Width="500"
-						ScrollViewer.HorizontalScrollBarVisibility="Auto"
-						ScrollViewer.VerticalScrollBarVisibility="Auto">
-						<DataGrid
-							HorizontalAlignment="Center"
-							ItemsSource="{Binding source}"
-							CanUserSortColumns="False"
-							CanUserAddRows="False"
-							AutoGenerateColumns="False"
-							CanUserReorderColumns="False"
-							IsReadOnly="True"
-							MaxWidth="800"
-							CanUserResizeColumns="False"
-							CanUserResizeRows="False"
-							HeadersVisibility="Column">
-							<DataGrid.CellStyle>
-								<Style
-									TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-									<Setter
-										Property="Background" 
-										Value="Red"
-										/>
-									<Style.Triggers>
-										<DataTrigger
-											Binding="{Binding Status}"
-											Value="Đợi gửi"
-											>
-											<Setter
-												Property="Background"
-												Value="#fff176"
-												/>
-										</DataTrigger>
-										<DataTrigger
-											Binding="{Binding Status}"
-											Value="Đã gửi">
-											<Setter
-												Property="Background"
-												Value="#4caf50" />
-										</DataTrigger>
-									</Style.Triggers>
-								</Style>
-							</DataGrid.CellStyle>
-							<DataGrid.Columns>
-								<materialDesign:DataGridTextColumn
-									IsReadOnly="True"
-									Binding="{Binding ID}"
-									Header="ID"
-									ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}">
-								</materialDesign:DataGridTextColumn>
-								<materialDesign:DataGridTextColumn
-									IsReadOnly="True"
-									Binding="{Binding To}"
-									Header="Gửi đến"
-									ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}">
-								</materialDesign:DataGridTextColumn>
-								<materialDesign:DataGridTextColumn
-									IsReadOnly="True"
-									Binding="{Binding Status}"
-									Header="Kết quả"
-									ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}">
-								</materialDesign:DataGridTextColumn>
-							</DataGrid.Columns>
-						</DataGrid>
-					</Grid>
-				</StackPanel>
-			</ScrollViewer>
-		</materialDesign:Card>
-	</Grid>
-</Page>
+	<materialDesign:Card
+		Width="auto"
+		Height="auto"
+		MaxWidth="1000"
+		Margin="10"
+		materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
+		materialDesign:ShadowAssist.ShadowDepth="Depth2"
+		HorizontalAlignment="Center"
+		VerticalAlignment="Center">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<Grid
+				Grid.Row="0"
+				>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition
+						Width="1*" />
+					<ColumnDefinition
+						Width="1*" />
+				</Grid.ColumnDefinitions>
+				<!--<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" materialDesign:ShadowAssist.ShadowDepth="Depth3" Grid.Column="0" Command="{Binding HomeCmd}" Content="Về trang chủ" />-->
+				<Button
+					Background="#c62828"
+					BorderBrush="#c62828"
+					materialDesign:ShadowAssist.ShadowDepth="Depth3"
+					Margin="15"
+					Grid.Column="0"
+					Grid.ColumnSpan="2"
+					IsEnabled="{Binding HomeEnabled}"
+					Command="{Binding CloseCmd}"
+					Content="Đóng" />
+			</Grid>
+			<TextBlock
+				Grid.Row="1"
+				ScrollViewer.VerticalScrollBarVisibility="Auto"
+				MaxHeight="500"
+				Margin="5"
+				Text="{Binding Warning, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+				TextWrapping="Wrap"
+				MaxWidth="300"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center" />
+			<ProgressBar
+				Grid.Row="2"
+				Margin="15 10 15 10"
+				Height="10"
+				Maximum="{Binding Limit}"
+				Value="{Binding Done}" />
+			<DataGrid
+				Grid.Row="3"
+				Margin="10"
+				Height="auto"
+				MinWidth="500"
+				Width="auto"
+				ScrollViewer.VerticalScrollBarVisibility="Auto"
+				ScrollViewer.HorizontalScrollBarVisibility="Auto"
+				HorizontalAlignment="Center"
+				ItemsSource="{Binding source}"
+				CanUserSortColumns="False"
+				CanUserAddRows="False"
+				AutoGenerateColumns="False"
+				CanUserReorderColumns="False"
+				IsReadOnly="True"
+				CanUserResizeColumns="False"
+				CanUserResizeRows="False"
+				HeadersVisibility="Column">
+				<DataGrid.CellStyle>
+					<Style
+						TargetType="DataGridCell"
+						BasedOn="{StaticResource MaterialDesignDataGridCell}">
+						<Setter
+							Property="Background"
+							Value="Red" />
+						<Style.Triggers>
+							<DataTrigger
+								Binding="{Binding Status}"
+								Value="Đợi gửi">
+								<Setter
+									Property="Background"
+									Value="#fff176" />
+							</DataTrigger>
+							<DataTrigger
+								Binding="{Binding Status}"
+								Value="Đã gửi">
+								<Setter
+									Property="Background"
+									Value="#4caf50" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</DataGrid.CellStyle>
+				<DataGrid.Columns>
+					<materialDesign:DataGridTextColumn
+						IsReadOnly="True"
+						Binding="{Binding ID}"
+						Header="ID"
+						ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"></materialDesign:DataGridTextColumn>
+					<materialDesign:DataGridTextColumn
+						IsReadOnly="True"
+						Binding="{Binding To}"
+						Header="Gửi đến"
+						ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"></materialDesign:DataGridTextColumn>
+					<materialDesign:DataGridTextColumn
+						IsReadOnly="True"
+						Binding="{Binding Status}"
+						Header="Kết quả"
+						ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"></materialDesign:DataGridTextColumn>
+				</DataGrid.Columns>
+			</DataGrid>
+		</Grid>
+	</materialDesign:Card>
+</Page> 

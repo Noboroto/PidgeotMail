@@ -13,14 +13,13 @@
 		VerticalAlignment="Center"
 		HorizontalAlignment="Center"
 		Margin="10"
-		MaxHeight="800"
-		>
+		MaxHeight="800">
 		<Grid
-			Margin="5"
-			>
+			Margin="5">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition />
-				<ColumnDefinition Width="auto" />
+				<ColumnDefinition
+					Width="auto" />
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition />
@@ -38,11 +37,11 @@
 				Command="{Binding BackCmd}"
 				Style="{StaticResource MaterialDesignIconForegroundButton}">
 				<materialDesign:PackIcon
-						Kind="ArrowLeft"
-						Height="24"
-						Width="24" />
+					Kind="ArrowLeft"
+					Height="24"
+					Width="24" />
 			</Button>
-			<TextBlock 
+			<TextBlock
 				Grid.Column="0"
 				Grid.Row="1"
 				Text="Thêm tệp đính kèm"
@@ -50,21 +49,20 @@
 				HorizontalAlignment="Left"
 				VerticalAlignment="Center"
 				FontWeight="Black"
-				Margin="5"
-				/>
+				Margin="5" />
 			<StackPanel
 				HorizontalAlignment="Right"
 				Grid.Column="1"
 				Grid.Row="1"
 				Orientation="Horizontal"
-				FlowDirection="RightToLeft"
-				>
+				FlowDirection="RightToLeft">
 				<StackPanel.Resources>
-					<Style TargetType="Button" BasedOn="{StaticResource MaterialDesignOutlinedButton}">
-						<Setter 
+					<Style
+						TargetType="Button"
+						BasedOn="{StaticResource MaterialDesignOutlinedButton}">
+						<Setter
 							Property="Margin"
-							Value="5"
-							/>
+							Value="5" />
 					</Style>
 				</StackPanel.Resources>
 				<Button
@@ -137,8 +135,7 @@
 							HorizontalAlignment="Center"
 							Kind="FilePdf"
 							Width="20"
-							Height="20"
-							/>
+							Height="20" />
 						<TextBlock
 							FontSize="12"
 							HorizontalAlignment="Center"
@@ -188,8 +185,7 @@
 						MaxWidth="350"
 						IsReadOnly="True" />
 					<DataGridTemplateColumn
-						Header="Gửi theo..."
-						>
+						Header="Gửi theo...">
 						<DataGridTemplateColumn.CellTemplate>
 							<DataTemplate>
 								<ComboBox
@@ -222,5 +218,5 @@
 				</StackPanel>
 			</Button>
 		</Grid>
-    </materialDesign:Card>
+	</materialDesign:Card>
 </Page>

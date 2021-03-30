@@ -205,7 +205,7 @@
 									VerticalAlignment="Center"
 									Command="{Binding BrowseCmd}"
 									Content="Chọn tệp" />
-								<TextBlock 
+								<TextBlock
 									x:Name="Ex"
 									FontSize="14"
 									Grid.Column="1"

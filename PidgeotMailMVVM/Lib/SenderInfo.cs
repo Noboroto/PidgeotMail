@@ -2,7 +2,7 @@
 
 namespace PidgeotMail.Lib
 {
-	public class SenderInfo : ObservableObject 
+	public class SenderInfo : ObservableObject
 	{
 		private string _Status;
 		public int ID { get; set; }
