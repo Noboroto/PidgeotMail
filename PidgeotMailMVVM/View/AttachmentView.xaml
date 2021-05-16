@@ -140,7 +140,7 @@
 						<TextBlock
 							FontSize="12"
 							HorizontalAlignment="Center"
-							Text="Phiếu điểm" />
+							Text="Cắt và gửi PDF" />
 						<TextBlock
 							FontSize="12"
 							HorizontalAlignment="Center"
