@@ -170,7 +170,7 @@ namespace PidgeotMail.ViewModel
 					}
 					catch (Exception ex)
 					{
-						log.Error("", ex);
+						log.Error(ex.ToString());
 						Done++;
 					}
 				}

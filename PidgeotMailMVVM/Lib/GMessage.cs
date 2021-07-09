@@ -104,7 +104,7 @@ namespace PidgeotMail.Lib
 			catch (Exception e)
 			{
 				MessageBox.Show(e.ToString() + " " + realID + "\nBạn có thể bỏ qua thông báo này");
-				log.Error(e.ToString() + realID, e);
+				log.Error(e.ToString() + realID);
 				return output;
 			}
 		}

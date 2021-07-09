@@ -40,7 +40,7 @@ namespace PidgeotMail.ViewModel
 			}
 			catch (Exception e)
 			{
-				log.Error("", e);
+				log.Error(e.ToString());
 			}
 		}
 		public async void ActiveAcount()
@@ -54,7 +54,7 @@ namespace PidgeotMail.ViewModel
 			}
 			catch (Exception e)
 			{
-				log.Error("", e);
+				log.Error(e.ToString());
 				return;
 			}
 		}

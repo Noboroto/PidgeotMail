@@ -9,6 +9,7 @@ using Google.Apis.Gmail.v1.Data;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using System.Threading;
 
 namespace PidgeotMail.Lib
 {
@@ -22,8 +23,10 @@ namespace PidgeotMail.Lib
 		public static Task<IList<Draft>> DraftsList => Task.Run(() => gs.Users.Drafts.List("me").Execute().Drafts);
 		public static string UserEmail => _UserEmail;
 
+		static CancellationTokenSource source = new CancellationTokenSource();
+
 		public static Task Init()
-		{
+		{		
 			return Task.Run(() =>
 			{
 				client = new SmtpClient();
@@ -34,10 +37,17 @@ namespace PidgeotMail.Lib
 					ApplicationName = MainViewModel.AppName,
 				});
 				_UserEmail = gs.Users.GetProfile("me").Execute().EmailAddress;
+				connect:
 				client.Connect("smtp.gmail.com", 587);
 				var oauth2 = new SaslMechanismOAuth2(UserEmail, GoogleService.Credential.Token.AccessToken);
+				if (!client.IsConnected) goto connect;
 				client.Authenticate(oauth2);
 			});
+		}
+
+		public static Task VerifyEmail (string email)
+		{
+			return client.VerifyAsync(email);
 		}
 
 		public static async void Disconnect()

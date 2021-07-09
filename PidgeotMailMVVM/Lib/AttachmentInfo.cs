@@ -41,7 +41,7 @@ namespace PidgeotMail.Lib
 			}
 			catch (Exception e)
 			{
-				log.Error("", e);
+				log.Error(e.ToString());
 				return null;
 			}
 		}
