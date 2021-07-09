@@ -124,46 +124,6 @@
 						</MultiBinding>
 					</TextBlock.Text>
 				</TextBlock>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition
-							Width="auto" />
-						<ColumnDefinition
-							Width="*" />
-					</Grid.ColumnDefinitions>
-					<Label
-						Margin="10 5 10 5"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						Grid.Column="0"
-						Content="Cc" />
-					<TextBox
-						Margin="10 5 10 5"
-						Grid.Column="1"
-						TextWrapping="Wrap"
-						MaxWidth="500"
-						Text="{Binding Cc}" />
-				</Grid>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition
-							Width="auto" />
-						<ColumnDefinition
-							Width="*" />
-					</Grid.ColumnDefinitions>
-					<Label
-						Margin="10 5 10 5"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						Grid.Column="0"
-						Content="Bcc" />
-					<TextBox
-						TextWrapping="Wrap"
-						Margin="10 5 10 5"
-						MaxWidth="500"
-						Text="{Binding Bcc}"
-						Grid.Column="1" />
-				</Grid>
 				<RadioButton
 					VerticalAlignment="Top"
 					Name="ExcelSelect"

@@ -12,6 +12,7 @@ using PidgeotMail.MessageForUI;
 using PidgeotMail.View;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace PidgeotMail.ViewModel
 {
@@ -42,10 +43,12 @@ namespace PidgeotMail.ViewModel
 		public int Done { get => _Done; set => Set(ref _Done, value); }
 		public int Limit { get => _Linmit; set => Set(ref _Linmit, value); }
 
-		public ObservableCollection<SenderInfo> source { get; set; }
+		public ObservableCollection<ReceiverInfo> source { get; set; }
+		public List<string> FailEmail;
 
 		public RelayCommand HomeCmd { get; set; }
 		public RelayCommand CloseCmd { get; set; }
+		public RelayCommand SaveFailedCmd { get; set; }
 
 		public static string HtmlEncode(string text)
 		{
@@ -55,7 +58,7 @@ namespace PidgeotMail.ViewModel
 		public ResultViewModel()
 		{
 			Messenger.Default.Register<StartMessage>(this, (t) => Start(t));
-			source = new ObservableCollection<SenderInfo>();
+			source = new ObservableCollection<ReceiverInfo>();
 			CloseCmd = new RelayCommand(() =>
 			{
 				App.Current.Shutdown();
@@ -66,6 +69,15 @@ namespace PidgeotMail.ViewModel
 					Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
 				}
 			);
+			SaveFailedCmd = new RelayCommand(() =>
+			{
+				SaveFileDialog saveFileDialog = new SaveFileDialog();
+				saveFileDialog.Filter = "Text file (*.txt)|*.txt";
+				if (saveFileDialog.ShowDialog() == DialogResult.OK)
+					foreach (var s in FailEmail)
+						File.WriteAllText(saveFileDialog.FileName, s);
+			}
+);
 		}
 
 		private static void AddLogs(GMessage ChoiceMail)
@@ -84,7 +96,7 @@ namespace PidgeotMail.ViewModel
 			sheet = UserSettings.Values;
 			Limit = sheet.Count - 1;
 			Done = 0;
-			HomeEnabled = false;			
+			HomeEnabled = false;
 			Warning = "Đang thực hiện ...";
 			await Process();
 			await Task.Run(Loop);
@@ -97,14 +109,15 @@ namespace PidgeotMail.ViewModel
 			{
 				if (messages.Count > 0)
 				{
-					result = GMService.Send(messages[0].message);					
+					result = GMService.Send(messages[0].message);
 					Done++;
 					if (result != "OK")
 					{
 						log.Error(result);
 						App.Current.Dispatcher.Invoke(() =>
 						{
-							source[int.Parse(messages[0].MessageId)-1].Status = result;
+							source[int.Parse(messages[0].MessageId) - 1].Status = result;
+							FailEmail.Add(source[int.Parse(messages[0].MessageId) - 1].ToString());
 							Warning = "Đã hoàn thành " + Done + " email";
 						});
 					}
@@ -116,7 +129,7 @@ namespace PidgeotMail.ViewModel
 							source[int.Parse(messages[0].MessageId) - 1].Status = "Đã gửi";
 							Warning = "Đã hoàn thành " + Done + " email";
 						});
-					}							
+					}
 					messages.RemoveAt(0);
 					await Task.Delay(1000);
 				}
@@ -165,7 +178,7 @@ namespace PidgeotMail.ViewModel
 						messages.Add(new GMessage(i.ToString(), ChoiceMail.GenerateClone(i, subject, plainbody, htmlbody)));
 						App.Current.Dispatcher.Invoke(() =>
 						{
-							source.Add(new SenderInfo(i, sheet[i][header["Email"]].ToString(), "Đợi gửi"));
+							source.Add(new ReceiverInfo(i, sheet[i][header["Email"]].ToString(), "Đợi gửi"));
 						});
 					}
 					catch (Exception ex)

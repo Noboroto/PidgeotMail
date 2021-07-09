@@ -23,8 +23,6 @@ namespace PidgeotMail.ViewModel
 
 		public string Left { get => UserSettings.L; set => Set(nameof(UserSettings.L), ref UserSettings.L, value); }
 		public string Right { get => UserSettings.R; set => Set(nameof(UserSettings.R), ref UserSettings.R, value); }
-		public string Bcc { get => UserSettings.Bcc; set => Set(nameof(UserSettings.Bcc), ref UserSettings.Bcc, value); }
-		public string Cc { get => UserSettings.Cc; set => Set(nameof(UserSettings.Cc), ref UserSettings.Cc, value); }
 		public string Link { get => _Link; set => Set(ref _Link, value); }
 		public bool SelectEx
 		{
@@ -63,8 +61,6 @@ namespace PidgeotMail.ViewModel
 			Left = "{{";
 			Right = "}}";
 			ExPath = "Chưa chọn";
-			Bcc = "";
-			Cc = "";
 			Link = "";
 			Row = 0;
 			Column = 0;

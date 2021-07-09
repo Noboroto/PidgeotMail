@@ -46,6 +46,8 @@ namespace PidgeotMail.Lib
 						if (_Header.ContainsKey(value.ToString())) _Header[value.ToString()] = i;
 						else _Header.Add(value.ToString(), i);
 						if (value.ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
+						if (value.ToString().Trim().ToUpper() == "BCC") UserSettings.BccColumn = i;
+						if (value.ToString().Trim().ToUpper() == "CC") UserSettings.CcColumn = i;
 						i++;
 					}
 					if (_Header.Count < Col || _Values.Count < Row) return "Danh sách không liền mạch";

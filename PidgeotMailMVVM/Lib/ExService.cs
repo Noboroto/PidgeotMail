@@ -56,6 +56,8 @@ namespace PidgeotMail.Lib
 								if (i != 0) continue;
 								_Header.Add(_Values[i][j].ToString(), x);
 								if (_Values[i][j].ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
+								if (_Values[i][j].ToString().Trim().ToUpper() == "BCC") UserSettings.BccColumn = i;								if (_Values[i][j].ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
+								if (_Values[i][j].ToString().Trim().ToUpper() == "CC") UserSettings.CcColumn = i;
 								x++;
 							}
 						}

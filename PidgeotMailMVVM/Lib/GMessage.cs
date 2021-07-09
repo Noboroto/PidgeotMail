@@ -45,8 +45,8 @@ namespace PidgeotMail.Lib
 				t.Subject = subject;				
 				t.From.Add(new MailboxAddress("",GMService.UserEmail));
 				t.To.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.KeyColumn].ToString()));
-				if (!string.IsNullOrEmpty(UserSettings.Bcc)) t.Bcc.Add(new MailboxAddress("", UserSettings.Bcc));
-				if (!string.IsNullOrEmpty(UserSettings.Cc)) t.Cc.Add(new MailboxAddress("", UserSettings.Cc));
+				if (UserSettings.BccColumn != -1) t.Bcc.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.BccColumn].ToString()));
+				if (UserSettings.CcColumn != -1) t.Cc.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.CcColumn].ToString()));
 				var builder = new BodyBuilder();
 				builder.HtmlBody = htmlbody;
 				builder.TextBody = plainbody;
