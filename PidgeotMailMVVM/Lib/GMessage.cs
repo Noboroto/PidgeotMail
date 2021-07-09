@@ -8,6 +8,8 @@ namespace PidgeotMail.Lib
 {
 	public class GMessage
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public MimeMessage message { get; set; }
 		public string MessageId { get; set; }
 		public string HTMLContent
@@ -102,7 +104,7 @@ namespace PidgeotMail.Lib
 			catch (Exception e)
 			{
 				MessageBox.Show(e.ToString() + " " + realID + "\nBạn có thể bỏ qua thông báo này");
-				Logs.Write(e.ToString() + realID);
+				log.Error(e.ToString() + realID, e);
 				return output;
 			}
 		}

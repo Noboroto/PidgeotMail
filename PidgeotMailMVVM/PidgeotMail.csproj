@@ -112,6 +112,9 @@
     <Reference Include="itext.svg, Version=7.1.14.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\itext7.7.1.14\lib\net40\itext.svg.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MailKit, Version=2.11.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.2.11.1\lib\net46\MailKit.dll</HintPath>
     </Reference>
@@ -171,7 +174,6 @@
     <Compile Include="Lib\GoogleService.cs" />
     <Compile Include="Lib\GSheetService.cs" />
     <Compile Include="Lib\HtmlPreviewVisitor.cs" />
-    <Compile Include="Lib\Logs.cs" />
     <Compile Include="Lib\PDFProcess.cs" />
     <Compile Include="Lib\SenderInfo.cs" />
     <Compile Include="Lib\UserSettings.cs" />

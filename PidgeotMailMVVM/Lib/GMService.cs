@@ -14,6 +14,8 @@ namespace PidgeotMail.Lib
 {
 	public class GMService
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private static GmailService gs;
 		private static SmtpClient client;
 		private static string _UserEmail;
@@ -67,7 +69,7 @@ namespace PidgeotMail.Lib
 			string result = "OK";
 			try
 			{
-				Logs.Write("Start send");
+				log.Info("Start send");
 				client.Send(m);
 			}
 			catch (Exception e)
@@ -76,7 +78,7 @@ namespace PidgeotMail.Lib
 			}
 			finally
 			{
-				Logs.Write("End send");
+				log.Info("End send");
 			}
 			return result;
 		}

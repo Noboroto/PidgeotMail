@@ -18,6 +18,8 @@ namespace PidgeotMail.ViewModel
 		private int _Row;
 		private int _Column;
 		private string _ExPath;
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 
 		public string Left { get => UserSettings.L; set => Set(nameof(UserSettings.L), ref UserSettings.L, value); }
 		public string Right { get => UserSettings.R; set => Set(nameof(UserSettings.R), ref UserSettings.R, value); }
@@ -96,17 +98,17 @@ namespace PidgeotMail.ViewModel
 						if (result != "OK")
 						{
 							MessageBox.Show(result);
-							Logs.Write(result);
+							log.Error(result);
 							return;
 						}
 						result = await GSheetService.InitValue(Column, Row);
 						if (result != "OK")
 						{
 							MessageBox.Show(result);
-							Logs.Write(result);
+							log.Error(result);
 							return;
 						}
-						Logs.Write("Đã chọn sheet " + GSheetService.ChoiceSheetID);
+						log.Info("Choose " + GSheetService.ChoiceSheetID);
 						UserSettings.HeaderLocation = GSheetService.Header;
 						UserSettings.Values = GSheetService.Values;
 					}
@@ -116,19 +118,19 @@ namespace PidgeotMail.ViewModel
 						if (result != "OK")
 						{
 							MessageBox.Show(result);
-							Logs.Write(result);
+							log.Error(result);
 							return;
 						}
 						result = await ExService.InitValue(Column, Row);
 						if (result != "OK")
 						{
 							MessageBox.Show(result);
-							Logs.Write(result);
+							log.Error(result);
 							return;
 						}
 						UserSettings.HeaderLocation = ExService.Header;
 						UserSettings.Values = ExService.Value;
-						Logs.Write("Đã chọn ExcelWorkbook " + ExService.Path);
+						log.Info("Đã chọn ExcelWorkbook " + ExService.Path);
 					}
 					Messenger.Default.Send(new NavigateToMessage(new AttachmentView()));
 					Messenger.Default.Send(new StartMessage(StartMessage.View.Attachments));

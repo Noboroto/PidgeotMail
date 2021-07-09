@@ -21,6 +21,7 @@ namespace PidgeotMail.ViewModel
 	public class ResultViewModel : ViewModelBase
 	{
 		private string _Warning;
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private bool _HomeEnabled;
 		private int _Done;
 		private int _Linmit;
@@ -69,19 +70,17 @@ namespace PidgeotMail.ViewModel
 
 		private static void AddLogs(GMessage ChoiceMail)
 		{
-			Logs.Add("Origin: ");
-			Logs.Add("ID: " + ChoiceMail.MessageId);
-			Logs.Add("Subject: " + ChoiceMail.Subject);
-			Logs.Add("Cc: " + UserSettings.Cc);
-			Logs.Add("Bcc: " + UserSettings.Bcc);
-			Logs.Add("Text: " + ChoiceMail.message.TextBody);
-			Logs.Add("Html: " + ChoiceMail.message.HtmlBody);
+			log.Info("Origin: ");
+			log.Info("ID: " + ChoiceMail.MessageId);
+			log.Info("Subject: " + ChoiceMail.Subject);
+			log.Info("Text: " + ChoiceMail.message.TextBody);
+			log.Info("Html: " + ChoiceMail.message.HtmlBody);
 		}
 
 		private async void Start(StartMessage s)
 		{
 			if (s.CurrentView != StartMessage.View.Result) return;
-			Logs.Write("Bắt đầu gửi mail");
+			log.Info("Bắt đầu gửi mail");
 			sheet = UserSettings.Values;
 			Limit = sheet.Count - 1;
 			Done = 0;
@@ -102,7 +101,7 @@ namespace PidgeotMail.ViewModel
 					Done++;
 					if (result != "OK")
 					{
-						Logs.Write(result);
+						log.Error(result);
 						App.Current.Dispatcher.Invoke(() =>
 						{
 							source[int.Parse(messages[0].MessageId)-1].Status = result;
@@ -111,7 +110,7 @@ namespace PidgeotMail.ViewModel
 					}
 					else
 					{
-						Logs.Write(messages[0].message.To.ToString());
+						log.Info(messages[0].message.To.ToString());
 						App.Current.Dispatcher.Invoke(() =>
 						{
 							source[int.Parse(messages[0].MessageId) - 1].Status = "Đã gửi";
@@ -140,11 +139,10 @@ namespace PidgeotMail.ViewModel
 			return Task.Run(() =>
 			{
 				var header = UserSettings.HeaderLocation;
-				Logs.Write("Template gửi thư: ");
-				Logs.Add("Sheet: ");
+				log.Info("Sheet: ");
 				foreach (var value in header)
 				{
-					Logs.Add(value.Key);
+					log.Info(value.Key);
 				}
 				GMessage ChoiceMail = new GMessage(UserSettings.ChoiceMailID, GMService.GetDraftByID(UserSettings.ChoiceMailID).Result);
 				AddLogs(ChoiceMail);
@@ -172,7 +170,7 @@ namespace PidgeotMail.ViewModel
 					}
 					catch (Exception ex)
 					{
-						Logs.Write(ex.ToString());
+						log.Error("", ex);
 						Done++;
 					}
 				}

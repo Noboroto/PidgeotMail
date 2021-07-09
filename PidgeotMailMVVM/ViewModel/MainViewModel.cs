@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -39,12 +41,9 @@ namespace PidgeotMail.ViewModel
 			////}
 			Tilte = "Phần mềm gửi mail tự động PidgeotMail";
 			AppName = "PidgeotMail";
-			LogCmd = new RelayCommand(() =>
+			RootFolderCmd = new RelayCommand(() =>
 				{
-					SaveFileDialog saveFileDialog = new SaveFileDialog();
-					saveFileDialog.Filter = "Text file (*.txt)|*.txt";
-					if (saveFileDialog.ShowDialog() == DialogResult.OK)
-						File.WriteAllText(saveFileDialog.FileName, Logs.Get());
+					Process.Start(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 				}
 			);
 			InfoCmd = new RelayCommand(() =>
@@ -54,7 +53,7 @@ namespace PidgeotMail.ViewModel
 			);
 		}
 
-		public ICommand LogCmd { get; set; }
+		public ICommand RootFolderCmd { get; set; }
 		public ICommand InfoCmd { get; set; }
 
 		public static string TokenFolder => AppDomain.CurrentDomain.BaseDirectory + "\\4xR24anAtrw2ajpqW45SVB56saAfas";

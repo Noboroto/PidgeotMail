@@ -12,6 +12,7 @@ namespace PidgeotMail.Lib
 		private int _GroupIndex;
 		private bool _Enable;
 
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		public string OriginExt { get; set; }
 		public string AttachmentPath => Dinfo.FullName;
 		public string Name => Dinfo.Name;
@@ -40,7 +41,7 @@ namespace PidgeotMail.Lib
 			}
 			catch (Exception e)
 			{
-				Logs.Write(e.ToString());
+				log.Error("", e);
 				return null;
 			}
 		}

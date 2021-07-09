@@ -23,6 +23,8 @@ namespace PidgeotMail.ViewModel
 		private bool _CanRefresh;
 		private GMessage item;
 		private int index;
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 
 		public string MyEmailContent => "Tài khoản hiện tại: " + GMService.UserEmail;
 		public ObservableCollection<GMessage> ListSource { get; set; }
@@ -50,7 +52,7 @@ namespace PidgeotMail.ViewModel
 			CanRefresh = false;
 			SelectedIndex = -1;
 			SelectedItem = null;
-			Logs.Write("Đã login bằng " + GMService.UserEmail);
+			log.Info("Đã login bằng " + GMService.UserEmail);
 			ListSource.Clear();
 			Process();
 		}
@@ -62,7 +64,7 @@ namespace PidgeotMail.ViewModel
 				{
 					if (SelectedIndex < 0) return;
 					UserSettings.ChoiceMailID = ListSource[SelectedIndex].MessageId;
-					Logs.Write("Đã chọn draft " + UserSettings.ChoiceMailID);
+					log.Info("Đã chọn draft " + UserSettings.ChoiceMailID);
 					Messenger.Default.Send(new NavigateToMessage(new ChooseSourceView()));
 					Messenger.Default.Send(new StartMessage(StartMessage.View.ChooseSource));
 				}, () => (SelectedIndex >= 0) && (ListSource.Count > 0)
@@ -71,7 +73,7 @@ namespace PidgeotMail.ViewModel
 			LogoutCmd = new RelayCommand(() =>
 				{
 					Directory.Delete(MainViewModel.TokenFolder, true);
-					Logs.Write("Logout");
+					log.Info("Logout");
 					Messenger.Default.Send(new NavigateToMessage(new LoginView()));
 				}
 			);
@@ -83,7 +85,7 @@ namespace PidgeotMail.ViewModel
 					ListSource.Clear();
 					Messenger.Default.Send(new ChangeHTMLContent(header));
 					SelectedIndex = -1;
-					Logs.Write("Đã refresh");
+					log.Info("Đã refresh");
 					Process();
 				}, () => CanRefresh
 			);
@@ -102,12 +104,12 @@ namespace PidgeotMail.ViewModel
 					catch (Exception e)
 					{
 						MessageBox.Show(e.ToString() + " " + value.Id);
-						Logs.Write(e.ToString() + " " + value.Id);
+						log.Error(e.ToString() + " " + value.Id);
 						continue;
 					}
 
 				}
-			Logs.Write("Đã load mail");
+			log.Info("Đã load mail");
 			CanRefresh = true;
 		}
 	}

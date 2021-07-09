@@ -17,6 +17,8 @@ namespace PidgeotMail.ViewModel
 	public class AttachmentViewModel : ViewModelBase
 	{
 		private bool _Continue;
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public bool Continue
 		{
 			get => _Continue;
@@ -38,7 +40,7 @@ namespace PidgeotMail.ViewModel
 			Attachments.Clear();
 			Selection.Clear();
 			Selection.Add("Tất cả");
-			Logs.Add("Chọn tệp đính kèm");
+			log.Info("Choose Attachments");
 			if (UserSettings.HeaderLocation != null)
 			{
 				foreach (var x in UserSettings.HeaderLocation)
@@ -58,7 +60,7 @@ namespace PidgeotMail.ViewModel
 					{
 						if (Attachments[i].IsSelected)
 						{
-							Logs.Add("Xoá file: " + Attachments[i].AttachmentPath);
+							log.Info("Xoá file: " + Attachments[i].AttachmentPath);
 							Attachments.RemoveAt(i);
 						}
 					}
@@ -71,7 +73,7 @@ namespace PidgeotMail.ViewModel
 					folderDlg.ShowNewFolderButton = true;
 					if (folderDlg.ShowDialog() == DialogResult.OK)
 					{
-						Logs.Add("Chọn thư mục: " + folderDlg.SelectedPath);
+						log.Info("Chọn thư mục: " + folderDlg.SelectedPath);
 						Attachments.Add(new AttachmentInfo(folderDlg.SelectedPath, false, UserSettings.KeyColumn + 1, true));
 					}
 				}
@@ -86,7 +88,7 @@ namespace PidgeotMail.ViewModel
 					{
 						foreach (var values in openFileDialog.FileNames)
 						{
-							Logs.Add("Chọn pdf: " + values);
+							log.Info("Chọn pdf: " + values);
 							Attachments.Add(new AttachmentInfo(values, true, UserSettings.KeyColumn + 1));
 						}
 					}
@@ -101,7 +103,7 @@ namespace PidgeotMail.ViewModel
 				{
 					foreach (var values in openFileDialog.FileNames)
 					{
-						Logs.Add("Chọn file: " + values);
+						log.Info("Chọn file: " + values);
 						Attachments.Add(new AttachmentInfo(values, false, 0));
 					}
 				}
@@ -118,7 +120,7 @@ namespace PidgeotMail.ViewModel
 						if (Attachments[i].IsResultPDF)
 						{
 							await PDFProcess.SplitPDF(Attachments[i], UserSettings.Values, UserSettings.KeyColumn);
-							Logs.Add("Chuyển đổi pdf: " + Attachments[i].AttachmentPath);
+							log.Info("Chuyển đổi pdf: " + Attachments[i].AttachmentPath);
 							UserSettings.Attachments.Add(new AttachmentInfo(PDFProcess.GetPDFPath(Attachments[i]), true, UserSettings.KeyColumn + 1, false, ".pdf"));
 						}
 						else UserSettings.Attachments.Add(Attachments[i]);

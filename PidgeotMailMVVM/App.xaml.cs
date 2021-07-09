@@ -11,10 +11,12 @@ namespace PidgeotMail
 	/// </summary>
 	public partial class App : Application
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
 			if (e != null)
-				Logs.Write(e.Exception.ToString());
+				log.Error("", e.Exception);
 			e.Handled = true;
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
 		}
@@ -22,13 +24,13 @@ namespace PidgeotMail
 		{
 			var ex = e.ExceptionObject as Exception;
 			if (e != null)
-				Logs.Write(ex.ToString());
+				log.Error("", ex.InnerException);
 		}
 
 		static void MyHandler(object sender, UnhandledExceptionEventArgs args)
 		{
 			Exception e = (Exception)args.ExceptionObject;
-			Logs.Add(e.ToString());
+			log.Error("", e);
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)

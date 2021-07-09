@@ -13,6 +13,7 @@ namespace PidgeotMail.ViewModel
 {
 	public class LoginViewModel : ViewModelBase
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private bool _NeedLog;
 		public RelayCommand LoginCmd { get; set; }
 		public bool NeedLog
@@ -39,7 +40,7 @@ namespace PidgeotMail.ViewModel
 			}
 			catch (Exception e)
 			{
-				Logs.Write(e.ToString());
+				log.Error("", e);
 			}
 		}
 		public async void ActiveAcount()
@@ -53,7 +54,7 @@ namespace PidgeotMail.ViewModel
 			}
 			catch (Exception e)
 			{
-				Logs.Write(e.ToString());
+				log.Error("", e);
 				return;
 			}
 		}

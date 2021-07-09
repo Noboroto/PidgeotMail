@@ -27,11 +27,11 @@
 					FontSize="12"
 					Height="auto"
 					Padding="5"
-					Header="Lưu Log"
-					Command="{Binding LogCmd}">
+					Header="Mở thư mục ứng dụng"
+					Command="{Binding RootFolderCmd}">
 					<MenuItem.Icon>
 						<materialDesign:PackIcon
-							Kind="ContentSave" />
+							Kind="FolderCog" />
 					</MenuItem.Icon>
 				</MenuItem>
 				<MenuItem
