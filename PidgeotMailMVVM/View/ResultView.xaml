@@ -41,10 +41,20 @@
 					materialDesign:ShadowAssist.ShadowDepth="Depth3"
 					Margin="15"
 					Grid.Column="0"
-					Grid.ColumnSpan="2"
+					Grid.ColumnSpan="1"
 					IsEnabled="{Binding HomeEnabled}"
 					Command="{Binding CloseCmd}"
 					Content="Đóng" />
+				<Button
+					Background="Yellow"
+					BorderBrush="Yellow"
+					materialDesign:ShadowAssist.ShadowDepth="Depth3"
+					Margin="15"
+					Grid.Column="1"
+					Grid.ColumnSpan="1"
+					IsEnabled="{Binding HomeEnabled}"
+					Command="{Binding SaveFailedCmd}"
+					Content="Lưu danh sách lỗi" />
 			</Grid>
 			<TextBlock
 				Grid.Row="1"

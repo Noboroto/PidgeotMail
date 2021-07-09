@@ -44,7 +44,7 @@ namespace PidgeotMail.ViewModel
 		public int Limit { get => _Linmit; set => Set(ref _Linmit, value); }
 
 		public ObservableCollection<ReceiverInfo> source { get; set; }
-		public List<string> FailEmail;
+		private List<string> FailEmail = new List<string>();
 
 		public RelayCommand HomeCmd { get; set; }
 		public RelayCommand CloseCmd { get; set; }
@@ -71,11 +71,15 @@ namespace PidgeotMail.ViewModel
 			);
 			SaveFailedCmd = new RelayCommand(() =>
 			{
-				SaveFileDialog saveFileDialog = new SaveFileDialog();
-				saveFileDialog.Filter = "Text file (*.txt)|*.txt";
-				if (saveFileDialog.ShowDialog() == DialogResult.OK)
-					foreach (var s in FailEmail)
-						File.WriteAllText(saveFileDialog.FileName, s);
+				if (FailEmail.Count <= 0) MessageBox.Show("Không có lỗi");
+				else
+				{
+					SaveFileDialog saveFileDialog = new SaveFileDialog();
+					saveFileDialog.Filter = "Text file (*.txt)|*.txt";
+					if (saveFileDialog.ShowDialog() == DialogResult.OK)
+						foreach (var s in FailEmail)
+							File.WriteAllText(saveFileDialog.FileName, s);
+				}
 			}
 );
 		}
@@ -117,9 +121,9 @@ namespace PidgeotMail.ViewModel
 						App.Current.Dispatcher.Invoke(() =>
 						{
 							source[int.Parse(messages[0].MessageId) - 1].Status = result;
-							FailEmail.Add(source[int.Parse(messages[0].MessageId) - 1].ToString());
 							Warning = "Đã hoàn thành " + Done + " email";
-						});
+						});							
+						FailEmail.Add(source[int.Parse(messages[0].MessageId) - 1].ToString());
 					}
 					else
 					{

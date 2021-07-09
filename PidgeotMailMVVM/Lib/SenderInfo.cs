@@ -16,7 +16,7 @@ namespace PidgeotMail.Lib
 		}
 		public override string ToString()
 		{
-			return ID + " " + To + " " + Status + "\n";
+			return ID + " " + To + " " + Status + "\n\n";
 		}
 	}
 }
