@@ -80,7 +80,10 @@ namespace PidgeotMail.Lib
 			try
 			{
 				log.Info("Start send");
-				client.Send(m);
+				App.Current.Dispatcher.Invoke(() =>
+				{
+					client.Send(m);
+				});
 			}
 			catch (Exception e)
 			{
