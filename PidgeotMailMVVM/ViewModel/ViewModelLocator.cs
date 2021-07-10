@@ -41,7 +41,11 @@ namespace PidgeotMail.ViewModel
 			////    // Create run time view services and models
 			////    SimpleIoc.Default.Register<IDataService, DataService>();
 			////}
+			Register();
+		}
 
+		public static void Register ()
+		{
 			SimpleIoc.Default.Register<MainViewModel>();
 			SimpleIoc.Default.Register<LoginViewModel>();
 			SimpleIoc.Default.Register<ChooseDraftViewModel>();
@@ -58,7 +62,12 @@ namespace PidgeotMail.ViewModel
 		public ResultViewModel Result => ServiceLocator.Current.GetInstance<ResultViewModel>();
 		public static void Cleanup()
 		{
-			// TODO Clear the ViewModels
+			SimpleIoc.Default.Unregister<MainViewModel>();
+			SimpleIoc.Default.Unregister<LoginViewModel>();
+			SimpleIoc.Default.Unregister<ChooseDraftViewModel>();
+			SimpleIoc.Default.Unregister<ChooseSourceViewModel>();
+			SimpleIoc.Default.Unregister<AttachmentViewModel>();
+			SimpleIoc.Default.Unregister<ResultViewModel>();
 		}
 	}
 }
