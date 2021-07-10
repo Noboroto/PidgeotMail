@@ -37,7 +37,7 @@ namespace PidgeotMail.ViewModel
 			set
 			{
 				Set(ref _HomeEnabled, value);
-				CloseCmd.RaiseCanExecuteChanged();
+				HomeCmd.RaiseCanExecuteChanged();
 			}
 		}
 		public int Done { get => _Done; set => Set(ref _Done, value); }
@@ -47,7 +47,6 @@ namespace PidgeotMail.ViewModel
 		private List<string> FailEmail = new List<string>();
 
 		public RelayCommand HomeCmd { get; set; }
-		public RelayCommand CloseCmd { get; set; }
 		public RelayCommand SaveFailedCmd { get; set; }
 
 		public static string HtmlEncode(string text)
@@ -59,16 +58,13 @@ namespace PidgeotMail.ViewModel
 		{
 			Messenger.Default.Register<StartMessage>(this, (t) => Start(t));
 			source = new ObservableCollection<ReceiverInfo>();
-			CloseCmd = new RelayCommand(() =>
+			HomeCmd = new RelayCommand(() =>
 			{
-				App.Current.Shutdown();
+				ViewModelLocator.Cleanup();
+				ViewModelLocator.Register();
 			}, () => HomeEnabled
 			);
-			HomeCmd = new RelayCommand(() =>
-				{
-					Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
-				}
-			);
+
 			SaveFailedCmd = new RelayCommand(() =>
 			{
 				if (FailEmail.Count <= 0) MessageBox.Show("Không có lỗi");
