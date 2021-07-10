@@ -36,15 +36,15 @@
 				</Grid.ColumnDefinitions>
 				<!--<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" materialDesign:ShadowAssist.ShadowDepth="Depth3" Grid.Column="0" Command="{Binding HomeCmd}" Content="Về trang chủ" />-->
 				<Button
-					Background="#c62828"
-					BorderBrush="#c62828"
+					Background="#FFA8F0EE"
+					BorderBrush="#FFA8F0EE"
 					materialDesign:ShadowAssist.ShadowDepth="Depth3"
 					Margin="15"
 					Grid.Column="0"
 					Grid.ColumnSpan="1"
 					IsEnabled="{Binding HomeEnabled}"
-					Command="{Binding CloseCmd}"
-					Content="Đóng" />
+					Command="{Binding HomeCmd}"
+					Content="Về trang đầu" />
 				<Button
 					Background="Yellow"
 					BorderBrush="Yellow"
