@@ -131,10 +131,9 @@
 					IsChecked="{Binding SelectEx}"
 					Margin="10 5 10 5">
 					<RadioButton.Content>
-						<Expander
+						<materialDesign:Card
 							Width="400"
-							Header="Excel"
-							IsExpanded="{Binding Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectEx}">
+							IsEnabled="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged, ElementName=ExcelSelect, Path=IsChecked}">
 							<Grid
 								HorizontalAlignment="Stretch">
 								<Grid.ColumnDefinitions>
@@ -146,10 +145,17 @@
 									<RowDefinition />
 									<RowDefinition />
 								</Grid.RowDefinitions>
-								<Button
-									Grid.ColumnSpan="2"
+								<Label
 									Grid.Row="0"
 									Grid.Column="0"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									FontSize="14"
+									FontWeight="Black"
+									Content="Excel" />
+								<Button
+									Grid.Row="0"
+									Grid.Column="1"
 									materialDesign:ShadowAssist.ShadowDepth="Depth3"
 									Margin="10 5 10 5"
 									Width="150"
@@ -174,7 +180,7 @@
 									Text="{Binding ExPath}"
 									VerticalAlignment="Center" />
 							</Grid>
-						</Expander>
+						</materialDesign:Card>
 					</RadioButton.Content>
 				</RadioButton>
 				<RadioButton
@@ -184,10 +190,9 @@
 					IsChecked="{Binding SelectGs}"
 					Margin="10 5 10 5">
 					<RadioButton.Content>
-						<Expander
-							Header="Google Sheet"
+						<materialDesign:Card
 							Width="400"
-							IsExpanded="{Binding Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectGs}">
+							IsEnabled="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged, ElementName=GSSelect, Path=IsChecked}">
 							<Grid>
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition
@@ -198,9 +203,16 @@
 									<RowDefinition />
 									<RowDefinition />
 								</Grid.RowDefinitions>
-								<Button
-									Grid.ColumnSpan="2"
+								<Label
+									Grid.Row="0"
 									Grid.Column="0"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									FontSize="14"
+									FontWeight="Black"
+									Content="Google Sheet" />
+								<Button
+									Grid.Column="1"
 									Grid.Row="0"
 									materialDesign:ShadowAssist.ShadowDepth="Depth3"
 									Margin="10 5 10 5"
@@ -210,7 +222,10 @@
 									Command="{Binding GSCmd}"
 									Content="Mở sheet tham khảo" />
 								<Label
+									Margin="5"
 									Grid.Row="1"
+									HorizontalAlignment="Right"
+									VerticalAlignment="Center"
 									Grid.Column="0"
 									Content="Link" />
 								<TextBox
@@ -221,7 +236,7 @@
 									Text="{Binding Link, UpdateSourceTrigger=PropertyChanged}"
 									InputScope="Url" />
 							</Grid>
-						</Expander>
+						</materialDesign:Card>
 					</RadioButton.Content>
 				</RadioButton>
 				<Button

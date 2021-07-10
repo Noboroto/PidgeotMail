@@ -13,8 +13,6 @@ namespace PidgeotMail.ViewModel
 	public class ChooseSourceViewModel : ViewModelBase
 	{
 		private string _Link;
-		private bool _SelectEx;
-		private bool _SelectGs;
 		private int _Row;
 		private int _Column;
 		private string _ExPath;
@@ -26,19 +24,18 @@ namespace PidgeotMail.ViewModel
 		public string Link { get => _Link; set => Set(ref _Link, value); }
 		public bool SelectEx
 		{
-			get => _SelectEx;
+			get => UserSettings.SelectEx;
 			set
 			{
-				Set(ref _SelectEx, value);
-				RaisePropertyChanged(nameof(SelectEx));
+				Set(ref UserSettings.SelectEx, value);
 			}
 		}
 		public bool SelectGs
 		{
-			get => _SelectGs; set
+			get => UserSettings.SelectGs;
+			set
 			{
-				Set(ref _SelectGs, value);
-				RaisePropertyChanged(nameof(SelectGs));
+				Set(ref UserSettings.SelectGs, value);
 			}
 		}
 		public int Row { get => _Row; set => Set(ref _Row, value); }
@@ -54,10 +51,6 @@ namespace PidgeotMail.ViewModel
 		private void Start(StartMessage s)
 		{
 			if (s.CurrentView != StartMessage.View.ChooseSource) return;
-			_SelectEx = true;
-			RaisePropertyChanged(nameof(SelectEx));
-			_SelectGs = false;
-			RaisePropertyChanged(nameof(SelectGs));
 			Left = "{{";
 			Right = "}}";
 			ExPath = "Chưa chọn";
@@ -82,7 +75,7 @@ namespace PidgeotMail.ViewModel
 
 			BackCmd = new RelayCommand(() =>
 				{
-					Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
+					Messenger.Default.Send(new GoBackMessage());
 				}
 			);
 

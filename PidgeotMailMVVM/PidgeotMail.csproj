@@ -178,6 +178,7 @@
     <Compile Include="Lib\SenderInfo.cs" />
     <Compile Include="Lib\UserSettings.cs" />
     <Compile Include="MessageForUI\ChangeHTMLContent.cs" />
+    <Compile Include="MessageForUI\GoBackMessage.cs" />
     <Compile Include="MessageForUI\NavigateToMessage.cs" />
     <Compile Include="MessageForUI\StartMessage.cs" />
     <Compile Include="ViewModel\AttachmentViewModel.cs" />

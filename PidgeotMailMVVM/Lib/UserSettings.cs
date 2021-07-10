@@ -14,5 +14,7 @@ namespace PidgeotMail.Lib
 		public static int KeyColumn = -1;
 		public static int BccColumn = -1;
 		public static int CcColumn = -1;
+		public static bool SelectEx = true;
+		public static bool SelectGs = false;
 	}
 }

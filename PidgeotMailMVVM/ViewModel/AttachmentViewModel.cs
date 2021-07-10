@@ -132,7 +132,7 @@ namespace PidgeotMail.ViewModel
 
 			BackCmd = new RelayCommand(() =>
 			{
-				Messenger.Default.Send(new NavigateToMessage(new ChooseSourceView()));
+				Messenger.Default.Send(new GoBackMessage());
 			}
 			);
 
