@@ -128,6 +128,7 @@ namespace PidgeotMail.ViewModel
 						UserSettings.Values = ExService.Value;
 						log.Info("Đã chọn ExcelWorkbook " + ExService.Path);
 					}
+					log.Info("Gửi " + Column + " cột và " + Row + " email");
 					Messenger.Default.Send(new NavigateToMessage(new AttachmentView()));
 					Messenger.Default.Send(new StartMessage(StartMessage.View.Attachments));
 				}
