@@ -62,6 +62,8 @@ namespace PidgeotMail.ViewModel
 			{
 				ViewModelLocator.Cleanup();
 				ViewModelLocator.Register();
+				Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
+				Messenger.Default.Send(new StartMessage(StartMessage.View.ChooseDraft));
 			}, () => HomeEnabled
 			);
 

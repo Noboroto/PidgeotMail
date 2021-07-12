@@ -54,6 +54,11 @@ namespace PidgeotMail.ViewModel
 			SimpleIoc.Default.Register<ResultViewModel>();
 		}
 
+		public static void CleanData<TClass>() where TClass : class
+		{
+			SimpleIoc.Default.Unregister<TClass>();
+			SimpleIoc.Default.Register<TClass>();
+		}
 		public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
 		public LoginViewModel Login => ServiceLocator.Current.GetInstance<LoginViewModel>();
 		public ChooseDraftViewModel ChooseDraft => ServiceLocator.Current.GetInstance<ChooseDraftViewModel>();

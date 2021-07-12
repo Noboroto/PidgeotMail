@@ -132,6 +132,8 @@ namespace PidgeotMail.ViewModel
 
 			BackCmd = new RelayCommand(() =>
 			{
+				ViewModelLocator.CleanData<AttachmentInfo>();
+				ViewModelLocator.CleanData<ChooseSourceView>();
 				Messenger.Default.Send(new GoBackMessage());
 			}
 			);
