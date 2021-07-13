@@ -16,6 +16,8 @@ using CommonServiceLocator;
 
 using GalaSoft.MvvmLight.Ioc;
 
+using PidgeotMail.Lib;
+
 namespace PidgeotMail.ViewModel
 {
 	/// <summary>
@@ -67,6 +69,7 @@ namespace PidgeotMail.ViewModel
 		public ResultViewModel Result => ServiceLocator.Current.GetInstance<ResultViewModel>();
 		public static void Cleanup()
 		{
+			UserSettings.Restart();
 			SimpleIoc.Default.Unregister<MainViewModel>();
 			SimpleIoc.Default.Unregister<LoginViewModel>();
 			SimpleIoc.Default.Unregister<ChooseDraftViewModel>();
