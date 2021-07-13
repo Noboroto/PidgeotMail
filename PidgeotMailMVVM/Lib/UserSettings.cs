@@ -16,5 +16,19 @@ namespace PidgeotMail.Lib
 		public static int CcColumn = -1;
 		public static bool SelectEx = true;
 		public static bool SelectGs = false;
+
+		public static void Restart ()
+		{
+			ChoiceMailID = "";
+			L = "{{";
+			R = "}}";
+			Values = null;
+			HeaderLocation = new Dictionary<string, int>();
+			KeyColumn = -1;
+			BccColumn = -1;
+			CcColumn = -1;
+			SelectEx = true;
+			SelectGs = false;
+		}
 	}
 }
