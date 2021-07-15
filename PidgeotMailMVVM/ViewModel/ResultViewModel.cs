@@ -180,7 +180,7 @@ namespace PidgeotMail.ViewModel
 						messages.Add(new GMessage(i.ToString(), ChoiceMail.GenerateClone(i, subject, plainbody, htmlbody)));
 						App.Current.Dispatcher.Invoke(() =>
 						{
-							source.Add(new ReceiverInfo(i, sheet[i][header["Email"]].ToString(), "Đợi gửi"));
+							source.Add(new ReceiverInfo(i, sheet[i][UserSettings.KeyColumn].ToString(), "Đợi gửi"));
 						});
 					}
 					catch (Exception ex)
