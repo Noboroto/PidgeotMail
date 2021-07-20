@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace PidgeotMail.Lib
 {
-	public class GMService
+	public static class GMService
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -24,26 +24,32 @@ namespace PidgeotMail.Lib
 		public static string UserEmail => _UserEmail;
 
 		static CancellationTokenSource source = new CancellationTokenSource();
+		public static bool Logout { get; set; }
 
 		public static Task Init()
 		{		
 			return Task.Run(() =>
 			{
 				client = new SmtpClient();
-				if (gs != null) return;
+				if (gs != null && !Logout) return;
+				Logout = false;
 				gs = new GmailService(new BaseClientService.Initializer()
 				{
 					HttpClientInitializer = GoogleService.Credential,
 					ApplicationName = MainViewModel.AppName,
 				});
 				_UserEmail = gs.Users.GetProfile("me").Execute().EmailAddress;
-				connect:
-				client.Connect("smtp.gmail.com", 587);
-				var oauth2 = new SaslMechanismOAuth2(UserEmail, GoogleService.Credential.Token.AccessToken);
-				if (!client.IsConnected) goto connect;
-				client.Authenticate(oauth2);
 			});
 		}
+
+		public static void Connect ()
+		{				
+			client.Connect("smtp.gmail.com", 587);
+			var oauth2 = new SaslMechanismOAuth2(UserEmail, GoogleService.Credential.Token.AccessToken);
+			if (!client.IsConnected) Connect();
+			client.Authenticate(oauth2);
+		}
+
 
 		public static Task VerifyEmail (string email)
 		{
@@ -82,6 +88,7 @@ namespace PidgeotMail.Lib
 				log.Info("Start send");
 				App.Current.Dispatcher.Invoke(() =>
 				{
+					if (!client.IsConnected) Connect();
 					client.Send(m);
 				});
 			}

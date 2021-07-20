@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PidgeotMail.Lib
 {
-	public class GSheetService
+	public static class GSheetService
 	{
 		private static SheetsService sheetsService;
 		private static IList<IList<Object>> _Values;
@@ -19,18 +19,21 @@ namespace PidgeotMail.Lib
 		public static Dictionary<string, int> Header => _Header;
 		public static IList<IList<Object>> Values => _Values;
 		public static string ChoiceSheetID => _ChoiceSheetID;
+		public static bool Logout { get; set; }
 
-		private static void Init()
+		public static void Init()
 		{
 			_Values = new List<IList<Object>>();
 			_Header = new Dictionary<string, int>();
-			if (sheetsService != null) return;
+			if (sheetsService != null && !Logout) return;
+			Logout = false;
 			sheetsService = new SheetsService(new BaseClientService.Initializer()
 			{
 				HttpClientInitializer = GoogleService.Credential,
 				ApplicationName = PidgeotMail.ViewModel.MainViewModel.AppName,
 			});
 		}
+
 		public static Task<string> InitValue(int Col, int Row)
 		{
 			return Task.Run(() =>

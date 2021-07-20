@@ -72,9 +72,14 @@ namespace PidgeotMail.ViewModel
 
 			LogoutCmd = new RelayCommand(() =>
 				{
+					GMService.Logout = true;
+					GSheetService.Logout = true;
+					UserSettings.Restart();
 					Directory.Delete(MainViewModel.TokenFolder, true);
 					log.Info("Logout");
-					Messenger.Default.Send(new NavigateToMessage(new LoginView()));
+					ViewModelLocator.CleanData<ChooseDraftView>();
+					ViewModelLocator.CleanData<LoginView>();
+					Messenger.Default.Send(new GoBackMessage());
 				}
 			);
 
