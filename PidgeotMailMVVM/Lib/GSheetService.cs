@@ -2,9 +2,7 @@
 using Google.Apis.Sheets.v4;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PidgeotMail.Lib
@@ -19,14 +17,12 @@ namespace PidgeotMail.Lib
 		public static Dictionary<string, int> Header => _Header;
 		public static IList<IList<Object>> Values => _Values;
 		public static string ChoiceSheetID => _ChoiceSheetID;
-		public static bool Logout { get; set; }
 
 		public static void Init()
 		{
 			_Values = new List<IList<Object>>();
 			_Header = new Dictionary<string, int>();
-			if (sheetsService != null && !Logout) return;
-			Logout = false;
+			if (sheetsService != null && !UserSettings.LogingOut) return;
 			sheetsService = new SheetsService(new BaseClientService.Initializer()
 			{
 				HttpClientInitializer = GoogleService.Credential,
@@ -34,7 +30,7 @@ namespace PidgeotMail.Lib
 			});
 		}
 
-		public static Task<string> InitValue(int Col, int Row)
+		public static Task<string> InitValueAsync(int Col, int Row)
 		{
 			return Task.Run(() =>
 			{
@@ -53,14 +49,14 @@ namespace PidgeotMail.Lib
 						if (value.ToString().Trim().ToUpper() == "CC") UserSettings.CcColumn = i;
 						i++;
 					}
-					if (_Header.Count < Col || _Values.Count < Row) return "Danh sách không liền mạch";
+					if (_Header.Count < Col) return "Danh sách không đủ số cột";
 				}
 				catch (Exception e)
 				{
 					return e.ToString();
 				}
 				if (_Values == null || _Values.Count == 0) return "Danh sách trống!";
-				if (UserSettings.KeyColumn == -1) return "Không tìm thấy Email";
+				if (UserSettings.KeyColumn == -1) return "Không tìm thấy cột Email";
 				return "OK";
 			});
 		}

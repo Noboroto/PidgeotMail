@@ -17,8 +17,6 @@ namespace PidgeotMail.ViewModel
 		private int _Column;
 		private string _ExPath;
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-
 		public string Left { get => UserSettings.L; set => Set(nameof(UserSettings.L), ref UserSettings.L, value); }
 		public string Right { get => UserSettings.R; set => Set(nameof(UserSettings.R), ref UserSettings.R, value); }
 		public string Link { get => _Link; set => Set(ref _Link, value); }
@@ -48,19 +46,10 @@ namespace PidgeotMail.ViewModel
 		public ICommand ExCmd { get; set; }
 		public ICommand BrowseCmd { get; set; }
 
-		private void Start(StartMessage s)
-		{
-			if (s.CurrentView != StartMessage.View.ChooseSource) return;
-			Left = "{{";
-			Right = "}}";
-			ExPath = "Chưa chọn";
-			Link = "";
-			Row = 0;
-			Column = 0;
-		}
-
 		public ChooseSourceViewModel()
 		{
+			Row = 0;
+			Column = 0;
 			BrowseCmd = new RelayCommand(() =>
 			   {
 				   var OpenFileBox = new OpenFileDialog();
@@ -92,7 +81,7 @@ namespace PidgeotMail.ViewModel
 							log.Error(result);
 							return;
 						}
-						result = await GSheetService.InitValue(Column, Row);
+						result = await GSheetService.InitValueAsync(Column, Row);
 						if (result != "OK")
 						{
 							MessageBox.Show(result);
@@ -112,7 +101,7 @@ namespace PidgeotMail.ViewModel
 							log.Error(result);
 							return;
 						}
-						result = await ExService.InitValue(Column, Row);
+						result = await ExService.InitValueAsync(Column, Row);
 						if (result != "OK")
 						{
 							MessageBox.Show(result);
@@ -125,7 +114,6 @@ namespace PidgeotMail.ViewModel
 					}
 					log.Info("Gửi " + Column + " cột và " + Row + " email");
 					Messenger.Default.Send(new NavigateToMessage(new AttachmentView()));
-					Messenger.Default.Send(new StartMessage(StartMessage.View.Attachments));
 				}
 				, () =>
 				{
@@ -146,7 +134,6 @@ namespace PidgeotMail.ViewModel
 					System.Diagnostics.Process.Start(@"https://docs.google.com/spreadsheets/d/1MLF5S_CsSFZa2fNVqyjSHOYwYWOlULftFyF5rFQzUKk/edit?usp=sharing");
 				}
 			);
-			Messenger.Default.Register<StartMessage>(this, (t) => Start(t));
 		}
 	}
 }

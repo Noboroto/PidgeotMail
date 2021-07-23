@@ -33,14 +33,14 @@ namespace PidgeotMail.ViewModel
 		public ObservableCollection<string> Selection { get; set; }
 		public ObservableCollection<AttachmentInfo> Attachments { get; set; }
 
-		public void Start(StartMessage s)
+		public AttachmentViewModel()
 		{
 			Continue = true;
-			if (s.CurrentView != StartMessage.View.Attachments) return;
-			Attachments.Clear();
-			Selection.Clear();
+			Attachments = new ObservableCollection<AttachmentInfo>();
+			Selection = new ObservableCollection<string>();
 			Selection.Add("Tất cả");
 			log.Info("Choose Attachments");
+
 			if (UserSettings.HeaderLocation != null)
 			{
 				foreach (var x in UserSettings.HeaderLocation)
@@ -48,12 +48,7 @@ namespace PidgeotMail.ViewModel
 					Selection.Add(x.Key);
 				}
 			}
-		}
 
-		public AttachmentViewModel()
-		{
-			Attachments = new ObservableCollection<AttachmentInfo>();
-			Selection = new ObservableCollection<string>();
 			DeleteCmd = new RelayCommand(() =>
 				{
 					for (int i = Attachments.Count - 1; i >= 0; --i)
@@ -108,7 +103,7 @@ namespace PidgeotMail.ViewModel
 					}
 				}
 			}
-   );
+			);
 
 			NextCmd = new RelayCommand(async () =>
 				{
@@ -119,14 +114,13 @@ namespace PidgeotMail.ViewModel
 					{
 						if (Attachments[i].IsResultPDF)
 						{
-							await PDFProcess.SplitPDF(Attachments[i], UserSettings.Values, UserSettings.KeyColumn);
+							await PDFProcess.SplitPDFAsync(Attachments[i], UserSettings.Values, UserSettings.KeyColumn);
 							log.Info("Chuyển đổi pdf: " + Attachments[i].AttachmentPath);
 							UserSettings.Attachments.Add(new AttachmentInfo(PDFProcess.GetPDFPath(Attachments[i]), true, UserSettings.KeyColumn + 1, false, ".pdf"));
 						}
 						else UserSettings.Attachments.Add(Attachments[i]);
 					}
 					Messenger.Default.Send(new NavigateToMessage(new ResultView()));
-					Messenger.Default.Send(new StartMessage(StartMessage.View.Result));
 				}
 			);
 
@@ -137,8 +131,6 @@ namespace PidgeotMail.ViewModel
 				Messenger.Default.Send(new GoBackMessage());
 			}
 			);
-
-			Messenger.Default.Register<StartMessage>(this, (t) => Start(t));
 		}
 	}
 }

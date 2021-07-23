@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -21,17 +22,23 @@ namespace PidgeotMail.ViewModel
 	{
 		private readonly string header = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>";
 		private bool _CanRefresh;
+		private string _Notice;
 		private GMessage item;
 		private int index;
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-
 		public string MyEmailContent => "Tài khoản hiện tại: " + GMService.UserEmail;
 		public ObservableCollection<GMessage> ListSource { get; set; }
-
 		public ICommand LogoutCmd { get; set; }
 		public ICommand NextCmd { get; set; }
 		public RelayCommand RefreshCmd { get; set; }
+		public string Notice
+		{
+			get => _Notice;
+			set
+			{
+				Set(ref _Notice, value);
+			}
+		}
 
 		public bool CanRefresh { get => _CanRefresh; set => Set(ref _CanRefresh, value); }
 		public GMessage SelectedItem
@@ -46,17 +53,6 @@ namespace PidgeotMail.ViewModel
 
 		public int SelectedIndex { get => index; set => Set(ref index, value); }
 
-		private void Start(StartMessage s)
-		{
-			if (s.CurrentView != StartMessage.View.ChooseDraft) return;
-			CanRefresh = false;
-			SelectedIndex = -1;
-			SelectedItem = null;
-			log.Info("Đã login bằng " + GMService.UserEmail);
-			ListSource.Clear();
-			Process();
-		}
-
 		public ChooseDraftViewModel()
 		{
 			ListSource = new ObservableCollection<GMessage>();
@@ -66,23 +62,19 @@ namespace PidgeotMail.ViewModel
 					UserSettings.ChoiceMailID = ListSource[SelectedIndex].MessageId;
 					log.Info("Đã chọn draft " + UserSettings.ChoiceMailID);
 					Messenger.Default.Send(new NavigateToMessage(new ChooseSourceView()));
-					Messenger.Default.Send(new StartMessage(StartMessage.View.ChooseSource));
 				}, () => (SelectedIndex >= 0) && (ListSource.Count > 0)
 			);
-
 			LogoutCmd = new RelayCommand(() =>
 				{
-					GMService.Logout = true;
-					GSheetService.Logout = true;
 					UserSettings.Restart();
 					Directory.Delete(MainViewModel.TokenFolder, true);
 					log.Info("Logout");
 					ViewModelLocator.CleanData<ChooseDraftView>();
 					ViewModelLocator.CleanData<LoginView>();
-					Messenger.Default.Send(new GoBackMessage());
+					UserSettings.LogingOut = true;
+					Messenger.Default.Send(new NavigateToMessage(new LoginView()));
 				}
 			);
-
 			RefreshCmd = new RelayCommand(() =>
 				{
 					CanRefresh = false;
@@ -91,31 +83,60 @@ namespace PidgeotMail.ViewModel
 					Messenger.Default.Send(new ChangeHTMLContent(header));
 					SelectedIndex = -1;
 					log.Info("Đã refresh");
-					Process();
+					LoadDraftList();
 				}, () => CanRefresh
 			);
-			Messenger.Default.Register<StartMessage>(this, (t) => Start(t));
+			CanRefresh = false;
+			SelectedIndex = -1;
+			SelectedItem = null;
+			log.Info("Đã login bằng " + GMService.UserEmail);
+			Notice = "Mail nháp";
+			ListSource.Clear();
+			LoadDraftList();
 		}
 
-		private async void Process()
+		private Task LoadDraftList()
 		{
-			var tmp = await GMService.DraftsList;
-			if (tmp != null) foreach (var value in tmp)
+			return Task.Run(() =>
+			{
+				var tmp = GMService.DraftsList;
+				if (tmp != null)
 				{
-					try
+					foreach (var value in tmp)
 					{
-						ListSource.Add(new GMessage(value.Id, await GMService.GetDraftByID(value.Id)));
+						try
+						{
+							var temp = new GMessage(value.Id, GMService.GetDraftByID(value.Id));
+							App.Current.Dispatcher.Invoke(() =>
+							{
+								ListSource.Add(temp);
+							});
+						}
+						catch (Exception e)
+						{
+							MessageBox.Show(e.ToString() + " " + value.Id);
+							App.Current.Dispatcher.Invoke(() =>
+							{
+								log.Error(e.ToString() + " " + value.Id);
+							});
+							continue;
+						}
 					}
-					catch (Exception e)
-					{
-						MessageBox.Show(e.ToString() + " " + value.Id);
-						log.Error(e.ToString() + " " + value.Id);
-						continue;
-					}
-
 				}
-			log.Info("Đã load mail");
-			CanRefresh = true;
+				else
+				{
+					App.Current.Dispatcher.Invoke(() =>
+					{
+						Notice = "Không có mail";
+						log.Warn("Không có mail");
+					});
+				}
+				App.Current.Dispatcher.Invoke(() =>
+				{
+					log.Info("Đã load mail");
+					CanRefresh = true;
+				});
+			});
 		}
 	}
 }

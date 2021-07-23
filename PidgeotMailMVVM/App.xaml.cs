@@ -35,7 +35,14 @@ namespace PidgeotMail
 
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{
-			if (Directory.Exists(ViewModel.MainViewModel.TempFolder)) Directory.Delete(ViewModel.MainViewModel.TempFolder, true);
+			try
+			{
+				if (Directory.Exists(ViewModel.MainViewModel.TempFolder)) Directory.Delete(ViewModel.MainViewModel.TempFolder, true);
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex.ToString());
+			}
 		}
 	}
 }

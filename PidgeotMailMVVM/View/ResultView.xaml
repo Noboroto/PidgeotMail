@@ -33,15 +33,24 @@
 						Width="1*" />
 					<ColumnDefinition
 						Width="1*" />
+					<ColumnDefinition
+						Width="1*" />
 				</Grid.ColumnDefinitions>
 				<!--<Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" materialDesign:ShadowAssist.ShadowDepth="Depth3" Grid.Column="0" Command="{Binding HomeCmd}" Content="Về trang chủ" />-->
+				<Button
+					Background="#FFCF1111"
+					BorderBrush="#FFCF1111"
+					materialDesign:ShadowAssist.ShadowDepth="Depth3"
+					Margin="15"
+					Grid.Column="0"
+					Command="{Binding CancelCmd}"
+					Content="Dừng" />
 				<Button
 					Background="#FFA8F0EE"
 					BorderBrush="#FFA8F0EE"
 					materialDesign:ShadowAssist.ShadowDepth="Depth3"
 					Margin="15"
-					Grid.Column="0"
-					Grid.ColumnSpan="1"
+					Grid.Column="1"
 					IsEnabled="{Binding HomeEnabled}"
 					Command="{Binding HomeCmd}"
 					Content="Về trang đầu" />
@@ -50,8 +59,7 @@
 					BorderBrush="Yellow"
 					materialDesign:ShadowAssist.ShadowDepth="Depth3"
 					Margin="15"
-					Grid.Column="1"
-					Grid.ColumnSpan="1"
+					Grid.Column="2"
 					IsEnabled="{Binding HomeEnabled}"
 					Command="{Binding SaveFailedCmd}"
 					Content="Lưu danh sách lỗi" />

@@ -22,7 +22,7 @@ namespace PidgeotMail.Lib
 			return (a < b) ? a : b;
 		}
 
-		public static Task SplitPDF(AttachmentInfo info, IList<IList<Object>> values, int col)
+		public static Task SplitPDFAsync(AttachmentInfo info, IList<IList<Object>> values, int col)
 		{
 			return Task.Run(() =>
 			{

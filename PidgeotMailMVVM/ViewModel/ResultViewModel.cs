@@ -29,6 +29,7 @@ namespace PidgeotMail.ViewModel
 		private bool _Cancel = false;
 		private IList<IList<Object>> sheet = null;
 		private List<GMessage> messages = new List<GMessage>();
+		private CancellationTokenSource cancellation = new CancellationTokenSource();
 
 		public string Warning { get => _Warning; set => Set(ref _Warning, value); }
 		public bool HomeEnabled
@@ -38,6 +39,7 @@ namespace PidgeotMail.ViewModel
 			{
 				Set(ref _HomeEnabled, value);
 				HomeCmd.RaiseCanExecuteChanged();
+				CancelCmd.RaiseCanExecuteChanged();
 			}
 		}
 		public int Done { get => _Done; set => Set(ref _Done, value); }
@@ -48,23 +50,33 @@ namespace PidgeotMail.ViewModel
 
 		public RelayCommand HomeCmd { get; set; }
 		public RelayCommand SaveFailedCmd { get; set; }
+		public RelayCommand CancelCmd { get; set; }
 
 		public static string HtmlEncode(string text)
 		{
 			return HttpUtility.HtmlEncode(text);
 		}
-
+		
+		private async void Start()
+		{
+			await Task.WhenAll(LoadResult(), LoadMail()).ConfigureAwait(false);
+		}
 		public ResultViewModel()
 		{
-			Messenger.Default.Register<StartMessage>(this, (t) => Start(t));
 			source = new ObservableCollection<ReceiverInfo>();
 			HomeCmd = new RelayCommand(() =>
 			{
 				ViewModelLocator.Cleanup();
 				ViewModelLocator.Register();
 				Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
-				Messenger.Default.Send(new StartMessage(StartMessage.View.ChooseDraft));
 			}, () => HomeEnabled
+			);
+
+			CancelCmd = new RelayCommand(() =>
+			{
+				cancellation.Cancel();
+				HomeEnabled = true;
+			}, () => !HomeEnabled
 			);
 
 			SaveFailedCmd = new RelayCommand(() =>
@@ -79,7 +91,14 @@ namespace PidgeotMail.ViewModel
 							File.WriteAllText(saveFileDialog.FileName, s);
 				}
 			}
-);
+			);
+			log.Info("Bắt đầu gửi mail");
+			sheet = UserSettings.Values;
+			Limit = sheet.Count - 1;
+			Done = 0;
+			HomeEnabled = false;
+			Warning = "Đang thực hiện ...";
+			Start();
 		}
 
 		private static void AddLogs(GMessage ChoiceMail)
@@ -91,67 +110,88 @@ namespace PidgeotMail.ViewModel
 			log.Info("Html: " + ChoiceMail.message.HtmlBody);
 		}
 
-		private async void Start(StartMessage s)
+		private Task LoadResult()
 		{
-			if (s.CurrentView != StartMessage.View.Result) return;
-			log.Info("Bắt đầu gửi mail");
-			sheet = UserSettings.Values;
-			Limit = sheet.Count - 1;
-			Done = 0;
-			HomeEnabled = false;
-			Warning = "Đang thực hiện ...";
-			await Process();
-			await Task.Run(Loop);
-		}
-
-		private async void Loop()
-		{
-			string result;
-			while (!_Cancel)
+			return Task.Run(async() =>
 			{
-				if (messages.Count > 0)
+				string result;
+				try
 				{
-					result = GMService.Send(messages[0].message);
-					Done++;
-					if (result != "OK")
+					GMService.Connect();
+				}
+				catch (Exception e)
+				{
+					MessageBox.Show(e.ToString(), "Không thể kết nối máy chủ gửi mail");
+					log.Fatal(e.ToString());
+					foreach (var mess in messages)
 					{
-						log.Error(result);
 						App.Current.Dispatcher.Invoke(() =>
 						{
-							source[int.Parse(messages[0].MessageId) - 1].Status = result;
-							Warning = "Đã hoàn thành " + Done + " email";
-						});							
-						FailEmail.Add(source[int.Parse(messages[0].MessageId) - 1].ToString());
-					}
-					else
-					{
-						log.Info(messages[0].message.To.ToString());
-						App.Current.Dispatcher.Invoke(() =>
-						{
-							source[int.Parse(messages[0].MessageId) - 1].Status = "Đã gửi";
+							source[int.Parse(mess.MessageId) - 1].Status = "Không thể gửi";
 							Warning = "Đã hoàn thành " + Done + " email";
 						});
+						FailEmail.Add(source[int.Parse(mess.MessageId) - 1].ToString());
 					}
-					messages.RemoveAt(0);
-					await Task.Delay(1000);
-				}
-				if (Done >= UserSettings.Values.Count - 1)
-				{
 					App.Current.Dispatcher.Invoke(() =>
 					{
 						HomeEnabled = true;
 					});
-					break;
+					_Cancel = true;
+					return;
 				}
-			}
+				while (!_Cancel)
+				{
+					if (messages.Count > 0)
+					{
+						try
+						{
+							result = await GMService.SendAsync(messages[0].message, cancellation.Token);
+						}
+						catch (OperationCanceledException)
+						{
+							result = "Bị dừng";
+						}
+						Done++;
+						if (result != "OK")
+						{
+							log.Error(result);
+							App.Current.Dispatcher.Invoke(() =>
+							{
+								source[int.Parse(messages[0].MessageId) - 1].Status = result;
+								Warning = "Đã hoàn thành " + Done + " email";
+							});
+							FailEmail.Add(source[int.Parse(messages[0].MessageId) - 1].ToString());
+						}
+						else
+						{
+							log.Info(messages[0].message.To.ToString());
+							App.Current.Dispatcher.Invoke(() =>
+							{
+								source[int.Parse(messages[0].MessageId) - 1].Status = "Đã gửi";
+								Warning = "Đã hoàn thành " + Done + " email";
+							});
+						}
+						messages.RemoveAt(0);
+						await Task.Delay(1000);
+					}
+					if (Done >= UserSettings.Values.Count - 1)
+					{
+						App.Current.Dispatcher.Invoke(() =>
+						{
+							HomeEnabled = true;
+						});
+						break;
+					}
+				}
+			});
 		}
 
-		private Task Process()
+		private Task LoadMail()
 		{
 			source.Clear();
 			string htmlbody, plainbody, subject;
 			string replacement, s;
-			return Task.Run(() =>
+			return Task.Run(async() =>
 			{
 				var header = UserSettings.HeaderLocation;
 				log.Info("Sheet: ");
@@ -159,7 +199,7 @@ namespace PidgeotMail.ViewModel
 				{
 					log.Info(value.Key);
 				}
-				GMessage ChoiceMail = new GMessage(UserSettings.ChoiceMailID, GMService.GetDraftByID(UserSettings.ChoiceMailID).Result);
+				GMessage ChoiceMail = new GMessage(UserSettings.ChoiceMailID, await GMService.GetDraftByIDAsync(UserSettings.ChoiceMailID));
 				AddLogs(ChoiceMail);
 				for (int i = 1; i < sheet.Count; ++i)
 				{
@@ -189,7 +229,7 @@ namespace PidgeotMail.ViewModel
 						Done++;
 					}
 				}
-			});
+			}, cancellation.Token);
 		}
 	}
 }

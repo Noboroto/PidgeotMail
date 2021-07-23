@@ -43,7 +43,7 @@
 				</Grid.RowDefinitions>
 				<TextBlock
 					Grid.Row="0"
-					Text="Chủ đề"
+					Text="{Binding Notice}"
 					Margin="10 10 10 5"
 					FontSize="20"
 					HorizontalAlignment="Center"

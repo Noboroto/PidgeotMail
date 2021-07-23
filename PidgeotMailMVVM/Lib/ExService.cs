@@ -35,7 +35,7 @@ namespace PidgeotMail.Lib
 			return "OK";
 		}
 
-		public static Task<string> InitValue(int Col, int Row)
+		public static Task<string> InitValueAsync(int Col, int Row)
 		{
 			Row++;
 			return Task.Run(() =>
@@ -52,19 +52,20 @@ namespace PidgeotMail.Lib
 							_Values.Add(new List<Object>());
 							for (int j = 0; j < Col; ++j)
 							{
-								_Values[i].Add(worksheet.Cells[i + 1, j + 1].Value.ToString());
+								string s = "";
+								if (worksheet.Cells[i + 1, j + 1].Value == null) s = "";
+								else s = worksheet.Cells[i + 1, j + 1].Value.ToString();
+								_Values[i].Add(s);
 								if (i != 0) continue;
-								_Header.Add(_Values[i][j].ToString(), x);
-								if (_Values[i][j].ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
-								if (_Values[i][j].ToString().Trim().ToUpper() == "BCC") UserSettings.BccColumn = i;								if (_Values[i][j].ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
-								if (_Values[i][j].ToString().Trim().ToUpper() == "CC") UserSettings.CcColumn = i;
+								if (s == "") return "Danh sách không đủ số cột";
+								_Header.Add(s.ToString(), x);
+								if (s.ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
+								if (s.ToString().Trim().ToUpper() == "BCC") UserSettings.BccColumn = i;								
+								if (s.ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
+								if (s.ToString().Trim().ToUpper() == "CC") UserSettings.CcColumn = i;
 								x++;
 							}
 						}
-					}
-					catch (NullReferenceException)
-					{
-						return "Danh sách không liền mạch";
 					}
 					catch (Exception e)
 					{

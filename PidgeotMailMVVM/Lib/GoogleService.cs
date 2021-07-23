@@ -29,9 +29,9 @@ namespace PidgeotMail.Lib
 			return stream;
 		}
 
-		public static async Task Init()
+		public static Task InitAsync()
 		{
-			await Task.Run(() =>
+			return Task.Run(() =>
 			{
 				try
 				{

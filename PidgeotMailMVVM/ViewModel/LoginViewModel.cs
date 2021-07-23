@@ -42,15 +42,19 @@ namespace PidgeotMail.ViewModel
 			{
 				log.Error(e.ToString());
 			}
+			finally
+			{
+				UserSettings.Restart();
+			}
 		}
 		public async void ActiveAcount()
 		{
 			try
 			{
-				await GoogleService.Init();
-				await GMService.Init();
+				await GoogleService.InitAsync();
+				await GMService.InitAsync();
+				UserSettings.LogingOut = false;
 				Messenger.Default.Send(new NavigateToMessage(new ChooseDraftView()));
-				Messenger.Default.Send(new StartMessage(StartMessage.View.ChooseDraft));
 			}
 			catch (Exception e)
 			{
