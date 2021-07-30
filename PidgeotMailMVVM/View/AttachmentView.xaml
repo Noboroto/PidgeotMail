@@ -144,7 +144,7 @@
 						<TextBlock
 							FontSize="12"
 							HorizontalAlignment="Center"
-							Text="một lớp" />
+							Text="bảng điểm một lớp" />
 					</StackPanel>
 				</Button>
 			</StackPanel>
