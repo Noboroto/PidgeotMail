@@ -22,7 +22,7 @@ namespace PidgeotMail.ViewModel
 		{
 			AutoUpdater.Mandatory = true;
 			AutoUpdater.UpdateMode = Mode.Forced;
-			AutoUpdater.Start(@"https://raw.githubusercontent.com/Noboroto/AutoUpdate_Info/main/PidgeotMailAutoUpdate.xml");
+			AutoUpdater.Start(@"https://raw.githubusercontent.com/Noboroto/PidgeotMailWeb/main/PidgeotMailAutoUpdate.xml");
 			NeedLog = true;
 			LoginCmd = new RelayCommand(() => ActiveAcount());
 			try
