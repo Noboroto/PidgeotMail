@@ -30,7 +30,7 @@ namespace PidgeotMail.Lib
 			});
 		}
 
-		public static Task<string> InitValueAsync(int Col, int Row)
+		public static Task<string> InitValueAsync(int Column, int Row)
 		{
 			return Task.Run(() =>
 			{
@@ -39,17 +39,17 @@ namespace PidgeotMail.Lib
 				try
 				{
 					_Values = sheetsService.Spreadsheets.Values.Get(ChoiceSheetID, "1:" + Row).Execute().Values;
-					int i = 0;
+					int col = 0;
 					foreach (var value in _Values[0])
 					{
-						if (_Header.ContainsKey(value.ToString())) _Header[value.ToString()] = i;
-						else _Header.Add(value.ToString(), i);
-						if (value.ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
-						if (value.ToString().Trim().ToUpper() == "BCC") UserSettings.BccColumn = i;
-						if (value.ToString().Trim().ToUpper() == "CC") UserSettings.CcColumn = i;
-						i++;
+						if (_Header.ContainsKey(value.ToString())) _Header[value.ToString()] = col;
+						else _Header.Add(value.ToString(), col);
+						if (value.ToString().Trim().ToUpper() == "EMAIL" && col < Column) UserSettings.KeyColumn = col;
+						if (value.ToString().Trim().ToUpper() == "BCC" && col < Column) UserSettings.BccColumn = col;
+						if (value.ToString().Trim().ToUpper() == "CC" && col < Column) UserSettings.CcColumn = col;
+						col++;
 					}
-					if (_Header.Count < Col) return "Danh sách không đủ số cột";
+					if (_Header.Count < Column) return "Danh sách không đủ số cột";
 				}
 				catch (Exception e)
 				{

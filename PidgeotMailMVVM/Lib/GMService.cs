@@ -92,10 +92,16 @@ namespace PidgeotMail.Lib
 				result = "Bị dừng";
 				log.Error(result);
 			}
+			catch (MailKit.ServiceNotAuthenticatedException e)
+			{
+				result = "Có lỗi xác thực, bạn vui lòng đợi 5 phút rồi hãy thử lại";
+				log.Error(e.ToString());
+			}
 			catch (Exception e)
 			{
-				result = e.ToString();
-				log.Error(result);
+				result = "Có lỗi xảy ra, vui lòng đăng nhập lại hoặc báo lỗi!";
+				if (e is AuthenticationException) result = "Có lỗi xác thực, bạn vui lòng đợi 5 phút rồi hãy thử lại";
+				log.Error(e.ToString());
 			}
 			finally
 			{

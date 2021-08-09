@@ -37,7 +37,7 @@ namespace PidgeotMail
 		{
 			try
 			{
-				if (Directory.Exists(ViewModel.MainViewModel.TempFolder)) Directory.Delete(ViewModel.MainViewModel.TempFolder, true);
+				if (Directory.Exists(Lib.UserSettings.TempFolder)) Directory.Delete(Lib.UserSettings.TempFolder, true);
 			}
 			catch (Exception ex)
 			{

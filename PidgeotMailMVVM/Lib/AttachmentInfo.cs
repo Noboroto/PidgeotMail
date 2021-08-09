@@ -11,6 +11,7 @@ namespace PidgeotMail.Lib
 		private bool _IsSelected;
 		private int _GroupIndex;
 		private bool _Enable;
+		private bool _Error;
 
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		public string OriginExt { get; set; }
@@ -18,6 +19,7 @@ namespace PidgeotMail.Lib
 		public string Name => Dinfo.Name;
 		public bool IsResultPDF { get; set; }
 		public bool Enable => _Enable;
+		public bool Error { get => _Error; set => Set(ref _Error, value); }
 		public int GroupIndex
 		{
 			get => _GroupIndex; set

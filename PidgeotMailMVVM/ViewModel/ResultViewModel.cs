@@ -154,7 +154,6 @@ namespace PidgeotMail.ViewModel
 						Done++;
 						if (result != "OK")
 						{
-							log.Error(result);
 							App.Current.Dispatcher.Invoke(() =>
 							{
 								source[int.Parse(messages[0].MessageId) - 1].Status = result;

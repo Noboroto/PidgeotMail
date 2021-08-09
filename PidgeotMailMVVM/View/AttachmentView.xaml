@@ -159,6 +159,21 @@
 				CanUserSortColumns="False"
 				AutoGenerateColumns="False"
 				HeadersVisibility="Column">
+				<DataGrid.CellStyle>
+					<Style
+						TargetType="DataGridCell"
+						BasedOn="{StaticResource MaterialDesignDataGridCell}">
+						<Style.Triggers>
+							<DataTrigger
+								Binding="{Binding Error}"
+								Value="True">
+								<Setter
+									Property="Background"
+									Value="#FFEC1F11" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</DataGrid.CellStyle>
 				<DataGrid.Columns>
 					<DataGridCheckBoxColumn
 						CanUserResize="False"

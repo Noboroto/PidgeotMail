@@ -108,17 +108,32 @@ namespace PidgeotMail.ViewModel
 			NextCmd = new RelayCommand(async () =>
 				{
 					Continue = false;
-					if (Directory.Exists(MainViewModel.TempFolder)) Directory.Delete(MainViewModel.TempFolder, true);
+					bool temp = false;
+					if (!GoogleService.StillAliveInMinutes(30))
+					{
+						MessageBox.Show("Đã quá hạn đăng nhập, vui lòng đăng nhập lại!");
+						GoogleService.LogOut();
+						return;
+					}
+					if (Directory.Exists(UserSettings.TempFolder)) Directory.Delete(UserSettings.TempFolder, true);
 					UserSettings.Attachments = new List<AttachmentInfo>();
 					for (int i = Attachments.Count - 1; i >= 0; --i)
 					{
 						if (Attachments[i].IsResultPDF)
 						{
-							await PDFProcess.SplitPDFAsync(Attachments[i], UserSettings.Values, UserSettings.KeyColumn);
+							Attachments[i].Error = ! await PDFProcess.SplitPDFAsync(Attachments[i], UserSettings.Values, UserSettings.KeyColumn);
+							temp = temp || Attachments[i].Error;
 							log.Info("Chuyển đổi pdf: " + Attachments[i].AttachmentPath);
 							UserSettings.Attachments.Add(new AttachmentInfo(PDFProcess.GetPDFPath(Attachments[i]), true, UserSettings.KeyColumn + 1, false, ".pdf"));
 						}
 						else UserSettings.Attachments.Add(Attachments[i]);
+					}
+					if (temp)
+					{
+						Continue = true;
+						MessageBox.Show("Vui lòng xoá những file bị lỗi để tiếp tục");
+						UserSettings.Attachments.Clear();
+						return;
 					}
 					Messenger.Default.Send(new NavigateToMessage(new ResultView()));
 				}

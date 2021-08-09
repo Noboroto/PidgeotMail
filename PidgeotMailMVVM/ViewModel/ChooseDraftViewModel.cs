@@ -59,6 +59,12 @@ namespace PidgeotMail.ViewModel
 			NextCmd = new RelayCommand(() =>
 				{
 					if (SelectedIndex < 0) return;
+					if (!GoogleService.StillAliveInMinutes(30))
+					{
+						MessageBox.Show("Quá hạn đăng nhập, vui lòng đăng nhập lại!");
+						GoogleService.LogOut();
+						return;
+					}
 					UserSettings.ChoiceMailID = ListSource[SelectedIndex].MessageId;
 					log.Info("Đã chọn draft " + UserSettings.ChoiceMailID);
 					Messenger.Default.Send(new NavigateToMessage(new ChooseSourceView()));
@@ -66,13 +72,7 @@ namespace PidgeotMail.ViewModel
 			);
 			LogoutCmd = new RelayCommand(() =>
 				{
-					UserSettings.Restart();
-					Directory.Delete(MainViewModel.TokenFolder, true);
-					log.Info("Logout");
-					ViewModelLocator.CleanData<ChooseDraftView>();
-					ViewModelLocator.CleanData<LoginView>();
-					UserSettings.LogingOut = true;
-					Messenger.Default.Send(new NavigateToMessage(new LoginView()));
+					GoogleService.LogOut();
 				}
 			);
 			RefreshCmd = new RelayCommand(() =>

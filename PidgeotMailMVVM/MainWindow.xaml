@@ -38,7 +38,18 @@
 					FontSize="12"
 					Height="auto"
 					Padding="5"
-					Header="Thông tin tác giả"
+					Header="Báo lỗi và góp ý"
+					Command="{Binding ReportCmd}">
+					<MenuItem.Icon>
+						<materialDesign:PackIcon
+							Kind="AlertCircle" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem
+					FontSize="12"
+					Height="auto"
+					Padding="5"
+					Header="Thông tin phần mềm"
 					Command="{Binding InfoCmd}">
 					<MenuItem.Icon>
 						<materialDesign:PackIcon

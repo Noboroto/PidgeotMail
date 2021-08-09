@@ -52,17 +52,14 @@ namespace PidgeotMail.Lib
 							_Values.Add(new List<Object>());
 							for (int j = 0; j < Col; ++j)
 							{
-								string s = "";
-								if (worksheet.Cells[i + 1, j + 1].Value == null) s = "";
-								else s = worksheet.Cells[i + 1, j + 1].Value.ToString();
+								string s = (worksheet.Cells[i + 1, j + 1].Value == null) ? "" : worksheet.Cells[i + 1, j + 1].Value.ToString();
 								_Values[i].Add(s);
 								if (i != 0) continue;
 								if (s == "") return "Danh sách không đủ số cột";
 								_Header.Add(s.ToString(), x);
-								if (s.ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
-								if (s.ToString().Trim().ToUpper() == "BCC") UserSettings.BccColumn = i;								
-								if (s.ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = i;
-								if (s.ToString().Trim().ToUpper() == "CC") UserSettings.CcColumn = i;
+								if (s.ToString().Trim().ToUpper() == "EMAIL") UserSettings.KeyColumn = j;
+								if (s.ToString().Trim().ToUpper() == "BCC") UserSettings.BccColumn = j;					
+								if (s.ToString().Trim().ToUpper() == "CC") UserSettings.CcColumn = j;
 								x++;
 							}
 						}

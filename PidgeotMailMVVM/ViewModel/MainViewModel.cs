@@ -48,16 +48,16 @@ namespace PidgeotMail.ViewModel
 			);
 			InfoCmd = new RelayCommand(() =>
 				{
-					MessageBox.Show("Võ Thanh Tú\nEmail: thanhtuvo135@gmail.com");
+					MessageBox.Show("Phiên bản "+ Assembly.GetExecutingAssembly().GetName().Version.ToString()+ "\nTác giả: Võ Thanh Tú\nEmail: thanhtuvo135@gmail.com");
 				}
 			);
+			ReportCmd = new RelayCommand(() => Process.Start(@"https://forms.gle/hDTY1YLHQrihNfZr9"));
 		}
 
 		public ICommand RootFolderCmd { get; set; }
 		public ICommand InfoCmd { get; set; }
+		public ICommand ReportCmd { get; set; }
 
-		public static string TokenFolder => AppDomain.CurrentDomain.BaseDirectory + "\\4xR24anAtrw2ajpqW45SVB56saAfas";
-		public static string TempFolder => AppDomain.CurrentDomain.BaseDirectory + "\\temp";
 		public static string Tilte { get; set; }
 		public static string AppName { get; set; }
 	}

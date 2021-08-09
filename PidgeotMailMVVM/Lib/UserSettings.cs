@@ -17,6 +17,8 @@ namespace PidgeotMail.Lib
 		public static bool SelectEx = true;
 		public static bool SelectGs = false;
 		public static bool LogingOut = false;
+		public static string TokenFolder => AppDomain.CurrentDomain.BaseDirectory + "\\4xR24anAtrw2ajpqW45SVB56saAfas";
+		public static string TempFolder => AppDomain.CurrentDomain.BaseDirectory + "\\temp";
 
 		public static void Restart ()
 		{
@@ -25,7 +27,6 @@ namespace PidgeotMail.Lib
 			R = "}}";
 			Values = null;
 			HeaderLocation = new Dictionary<string, int>();
-			//Values = new List<IList<Object>>();
 			Attachments = new List<AttachmentInfo>();
 			KeyColumn = -1;
 			BccColumn = -1;

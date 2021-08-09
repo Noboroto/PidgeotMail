@@ -72,6 +72,12 @@ namespace PidgeotMail.ViewModel
 
 			NextCmd = new RelayCommand(async () =>
 				{
+					if (!GoogleService.StillAliveInMinutes(30))
+					{
+						MessageBox.Show("Đã quá hạn đăng nhập, vui lòng đăng nhập lại!");
+						GoogleService.LogOut();
+						return;
+					}
 					if (SelectGs)
 					{
 						string result = GSheetService.CheckAvailable(_Link);

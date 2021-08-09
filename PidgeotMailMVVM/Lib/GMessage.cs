@@ -22,7 +22,7 @@ namespace PidgeotMail.Lib
 				return visitor.HtmlBody;
 			}
 		}
-		public string Subject => (string.IsNullOrEmpty(message.Subject)) ? "None subject" : message.Subject;
+		public string Subject => (string.IsNullOrEmpty(message.Subject)) ? "" : message.Subject;
 		public string Date => (message == null) ? "null" : message.Date.ToString();
 		public string ShortContent => (message == null) ? "null" : message.TextBody.Substring(0, Min(20, message.TextBody.Length)) + "...";
 		public GMessage(string id = "", MimeMessage m = null)
