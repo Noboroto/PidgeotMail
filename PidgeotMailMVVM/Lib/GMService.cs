@@ -101,18 +101,12 @@ namespace PidgeotMail.Lib
 		{
 			try
 			{
-				Test();
 				await client.SendAsync(m, cancellation);
 			}
 			catch (Exception e)
 			{
 				throw e;
 			}
-		}
-		public static Task Test()
-		{
-		return Task.Run(() =>
-		   throw new AggregateException("asda"));
 		}
 
 		public static MimeMessage GetDraftByID(string id)
