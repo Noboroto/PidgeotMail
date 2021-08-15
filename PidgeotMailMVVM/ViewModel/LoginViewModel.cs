@@ -21,7 +21,6 @@ namespace PidgeotMail.ViewModel
 		public LoginViewModel()
 		{
 			AutoUpdater.Mandatory = true;
-			AutoUpdater.UpdateMode = Mode.Forced;
 			AutoUpdater.Start(@"https://raw.githubusercontent.com/Noboroto/PidgeotMailWeb/main/PidgeotMailAutoUpdate.xml");
 			NeedLog = true;
 			LoginCmd = new RelayCommand(() => ActiveAcount());
