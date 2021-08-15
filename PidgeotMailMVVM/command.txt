@@ -1,0 +1,16 @@
+Install-Package Autoupdater.NET.Official
+Install-Package EPPlus
+Install-Package Google.Apis
+Install-Package Google.Apis.Core
+Install-Package Google.Apis.Gmail.v1
+Install-Package Google.Apis.Sheets.v4
+Install-Package itext7
+Install-Package log4net
+Install-Package MailKit
+Install-Package MaterialDesignColors
+Install-Package MaterialDesignThemes
+Install-Package MvvmLight
+Install-Package MvvmLightLibs
+Install-Package PrettyBin
+
+
