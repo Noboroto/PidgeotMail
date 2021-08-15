@@ -1,5 +1,4 @@
-﻿using iText.IO;
-
+﻿
 using System;
 
 namespace PidgeotMail.Lib

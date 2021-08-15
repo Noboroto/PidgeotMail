@@ -72,7 +72,7 @@ namespace PidgeotMail.Lib
 				}
 				catch (Exception e)
 				{
-					if (Directory.Exists(UserSettings.TokenFolder))Directory.Delete(UserSettings.TokenFolder, true);
+					if (Directory.Exists(UserSettings.TokenFolder)) Directory.Delete(UserSettings.TokenFolder, true);
 					throw e;
 				}
 			}
