@@ -1,13 +1,16 @@
-﻿using PidgeotMail.Lib;
-using System;
-using System.IO;
-using PidgeotMail.MessageForUI;
-using PidgeotMail.View;
+﻿using AutoUpdaterDotNET;
+
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight;
+
+using PidgeotMail.Lib;
+using PidgeotMail.MessageForUI;
+using PidgeotMail.View;
+
+using System;
+using System.IO;
 using System.Windows;
-using AutoUpdaterDotNET;
 
 namespace PidgeotMail.ViewModel
 {
@@ -34,6 +37,14 @@ namespace PidgeotMail.ViewModel
 					ActiveAcount();
 				}
 			}
+			catch (AggregateException ae)
+			{
+				var x = ae.Flatten();
+				foreach (var e in x.InnerExceptions)
+				{
+					log.Error(e.ToString());
+				}
+			}
 			catch (Exception e)
 			{
 				log.Error(e.ToString());
@@ -55,9 +66,9 @@ namespace PidgeotMail.ViewModel
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show("Có lỗi, vui lòng thử lại");
+				MessageBox.Show(HandleException.CorrectErrorMessage(e));
 				log.Error(e.ToString());
-				Directory.Delete(UserSettings.TokenFolder, true);
+				if (Directory.Exists(UserSettings.TokenFolder)) Directory.Delete(UserSettings.TokenFolder, true);
 			}
 		}
 	}

@@ -4,7 +4,6 @@ using PidgeotMail.MessageForUI;
 
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 
 namespace PidgeotMail.View
 {

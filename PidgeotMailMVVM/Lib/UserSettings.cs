@@ -20,7 +20,7 @@ namespace PidgeotMail.Lib
 		public static string TokenFolder => AppDomain.CurrentDomain.BaseDirectory + "\\4xR24anAtrw2ajpqW45SVB56saAfas";
 		public static string TempFolder => AppDomain.CurrentDomain.BaseDirectory + "\\temp";
 
-		public static void Restart ()
+		public static void Restart()
 		{
 			ChoiceMailID = "";
 			L = "{{";

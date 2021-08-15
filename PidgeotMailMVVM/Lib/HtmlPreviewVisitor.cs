@@ -1,9 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using MimeKit;
+﻿using MimeKit;
 using MimeKit.Text;
 using MimeKit.Tnef;
+
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace PidgeotMail.Lib
 {

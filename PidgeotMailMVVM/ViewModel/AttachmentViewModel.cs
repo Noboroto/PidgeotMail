@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Windows.Forms;
-using System.Windows.Input;
-
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 
 using PidgeotMail.Lib;
 using PidgeotMail.MessageForUI;
 using PidgeotMail.View;
+
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace PidgeotMail.ViewModel
 {
@@ -121,7 +121,7 @@ namespace PidgeotMail.ViewModel
 					{
 						if (Attachments[i].IsResultPDF)
 						{
-							Attachments[i].Error = ! await PDFProcess.SplitPDFAsync(Attachments[i], UserSettings.Values, UserSettings.KeyColumn);
+							Attachments[i].Error = !await PDFProcess.SplitPDFAsync(Attachments[i], UserSettings.Values, UserSettings.KeyColumn);
 							temp = temp || Attachments[i].Error;
 							log.Info("Chuyển đổi pdf: " + Attachments[i].AttachmentPath);
 							UserSettings.Attachments.Add(new AttachmentInfo(PDFProcess.GetPDFPath(Attachments[i]), true, UserSettings.KeyColumn + 1, false, ".pdf"));

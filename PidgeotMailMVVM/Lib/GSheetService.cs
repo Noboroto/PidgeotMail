@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace PidgeotMail.Lib
 			sheetsService = new SheetsService(new BaseClientService.Initializer()
 			{
 				HttpClientInitializer = GoogleService.Credential,
-				ApplicationName = PidgeotMail.ViewModel.MainViewModel.AppName,
+				ApplicationName = ViewModel.MainViewModel.AppName,
 			});
 		}
 

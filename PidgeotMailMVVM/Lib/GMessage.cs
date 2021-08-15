@@ -24,7 +24,7 @@ namespace PidgeotMail.Lib
 		}
 		public string Subject => (string.IsNullOrEmpty(message.Subject)) ? "" : message.Subject;
 		public string Date => (message == null) ? "null" : message.Date.ToString();
-		public string ShortContent => (message == null) ? "null" : message.TextBody.Substring(0, Min(20, message.TextBody.Length)) + "...";
+		public string ShortContent => (message == null || message.TextBody == null) ? "null" : message.TextBody.Substring(0, Min(20, message.TextBody.Length)) + "...";
 		public GMessage(string id = "", MimeMessage m = null)
 		{
 			message = m;
@@ -42,8 +42,8 @@ namespace PidgeotMail.Lib
 			try
 			{
 				t = new MimeMessage();
-				t.Subject = subject;				
-				t.From.Add(new MailboxAddress("",GMService.UserEmail));
+				t.Subject = subject;
+				t.From.Add(new MailboxAddress("", GMService.UserEmail));
 				t.To.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.KeyColumn].ToString()));
 				if (UserSettings.BccColumn != -1) t.Bcc.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.BccColumn].ToString()));
 				if (UserSettings.CcColumn != -1) t.Cc.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.CcColumn].ToString()));
@@ -54,31 +54,31 @@ namespace PidgeotMail.Lib
 					{
 						builder.Attachments.Add(x);
 					}
-				if (UserSettings.Attachments != null) 
-				foreach (var x in UserSettings.Attachments)
-				{
-					string s, name = x.Name;
-					if (!x.Enable && !x.IsResultPDF)
+				if (UserSettings.Attachments != null)
+					foreach (var x in UserSettings.Attachments)
 					{
-						s = x.AttachmentPath;
+						string s, name = x.Name;
+						if (!x.Enable && !x.IsResultPDF)
+						{
+							s = x.AttachmentPath;
+						}
+						else
+						{
+							s = UserSettings.Values[id][x.GroupIndex - 1].ToString();
+							name = x.Name + "-" + s + "-" + id + x.OriginExt;
+						}
+						try
+						{
+							var info = x.GetFile(id, s);
+							FileStream f = info.OpenRead();
+							if (x.Enable) name = info.Name;
+							if (f != null) builder.Attachments.Add(name, f); ;
+						}
+						catch (NullReferenceException)
+						{
+							continue;
+						}
 					}
-					else
-					{
-						s = UserSettings.Values[id][x.GroupIndex - 1].ToString();
-						name = x.Name + "-" + s + "-" + id + x.OriginExt;
-					}
-					try
-					{
-						var info = x.GetFile(id, s);
-						FileStream f = info.OpenRead();
-						if (x.Enable) name = info.Name;
-						if (f != null) builder.Attachments.Add(name, f); ;
-					}
-					catch (NullReferenceException)
-					{
-						continue;
-					}
-				}
 				t.Body = builder.ToMessageBody();
 			}
 			catch (Exception e)

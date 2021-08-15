@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using GalaSoft.MvvmLight;
 
-using GalaSoft.MvvmLight;
+using System;
+using System.IO;
 
 namespace PidgeotMail.Lib
 {

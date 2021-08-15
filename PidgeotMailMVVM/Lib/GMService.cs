@@ -1,15 +1,19 @@
 ﻿using Google.Apis.Gmail.v1;
-using Google.Apis.Services;
-using PidgeotMail.ViewModel;
-using System;
-using System.Collections.Generic;
-using MimeKit;
-using System.IO;
 using Google.Apis.Gmail.v1.Data;
-using System.Threading.Tasks;
+using Google.Apis.Services;
+
 using MailKit.Net.Smtp;
 using MailKit.Security;
+
+using MimeKit;
+
+using PidgeotMail.ViewModel;
+
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace PidgeotMail.Lib
 {
@@ -20,7 +24,7 @@ namespace PidgeotMail.Lib
 		private static GmailService gs;
 		private static SmtpClient client;
 		private static string _UserEmail;
-		public static IList<Draft> DraftsList =>  gs.Users.Drafts.List("me").Execute().Drafts;
+		public static IList<Draft> DraftsList => gs.Users.Drafts.List("me").Execute().Drafts;
 		public static string UserEmail => _UserEmail;
 
 		static CancellationTokenSource source = new CancellationTokenSource();
@@ -46,13 +50,27 @@ namespace PidgeotMail.Lib
 			{
 				throw new TimeoutException();
 			}
-			client.Connect("smtp.gmail.com", 587);
+			if (!client.IsConnected) client.Connect("smtp.gmail.com", 587);
 			var oauth2 = new SaslMechanismOAuth2(UserEmail, GoogleService.Credential.Token.AccessToken);
-			if (!client.IsConnected) Connect(loop + 1);
+			if (!client.IsConnected)
+			{
+				try
+				{
+					Connect(loop + 1);
+				}
+				catch (AggregateException ae)
+				{
+					throw ae.Flatten();
+				}
+				catch (Exception e)
+				{
+					throw e;
+				}
+			}
 			else
 			{
 				client.Authenticate(oauth2);
-				client.Timeout = 10000;
+				client.Timeout = 100000;
 			}
 		}
 		public static async void Disconnect()
@@ -78,46 +96,25 @@ namespace PidgeotMail.Lib
 					.Replace('+', '-').Replace('/', '_');
 			}
 		}
-		
-		public static async Task<string> Send(MimeMessage m, CancellationToken cancellation)
+
+		public static async Task SendAsync(MimeMessage m, CancellationToken cancellation)
 		{
-			string result = "OK";
 			try
 			{
-				log.Info("Start send");
+				Test();
 				await client.SendAsync(m, cancellation);
-			}
-			catch (OperationCanceledException)
-			{
-				result = "Bị dừng";
-				log.Error(result);
-			}
-			catch (MailKit.ServiceNotAuthenticatedException e)
-			{
-				result = "Có lỗi xác thực, bạn vui lòng đợi 5 phút rồi hãy thử lại";
-				log.Error(e.ToString());
 			}
 			catch (Exception e)
 			{
-				result = "Có lỗi xảy ra, vui lòng đăng nhập lại hoặc báo lỗi!";
-				if (e is AuthenticationException) result = "Có lỗi xác thực, bạn vui lòng đợi 5 phút rồi hãy thử lại";
-				log.Error(e.ToString());
+				throw e;
 			}
-			finally
-			{
-				log.Info("End send");
-			}
-			return result;
 		}
-		public static Task<string> SendAsync (MimeMessage m)
+		public static Task Test()
 		{
-			return Task.Run(() => Send(m, CancellationToken.None));
+		return Task.Run(() =>
+		   throw new AggregateException("asda"));
 		}
-		public static Task<string> SendAsync(MimeMessage m, CancellationToken cancellationToken)
-		{
-			return Task.Run(() => Send(m, cancellationToken), cancellationToken);
-		}
-		
+
 		public static MimeMessage GetDraftByID(string id)
 		{
 			var request = gs.Users.Drafts.Get("me", id);

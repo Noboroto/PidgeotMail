@@ -192,6 +192,7 @@
     <Compile Include="Lib\GMService.cs" />
     <Compile Include="Lib\GoogleService.cs" />
     <Compile Include="Lib\GSheetService.cs" />
+    <Compile Include="Lib\HandleException.cs" />
     <Compile Include="Lib\HtmlPreviewVisitor.cs" />
     <Compile Include="Lib\PDFProcess.cs" />
     <Compile Include="Lib\SenderInfo.cs" />

@@ -1,8 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
-using PidgeotMail.Lib;
-using System.IO;
 
 namespace PidgeotMail
 {

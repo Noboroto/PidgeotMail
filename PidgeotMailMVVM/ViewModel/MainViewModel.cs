@@ -1,14 +1,11 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Input;
-
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
-
-using PidgeotMail.Lib;
 
 namespace PidgeotMail.ViewModel
 {
@@ -48,7 +45,7 @@ namespace PidgeotMail.ViewModel
 			);
 			InfoCmd = new RelayCommand(() =>
 				{
-					MessageBox.Show("Phiên bản "+ Assembly.GetExecutingAssembly().GetName().Version.ToString()+ "\nTác giả: Võ Thanh Tú\nEmail: thanhtuvo135@gmail.com");
+					MessageBox.Show("Phiên bản " + Assembly.GetExecutingAssembly().GetName().Version.ToString() + "\nTác giả: Võ Thanh Tú\nEmail: thanhtuvo135@gmail.com");
 				}
 			);
 			ReportCmd = new RelayCommand(() => Process.Start(@"https://forms.gle/hDTY1YLHQrihNfZr9"));

@@ -1,17 +1,18 @@
-﻿using System;
-using System.Web;
+﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+
+using PidgeotMail.Lib;
+using PidgeotMail.MessageForUI;
+using PidgeotMail.View;
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using PidgeotMail.Lib;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using System.Windows.Input;
-using GalaSoft.MvvmLight.Messaging;
-using PidgeotMail.MessageForUI;
-using PidgeotMail.View;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Forms;
 
 namespace PidgeotMail.ViewModel
@@ -56,7 +57,7 @@ namespace PidgeotMail.ViewModel
 		{
 			return HttpUtility.HtmlEncode(text);
 		}
-		
+
 		private async void Start()
 		{
 			await Task.WhenAll(LoadResult(), LoadMail()).ConfigureAwait(false);
@@ -112,16 +113,16 @@ namespace PidgeotMail.ViewModel
 
 		private Task LoadResult()
 		{
-			return Task.Run(async() =>
+			return Task.Run(async () =>
 			{
-				string result;
+				string result = "";
 				try
 				{
 					GMService.Connect();
 				}
 				catch (Exception e)
 				{
-					MessageBox.Show(e.ToString(), "Không thể kết nối máy chủ gửi mail");
+					MessageBox.Show(HandleException.CorrectErrorMessage(e), "Không thể kết nối máy chủ gửi mail");
 					log.Fatal(e.ToString());
 					foreach (var mess in messages)
 					{
@@ -145,11 +146,27 @@ namespace PidgeotMail.ViewModel
 					{
 						try
 						{
-							result = await GMService.SendAsync(messages[0].message, cancellation.Token);
+							log.Info("StartSend");
+							result = "";
+							await GMService.SendAsync(messages[0].message, cancellation.Token);
+							result = "OK";
 						}
-						catch (OperationCanceledException)
+						catch (AggregateException ae)
 						{
-							result = "Bị dừng";
+							foreach (var e in ae.InnerExceptions)
+							{
+								result = HandleException.CorrectErrorMessage(e);
+								log.Error(e.ToString());
+							}
+						}
+						catch (Exception e)
+						{
+							result = HandleException.CorrectErrorMessage(e);
+							log.Error(e.ToString());
+						}
+						finally
+						{
+							log.Info("EndSend");
 						}
 						Done++;
 						if (result != "OK")
@@ -173,6 +190,7 @@ namespace PidgeotMail.ViewModel
 						messages.RemoveAt(0);
 						await Task.Delay(1000);
 					}
+
 					if (Done >= UserSettings.Values.Count - 1)
 					{
 						App.Current.Dispatcher.Invoke(() =>
@@ -190,7 +208,7 @@ namespace PidgeotMail.ViewModel
 			source.Clear();
 			string htmlbody, plainbody, subject;
 			string replacement, s;
-			return Task.Run(async() =>
+			return Task.Run(async () =>
 			{
 				var header = UserSettings.HeaderLocation;
 				log.Info("Sheet: ");
@@ -202,9 +220,9 @@ namespace PidgeotMail.ViewModel
 				AddLogs(ChoiceMail);
 				for (int i = 1; i < sheet.Count; ++i)
 				{
-					htmlbody = ChoiceMail.message.HtmlBody;
-					plainbody = ChoiceMail.message.TextBody;
-					subject = ChoiceMail.Subject;
+					htmlbody = (ChoiceMail.message.HtmlBody == null) ? "" : ChoiceMail.message.HtmlBody;
+					plainbody = (ChoiceMail.message.TextBody == null) ? "" : ChoiceMail.message.TextBody;
+					subject = (ChoiceMail.Subject == null) ? "" : ChoiceMail.Subject;
 					foreach (var value in header)
 					{
 						if (value.Value >= sheet[i].Count) continue;

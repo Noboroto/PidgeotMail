@@ -46,7 +46,7 @@ namespace PidgeotMail.ViewModel
 			Register();
 		}
 
-		public static void Register ()
+		public static void Register()
 		{
 			SimpleIoc.Default.Register<MainViewModel>();
 			SimpleIoc.Default.Register<LoginViewModel>();

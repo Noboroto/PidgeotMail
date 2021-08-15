@@ -1,12 +1,15 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
+
+using Microsoft.Win32;
+
 using PidgeotMail.Lib;
-using System.Windows.Input;
 using PidgeotMail.MessageForUI;
 using PidgeotMail.View;
+
 using System.Windows;
-using Microsoft.Win32;
+using System.Windows.Input;
 
 namespace PidgeotMail.ViewModel
 {
