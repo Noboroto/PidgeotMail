@@ -1,4 +1,7 @@
 Install-Package Autoupdater.NET.Official
+Install-Package Common.Logging
+Install-Package Common.Logging.Core
+Install-Package CommonServiceLocator
 Install-Package EPPlus
 Install-Package Google.Apis
 Install-Package Google.Apis.Core
@@ -9,8 +12,13 @@ Install-Package log4net
 Install-Package MailKit
 Install-Package MaterialDesignColors
 Install-Package MaterialDesignThemes
+Install-Package Microsoft.CSharp
+Install-Package Microsoft.IO.RecyclableMemoryStream
+Install-Package MimeKit
 Install-Package MvvmLight
 Install-Package MvvmLightLibs
+Install-Package Newtonsoft.Json
+Install-Package Portable.BouncyCastle
 Install-Package PrettyBin
-
-
+Install-Package System.Buffers
+Install-Package System.ComponentModel.Annotations
