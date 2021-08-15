@@ -53,6 +53,7 @@ namespace PidgeotMail.Lib
 			return span <= TimeSpan.FromMinutes(minutes);
 		}
 
+		[Obsolete]
 		public static Task InitAsync()
 		{
 			return Task.Run(() =>
