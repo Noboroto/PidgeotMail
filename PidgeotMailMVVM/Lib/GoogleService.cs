@@ -53,7 +53,6 @@ namespace PidgeotMail.Lib
 			return span <= TimeSpan.FromMinutes(minutes);
 		}
 
-		[Obsolete]
 		public static Task InitAsync()
 		{
 			return Task.Run(() =>
@@ -63,7 +62,7 @@ namespace PidgeotMail.Lib
 					using (var stream = GenerateStreamFromString(TextCredential))
 					{
 						credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-							GoogleClientSecrets.Load(stream).Secrets,
+							GoogleClientSecrets.FromStream(stream).Secrets,
 							Scopes,
 							"user",
 							CancellationToken.None, new FileDataStore(UserSettings.TokenFolder, true)).Result;

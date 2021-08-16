@@ -44,33 +44,24 @@ namespace PidgeotMail.Lib
 			});
 		}
 
-		public static void Connect(int loop = 0)
+		public static async Task Connect(CancellationToken token)
 		{
-			if (loop > MaxLoop)
+			try
 			{
-				throw new TimeoutException();
-			}
-			if (!client.IsConnected) client.Connect("smtp.gmail.com", 587);
-			var oauth2 = new SaslMechanismOAuth2(UserEmail, GoogleService.Credential.Token.AccessToken);
-			if (!client.IsConnected)
-			{
-				try
+				await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.Auto, token);
+				var oauth2 = new SaslMechanismOAuth2(UserEmail, GoogleService.Credential.Token.AccessToken);
+				if (client.IsConnected)
 				{
-					Connect(loop + 1);
-				}
-				catch (AggregateException ae)
-				{
-					throw ae.Flatten();
-				}
-				catch (Exception e)
-				{
-					throw e;
+					client.Authenticate(oauth2);
 				}
 			}
-			else
+			catch (AggregateException ae)
 			{
-				client.Authenticate(oauth2);
-				client.Timeout = 100000;
+				throw ae.Flatten();
+			}
+			catch (Exception e)
+			{
+				throw e;
 			}
 		}
 		public static async void Disconnect()

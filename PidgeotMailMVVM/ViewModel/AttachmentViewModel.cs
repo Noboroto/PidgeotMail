@@ -37,8 +37,10 @@ namespace PidgeotMail.ViewModel
 		{
 			Continue = true;
 			Attachments = new ObservableCollection<AttachmentInfo>();
-			Selection = new ObservableCollection<string>();
-			Selection.Add("Tất cả");
+			Selection = new ObservableCollection<string>
+			{
+				"Tất cả"
+			};
 			log.Info("Choose Attachments");
 
 			if (UserSettings.HeaderLocation != null)
@@ -64,8 +66,10 @@ namespace PidgeotMail.ViewModel
 
 			FolderCmd = new RelayCommand(() =>
 				{
-					FolderBrowserDialog folderDlg = new FolderBrowserDialog();
-					folderDlg.ShowNewFolderButton = true;
+					FolderBrowserDialog folderDlg = new FolderBrowserDialog
+					{
+						ShowNewFolderButton = true
+					};
 					if (folderDlg.ShowDialog() == DialogResult.OK)
 					{
 						log.Info("Chọn thư mục: " + folderDlg.SelectedPath);
@@ -76,9 +80,11 @@ namespace PidgeotMail.ViewModel
 
 			PDFCmd = new RelayCommand(() =>
 				{
-					OpenFileDialog openFileDialog = new OpenFileDialog();
-					openFileDialog.Filter = "PDF File|*.pdf";
-					openFileDialog.Multiselect = true;
+					OpenFileDialog openFileDialog = new OpenFileDialog
+					{
+						Filter = "PDF File|*.pdf",
+						Multiselect = true
+					};
 					if (openFileDialog.ShowDialog() == DialogResult.OK)
 					{
 						foreach (var values in openFileDialog.FileNames)
@@ -92,8 +98,10 @@ namespace PidgeotMail.ViewModel
 
 			FileCmd = new RelayCommand(() =>
 			{
-				OpenFileDialog openFileDialog = new OpenFileDialog();
-				openFileDialog.Multiselect = true;
+				OpenFileDialog openFileDialog = new OpenFileDialog
+				{
+					Multiselect = true
+				};
 				if (openFileDialog.ShowDialog() == DialogResult.OK)
 				{
 					foreach (var values in openFileDialog.FileNames)

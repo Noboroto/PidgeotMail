@@ -85,8 +85,10 @@ namespace PidgeotMail.ViewModel
 				if (FailEmail.Count <= 0) MessageBox.Show("Không có lỗi");
 				else
 				{
-					SaveFileDialog saveFileDialog = new SaveFileDialog();
-					saveFileDialog.Filter = "Text file (*.txt)|*.txt";
+					SaveFileDialog saveFileDialog = new SaveFileDialog
+					{
+						Filter = "Text file (*.txt)|*.txt"
+					};
 					if (saveFileDialog.ShowDialog() == DialogResult.OK)
 						foreach (var s in FailEmail)
 							File.WriteAllText(saveFileDialog.FileName, s);
@@ -118,7 +120,7 @@ namespace PidgeotMail.ViewModel
 				string result = "";
 				try
 				{
-					GMService.Connect();
+					await GMService.Connect(cancellation.Token);
 				}
 				catch (Exception e)
 				{
@@ -146,7 +148,7 @@ namespace PidgeotMail.ViewModel
 					{
 						try
 						{
-							log.Info("StartSend");
+							log.Info("StartSend " + messages[0].message.To);
 							result = "";
 							await GMService.SendAsync(messages[0].message, cancellation.Token);
 							result = "OK";
@@ -180,7 +182,6 @@ namespace PidgeotMail.ViewModel
 						}
 						else
 						{
-							log.Info(messages[0].message.To.ToString());
 							App.Current.Dispatcher.Invoke(() =>
 							{
 								source[int.Parse(messages[0].MessageId) - 1].Status = "Đã gửi";
@@ -212,9 +213,11 @@ namespace PidgeotMail.ViewModel
 			{
 				var header = UserSettings.HeaderLocation;
 				log.Info("Sheet: ");
+				int counting = 1;
 				foreach (var value in header)
 				{
-					log.Info(value.Key);
+					log.Info(counting + " " + value.Key);
+					counting++;
 				}
 				GMessage ChoiceMail = new GMessage(UserSettings.ChoiceMailID, await GMService.GetDraftByIDAsync(UserSettings.ChoiceMailID));
 				AddLogs(ChoiceMail);

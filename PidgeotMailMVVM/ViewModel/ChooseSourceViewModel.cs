@@ -23,6 +23,16 @@ namespace PidgeotMail.ViewModel
 		public string Left { get => UserSettings.L; set => Set(nameof(UserSettings.L), ref UserSettings.L, value); }
 		public string Right { get => UserSettings.R; set => Set(nameof(UserSettings.R), ref UserSettings.R, value); }
 		public string Link { get => _Link; set => Set(ref _Link, value); }
+		public bool TurnOnBcc
+		{
+			get => UserSettings.TurnOnBcc;
+			set => Set(ref UserSettings.TurnOnBcc, value);
+		}
+		public bool TurnOnCc
+		{
+			get => UserSettings.TurnOnCc;
+			set => Set(ref UserSettings.TurnOnCc, value);
+		}
 		public bool SelectEx
 		{
 			get => UserSettings.SelectEx;
@@ -55,9 +65,11 @@ namespace PidgeotMail.ViewModel
 			Column = 0;
 			BrowseCmd = new RelayCommand(() =>
 			   {
-				   var OpenFileBox = new OpenFileDialog();
-				   OpenFileBox.Filter = "Excel Files|*.xls;*.xlsx";
-				   OpenFileBox.Multiselect = false;
+				   var OpenFileBox = new OpenFileDialog
+				   {
+					   Filter = "Excel Files|*.xls;*.xlsx",
+					   Multiselect = false
+				   };
 				   if (OpenFileBox.ShowDialog() == true)
 				   {
 					   ExPath = OpenFileBox.FileName;

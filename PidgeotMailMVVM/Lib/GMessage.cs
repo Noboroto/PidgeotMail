@@ -41,15 +41,19 @@ namespace PidgeotMail.Lib
 			MimeMessage t = new MimeMessage();
 			try
 			{
-				t = new MimeMessage();
-				t.Subject = subject;
+				t = new MimeMessage
+				{
+					Subject = subject
+				};
 				t.From.Add(new MailboxAddress("", GMService.UserEmail));
 				t.To.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.KeyColumn].ToString()));
 				if (UserSettings.BccColumn != -1) t.Bcc.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.BccColumn].ToString()));
 				if (UserSettings.CcColumn != -1) t.Cc.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.CcColumn].ToString()));
-				var builder = new BodyBuilder();
-				builder.HtmlBody = htmlbody;
-				builder.TextBody = plainbody;
+				var builder = new BodyBuilder
+				{
+					HtmlBody = htmlbody,
+					TextBody = plainbody
+				};
 				if (message.Attachments != null) foreach (var x in message.Attachments)
 					{
 						builder.Attachments.Add(x);
@@ -83,9 +87,11 @@ namespace PidgeotMail.Lib
 			}
 			catch (Exception e)
 			{
-				t = new MimeMessage();
-				t.Subject = e.ToString();
-				t.MessageId = "-1";
+				t = new MimeMessage
+				{
+					Subject = e.ToString(),
+					MessageId = "-1"
+				};
 			}
 			return t;
 		}

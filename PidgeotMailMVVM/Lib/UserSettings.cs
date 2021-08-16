@@ -19,9 +19,12 @@ namespace PidgeotMail.Lib
 		public static bool LogingOut = false;
 		public static string TokenFolder => AppDomain.CurrentDomain.BaseDirectory + "\\4xR24anAtrw2ajpqW45SVB56saAfas";
 		public static string TempFolder => AppDomain.CurrentDomain.BaseDirectory + "\\temp";
-
+		public static bool TurnOnBcc;
+		public static bool TurnOnCc;
 		public static void Restart()
 		{
+			TurnOnCc = false;
+			TurnOnBcc = false;
 			ChoiceMailID = "";
 			L = "{{";
 			R = "}}";

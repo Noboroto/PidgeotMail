@@ -20,9 +20,10 @@ namespace PidgeotMail.Lib
 				}
 			}
 			if (e is MailKit.CommandException)
-				result = "Lỗi câu lệnh, vui lòng thử lại";
+				if (e.Message.Contains("5.5.2 Syntax error")) result = "Sai định dạng email người nhận hoặc Cc, Bcc";
+				else result = "Lỗi câu lệnh, vui lòng thử lại\n\n" + e.Message;
 			if (e is MailKit.ProtocolException)
-				result = "Lỗi protocol, vul lòng thử lại";
+				result = "Lỗi protocol, vul lòng thử lại\n\n" + e.Message;
 			if (e is System.IO.IOException)
 				result = "Lỗi nhập/xuất, vui lòng thử lại";
 			if (e is ObjectDisposedException)

@@ -46,9 +46,10 @@ namespace PidgeotMail.Lib
 						if (_Header.ContainsKey(value.ToString())) _Header[value.ToString()] = col;
 						else _Header.Add(value.ToString(), col);
 						if (value.ToString().Trim().ToUpper() == "EMAIL" && col < Column) UserSettings.KeyColumn = col;
-						if (value.ToString().Trim().ToUpper() == "BCC" && col < Column) UserSettings.BccColumn = col;
-						if (value.ToString().Trim().ToUpper() == "CC" && col < Column) UserSettings.CcColumn = col;
+						if (UserSettings.TurnOnBcc && value.ToString().Trim().ToUpper() == "BCC" && col < Column) UserSettings.BccColumn = col;
+						if (UserSettings.TurnOnCc && value.ToString().Trim().ToUpper() == "CC" && col < Column) UserSettings.CcColumn = col;
 						col++;
+						if (col >= Column) break;
 					}
 					if (_Header.Count < Column) return "Danh sách không đủ số cột";
 				}
