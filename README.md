@@ -25,7 +25,7 @@ Các thư viện hỗ trợ:
 - [Material Design In XAML Toolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit): hỗ trợ giao diện phần mềm
 - [Gmail API](https://developers.google.com/gmail/api): lấy danh sách mail nháp và gửi mail
 - [MimeKit](https://github.com/jstedfast/MimeKit): tùy chỉnh mail
-- [Epplus](https://github.com/JanKallman/EPPlus): nạp file .xlxs vào phần mềm
+- [Epplus](https://github.com/EPPlusSoftware/EPPlus): nạp file .xlxs vào phần mềm
 - [Google Sheet API](https://developers.google.com/sheets/api): nạp dữ liệu từ Google Sheet vào phần mềm
 
 ## Liên hệ
