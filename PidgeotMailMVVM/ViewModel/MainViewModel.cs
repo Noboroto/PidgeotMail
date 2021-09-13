@@ -1,8 +1,12 @@
-﻿using GalaSoft.MvvmLight;
+﻿using AutoUpdaterDotNET;
+
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 
+using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -49,11 +53,76 @@ namespace PidgeotMail.ViewModel
 				}
 			);
 			ReportCmd = new RelayCommand(() => Process.Start(@"https://forms.gle/hDTY1YLHQrihNfZr9"));
+            CheckUpdateCmd = new RelayCommand(() =>
+			{
+				AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
+                AutoUpdater.Synchronous = true;
+				AutoUpdater.Start(@"https://raw.githubusercontent.com/Noboroto/PidgeotMailWeb/main/PidgeotMailAutoUpdate.xml");
+                AutoUpdater.CheckForUpdateEvent -= AutoUpdaterOnCheckForUpdateEvent;
+            });
 		}
 
-		public ICommand RootFolderCmd { get; set; }
+        private void AutoUpdaterOnCheckForUpdateEvent(UpdateInfoEventArgs args)
+        {
+            if (args.Error == null)
+            {
+                if (args.IsUpdateAvailable)
+                {
+                    DialogResult dialogResult;
+                    dialogResult =
+                            MessageBox.Show(
+                                $@"Có phiên bản mới {args.CurrentVersion}. Bạn đang dùng phiên bản {
+                                        args.InstalledVersion
+                                    }. Bạn có muốn cập nhật ngay bây giờ không?", @"Update Available",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Information);
+                    // Uncomment the following line if you want to show standard update dialog instead.
+                    // AutoUpdater.ShowUpdateForm(args);
+
+                    if (dialogResult.Equals(DialogResult.Yes) || dialogResult.Equals(DialogResult.OK))
+                    {
+                        try
+                        {
+                            if (AutoUpdater.DownloadUpdate(args))
+                            {
+                                Application.Exit();
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+                            MessageBox.Show(exception.Message, exception.GetType().ToString(), MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(@"Bạn đã ở phiên bản mới nhất", @"No update available",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                if (args.Error is WebException)
+                {
+                    MessageBox.Show(
+                        @"There is a problem reaching update server. Please check your internet connection and try again later.",
+                        @"Update Check Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show(args.Error.Message,
+                        args.Error.GetType().ToString(), MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+        }
+
+
+        public ICommand RootFolderCmd { get; set; }
 		public ICommand InfoCmd { get; set; }
 		public ICommand ReportCmd { get; set; }
+		public ICommand CheckUpdateCmd { get; set; }
 
 		public static string Tilte { get; set; }
 		public static string AppName { get; set; }

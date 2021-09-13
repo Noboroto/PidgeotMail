@@ -23,13 +23,12 @@ namespace PidgeotMail.ViewModel
 
 		public LoginViewModel()
 		{
-			AutoUpdater.Mandatory = true;
 			AutoUpdater.Start(@"https://raw.githubusercontent.com/Noboroto/PidgeotMailWeb/main/PidgeotMailAutoUpdate.xml");
-			NeedLog = true;
+            NeedLog = true;
 			LoginCmd = new RelayCommand(() => ActiveAcount());
 			try
 			{
-				if (!GoogleService.StillAliveInMinutes(5)) Directory.Delete(UserSettings.TokenFolder, true);
+                if (!GoogleService.StillAliveInMinutes(5)) Directory.Delete(UserSettings.TokenFolder, true);
 				if (!Directory.Exists(UserSettings.TokenFolder)) Directory.CreateDirectory(UserSettings.TokenFolder);
 				if (Directory.GetFiles(UserSettings.TokenFolder).Length > 0)
 				{
@@ -55,7 +54,7 @@ namespace PidgeotMail.ViewModel
 			}
 		}
 
-		public async void ActiveAcount()
+        public async void ActiveAcount()
 		{
 			try
 			{

@@ -49,6 +49,17 @@
 					FontSize="12"
 					Height="auto"
 					Padding="5"
+					Header="Kiểm tra cập nhật"
+					Command="{Binding CheckUpdateCmd}">
+					<MenuItem.Icon>
+						<materialDesign:PackIcon
+							Kind="Update" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem
+					FontSize="12"
+					Height="auto"
+					Padding="5"
 					Header="Thông tin phần mềm"
 					Command="{Binding InfoCmd}">
 					<MenuItem.Icon>
