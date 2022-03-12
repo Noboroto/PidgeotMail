@@ -20,7 +20,6 @@ namespace PidgeotMail.Lib
 	public static class GMService
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		private static int MaxLoop = 5;
 		private static GmailService gs;
 		private static SmtpClient client;
 		private static string _UserEmail;
