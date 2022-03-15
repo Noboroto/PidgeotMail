@@ -74,6 +74,7 @@ namespace PidgeotMail.Lib
 						try
 						{
 							var info = x.GetFile(id, s);
+							if (info == null) throw new NullReferenceException();
 							FileStream f = info.OpenRead();
 							if (x.Enable) name = info.Name;
 							if (f != null) builder.Attachments.Add(name, f); ;
