@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace PidgeotMail.Lib
 {
@@ -35,12 +36,22 @@ namespace PidgeotMail.Lib
 			try
 			{
 				string s;
+				IEnumerable<FileInfo> res;
 				if (GroupIndex == 0) return new FileInfo(Dinfo.FullName);
-				if (IsResultPDF) s = matcher + "-" + id.ToString();
-				else s = matcher;
-				var res = from file in Dinfo.GetFiles()
-						where file.Name.Contains(s)
-						select file;
+				if (IsResultPDF)
+				{
+					s = matcher + "-" + id.ToString();
+					res = from file in Dinfo.GetFiles()
+						  where file.Name.Contains(s)
+						  select file;
+
+				}
+				else
+				{
+					res = from file in Dinfo.GetFiles()
+						  where file.Name == matcher
+						  select file;
+				}
 				var a = res.ToArray();
 				if (a.Length > 0) return a[0];
 				return null;
