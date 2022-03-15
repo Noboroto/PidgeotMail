@@ -147,7 +147,6 @@ namespace PidgeotMail.ViewModel
 				double ProcessTime;
 				while (!_Cancel)
 				{
-					DateTime EndTime = DateTime.Now;
 					if (messages.Count > 0)
 					{
 						try
@@ -173,9 +172,6 @@ namespace PidgeotMail.ViewModel
 						finally
 						{
 							log.Info("EndSend");
-							TimeSpan duration = DateTime.Now - EndTime;
-							ProcessTime = duration.TotalMilliseconds;
-							EndTime = DateTime.Now;
 						}
 						Done++;
 						if (result != "OK")
@@ -197,7 +193,7 @@ namespace PidgeotMail.ViewModel
 						}
 						messages.RemoveAt(0);
 						i++;
-						await Task.Delay((int)((DelaySecond - ProcessTime > 0) ? DelaySecond - ProcessTime : 0));
+						await Task.Delay(DelaySecond);
 					}
 
 					if (Done >= UserSettings.Values.Count - 1)
