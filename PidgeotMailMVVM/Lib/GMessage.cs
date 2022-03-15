@@ -46,7 +46,7 @@ namespace PidgeotMail.Lib
 					Subject = subject
 				};
 				t.From.Add(new MailboxAddress("", GMService.UserEmail));
-				t.To.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.KeyColumn].ToString()));
+				t.To.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.KeyColumn].ToString().Trim().Replace("\n", "").Replace("\r","")));
 				if (UserSettings.BccColumn != -1) t.Bcc.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.BccColumn].ToString()));
 				if (UserSettings.CcColumn != -1) t.Cc.Add(new MailboxAddress("", UserSettings.Values[id][UserSettings.CcColumn].ToString()));
 				var builder = new BodyBuilder
@@ -74,7 +74,6 @@ namespace PidgeotMail.Lib
 						try
 						{
 							var info = x.GetFile(id, s);
-							if (info == null) throw new NullReferenceException();
 							FileStream f = info.OpenRead();
 							if (x.Enable) name = info.Name;
 							if (f != null) builder.Attachments.Add(name, f); ;

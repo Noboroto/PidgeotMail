@@ -22,6 +22,7 @@ namespace PidgeotMail.ViewModel
 	/// </summary>
 	public class ResultViewModel : ViewModelBase
 	{
+		private const int DelaySecond = 1000;
 		private string _Warning;
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private bool _HomeEnabled;
@@ -109,8 +110,8 @@ namespace PidgeotMail.ViewModel
 			log.Info("Origin: ");
 			log.Info("ID: " + ChoiceMail.MessageId);
 			log.Info("Subject: " + ChoiceMail.Subject);
-			log.Info("Text: " + ChoiceMail.message.TextBody);
-			log.Info("Html: " + ChoiceMail.message.HtmlBody);
+			log.Info("Text:\n" + ChoiceMail.message.TextBody);
+			log.Info("Html:\n" + ChoiceMail.message.HtmlBody);
 		}
 
 		private Task LoadResult()
@@ -141,14 +142,17 @@ namespace PidgeotMail.ViewModel
 					});
 					_Cancel = true;
 					return;
-				}
+				}					
+				int i = 0;
+				double ProcessTime;
 				while (!_Cancel)
 				{
+					DateTime EndTime = DateTime.Now;
 					if (messages.Count > 0)
 					{
 						try
 						{
-							log.Info("StartSend " + messages[0].message.To);
+							log.Info("StartSend " + i + " " + messages[0].message.To);
 							result = "";
 							await GMService.SendAsync(messages[0].message, cancellation.Token);
 							result = "OK";
@@ -169,6 +173,9 @@ namespace PidgeotMail.ViewModel
 						finally
 						{
 							log.Info("EndSend");
+							TimeSpan duration = DateTime.Now - EndTime;
+							ProcessTime = duration.TotalMilliseconds;
+							EndTime = DateTime.Now;
 						}
 						Done++;
 						if (result != "OK")
@@ -189,7 +196,8 @@ namespace PidgeotMail.ViewModel
 							});
 						}
 						messages.RemoveAt(0);
-						await Task.Delay(1000);
+						i++;
+						await Task.Delay((int)((DelaySecond - ProcessTime > 0) ? DelaySecond - ProcessTime : 0));
 					}
 
 					if (Done >= UserSettings.Values.Count - 1)

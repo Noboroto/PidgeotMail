@@ -35,7 +35,7 @@ namespace PidgeotMail.Lib
 			if (e is MailKit.ServiceNotConnectedException)
 				result = "Lỗi kết nối máy chủ, vui lòng thử lại";
 			if (e is OperationCanceledException)
-				result = "Bị dừng";
+				result = "Bị dừng, bạn có thể tắt app từ đây";
 			if (e is MailKit.Security.AuthenticationException)
 				result = "Có lỗi xác thực, bạn vui lòng đợi 5 phút rồi hãy thử lại";
 			if (e is System.Security.Authentication.AuthenticationException)
