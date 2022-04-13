@@ -28,6 +28,10 @@ Các thư viện hỗ trợ:
 - [Epplus](https://github.com/EPPlusSoftware/EPPlus): nạp file .xlxs vào phần mềm
 - [Google Sheet API](https://developers.google.com/sheets/api): nạp dữ liệu từ Google Sheet vào phần mềm
 
+## Thành viên 
+- [Võ Thanh Tú](https://github.com/Noboroto/): chịu trách nhiệm chính
+- [Nguyễn Nhật Nam](https://github.com/snowynguyen): hỗ trợ kiểm thử phần mềm
+
 ## Liên hệ
 
 Email: thanhtuvo135@gmail.com
