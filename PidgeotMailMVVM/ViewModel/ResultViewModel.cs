@@ -144,7 +144,6 @@ namespace PidgeotMail.ViewModel
 					return;
 				}					
 				int i = 0;
-				double ProcessTime;
 				while (!_Cancel)
 				{
 					if (messages.Count > 0)

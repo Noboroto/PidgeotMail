@@ -5,7 +5,6 @@ using GalaSoft.MvvmLight.Messaging;
 using PidgeotMail.Lib;
 using PidgeotMail.MessageForUI;
 using PidgeotMail.View;
-using PidgeotMail.Lib.WindowsForm;
 
 using System;
 using System.Collections.Generic;
