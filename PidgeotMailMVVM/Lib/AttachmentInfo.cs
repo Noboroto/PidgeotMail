@@ -44,7 +44,6 @@ namespace PidgeotMail.Lib
 					res = from file in Dinfo.GetFiles()
 						  where file.Name.Contains(s)
 						  select file;
-
 				}
 				else
 				{
@@ -53,7 +52,15 @@ namespace PidgeotMail.Lib
 						  select file;
 				}
 				var a = res.ToArray();
-				if (a.Length > 0) return a[0];
+				if (a.Length > 0)
+				{
+					foreach (var info in a)
+					{
+						if (info.Name == matcher)
+							return info;
+					}
+				} 
+				
 				return null;
 			}
 			catch (Exception e)

@@ -5,12 +5,15 @@ using GalaSoft.MvvmLight.Messaging;
 using PidgeotMail.Lib;
 using PidgeotMail.MessageForUI;
 using PidgeotMail.View;
+using PidgeotMail.Lib.WindowsForm;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace PidgeotMail.ViewModel
 {
@@ -66,14 +69,15 @@ namespace PidgeotMail.ViewModel
 
 			FolderCmd = new RelayCommand(() =>
 				{
-					FolderBrowserDialog folderDlg = new FolderBrowserDialog
+					var folderDlg = new CommonOpenFileDialog()
 					{
-						ShowNewFolderButton = true
+                        IsFolderPicker = true
 					};
-					if (folderDlg.ShowDialog() == DialogResult.OK)
+
+                    if (folderDlg.ShowDialog() == CommonFileDialogResult.Ok)
 					{
-						log.Info("Chọn thư mục: " + folderDlg.SelectedPath);
-						Attachments.Add(new AttachmentInfo(folderDlg.SelectedPath, false, UserSettings.KeyColumn + 1, true));
+						log.Info("Chọn thư mục: " + folderDlg.FileName);
+						Attachments.Add(new AttachmentInfo(folderDlg.FileName, false, UserSettings.KeyColumn + 1, true));
 					}
 				}
 			);

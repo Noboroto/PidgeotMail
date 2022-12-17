@@ -59,6 +59,7 @@ namespace PidgeotMail.Lib
 						builder.Attachments.Add(x);
 					}
 				if (UserSettings.Attachments != null)
+				{
 					foreach (var x in UserSettings.Attachments)
 					{
 						string s, name = x.Name;
@@ -83,6 +84,7 @@ namespace PidgeotMail.Lib
 							continue;
 						}
 					}
+				}
 				t.Body = builder.ToMessageBody();
 			}
 			catch (Exception e)
